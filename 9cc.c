@@ -2,17 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-enum {
-  TK_NUM = 256,
-  TK_EOF,
-};
-
-typedef struct {
-  int ty; // type of token
-  int val; // ty が TK_NUM の場合のその値
-  char *input; // token string(for error message)
-} Token;
+#include "9cc.h"
 
 Token tokens[100];
 
