@@ -9,4 +9,18 @@ typedef struct {
   char *input; // token string(for error message)
 } Token;
 
-Token tokens[];
+typedef struct Node {
+  int ty;
+  struct Node *lhs;
+  struct Node *rhs;
+  int val;
+} Node;
+
+Node *expr();
+void gen(Node *);
+
+//void error(int);
+
+extern Token tokens[];
+extern int pos;
+

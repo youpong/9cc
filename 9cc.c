@@ -4,7 +4,10 @@
 #include <string.h>
 #include "9cc.h"
 
+static void error(int);
+
 Token tokens[100];
+int pos = 0;
 
 void tokenize(char *p) {
   int i = 0;
@@ -46,40 +49,16 @@ int main(int argc, char ** argv) {
   }
 
   tokenize(argv[1]);
-  
+
+  Node *node = expr();
+
   printf(".intel_syntax noprefix\n");
   printf(".global main\n");
   printf("main:\n");
 
-  if (tokens[0].ty != TK_NUM)
-    error(0);
-  
-  printf("\tmov rax, %d\n", tokens[0].val);
+  gen(node);
 
-  int i = 1;
-  while (tokens[i].ty != TK_EOF) {
-    if (tokens[i].ty == '+') {
-      i++;
-      if (tokens[i].ty != TK_NUM)
-	error(i);
-      printf("\tadd rax, %d\n", tokens[i].val);
-      i++;
-      continue;
-    }
-    
-    if (tokens[i].ty == '-') {
-      i++;
-      if (tokens[i].ty != TK_NUM)
-	error(i);
-      printf("\tsub rax, %d\n", tokens[i].val);
-      i++;
-      continue;
-    }
-
-    error(i);
-    return 1;
-  }
-  
   printf("\tret\n");
+    
   return 0;
 }
