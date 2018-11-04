@@ -3,10 +3,11 @@
 try() {
     expected="$1"
     input="$2"
+    msg="$3"
 
     ./9cc "$input" > tmp.s
     if [ $? != 0 ]; then
-	echo "cann't compile"
+	echo "$3: cann't compile"
 	exit 1
     fi
     
@@ -15,18 +16,19 @@ try() {
     actual="$?"
 
     if [ "$actual" != "$expected" ]; then
-	echo "$input expected, but got $actual"
+	echo "$3: $input expected, but got $actual"
 	exit 1
     fi
 }
 
-try 42 42
-try 0 0
-try 255 255
+try 42 42   10
+try 0 0     20
+try 255 255 30
 
-try 21 '5+20-4'
-try 41 ' 12 + 34 - 5 '
+try  3 '1+2'    31
+try 21 '5+20-4' 40
+try 41 ' 12 + 34 - 5 ' 50
 
-#try 0 256
+#try 0 256 60
 
 echo OK
