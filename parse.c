@@ -2,9 +2,6 @@
 #include <stdio.h>
 #include "9cc.h"
 
-enum {
-  ND_NUM = 256,
-};
 
 
 Node *new_node(int, Node *, Node *);
@@ -44,7 +41,7 @@ Node *expr() {
       return new_node(*ptr, lhs, expr());
     }
   }
-  error("unexpected token: %s", tokens[pos].input);
+  error("unexpected token: %s\n", tokens[pos].input);
 }
   
 Node *mul() {
@@ -59,7 +56,7 @@ Node *mul() {
       return new_node(*ptr, lhs, mul());
     }
   }
-  error("unexpected token: %s", tokens[pos].input);
+  error("unexpected token: %s\n", tokens[pos].input);
 }
 
 Node *term() {
@@ -69,11 +66,11 @@ Node *term() {
     pos++;
     Node *node = expr();
     if(tokens[pos].ty != ')')
-      error("対応する閉じカッコがありません: %s", tokens[pos].input);
+      error("対応する閉じカッコがありません: %s\n", tokens[pos].input);
     pos++;
     return node;
   }
-  error("unexpected token: %s", tokens[pos].input);
+  error("unexpected token: %s\n", tokens[pos].input);
 }
 
 void error(char *fmt, char *input) {

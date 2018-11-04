@@ -1,3 +1,4 @@
+all: 9cc
 9cc: 9cc.o parse.o gen.o
 9cc.o: 9cc.c 9cc.h
 parse.o: parse.c 9cc.h

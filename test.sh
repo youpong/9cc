@@ -5,6 +5,11 @@ try() {
     input="$2"
 
     ./9cc "$input" > tmp.s
+    if [ $? != 0 ]; then
+	echo "cann't compile"
+	exit 1
+    fi
+    
     gcc -o tmp tmp.s
     ./tmp
     actual="$?"

@@ -3,6 +3,10 @@ enum {
   TK_EOF,
 };
 
+enum {
+  ND_NUM = 256,
+};
+
 typedef struct {
   int ty; // type of token
   int val; // ty が TK_NUM の場合のその値
