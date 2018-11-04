@@ -50,7 +50,7 @@ int main(int argc, char ** argv) {
 
   tokenize(argv[1]);
 
-  Node *node = expr();
+  Node *node = parse();
 
   printf(".intel_syntax noprefix\n");
   printf(".global main\n");

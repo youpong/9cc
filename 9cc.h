@@ -16,7 +16,7 @@ typedef struct Node {
   int val;
 } Node;
 
-Node *expr();
+Node *parse();
 void gen(Node *);
 
 //void error(int);

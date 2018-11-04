@@ -9,7 +9,7 @@ enum {
 
 Node *new_node(int, Node *, Node *);
 Node *new_node_num(int);
-
+Node *expr();
 Node *mul();
 Node *term();
 static void error(char *, char *);
@@ -27,6 +27,10 @@ Node *new_node_num(int val) {
   node->ty = ND_NUM;
   node->val = val;
   return node;
+}
+
+Node *parse() {
+  return expr();
 }
 
 Node *expr() {
