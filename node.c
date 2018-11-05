@@ -16,10 +16,22 @@ Node *new_node_num(int val) {
   return node;
 }
 
-Node_Ite *setup(Node *start) {
-  return NULL;
+Node_Ite *setup_ite(Node *start) {
+  Node_Ite *ite = malloc(sizeof(Node_Ite));
+  ite->cur = start;
+  return ite;
 }
 
 Node *next_node(Node_Ite *ite) {
-  return NULL;
+  if (ite->cur->ty == ND_NUM) {
+    return ite->cur;
+  }
+  // ite->cur->ty != ND_NUM
+  return NULL; // TODO
 }
+
+#ifdef UNIT_TEST
+int main() {
+  return 0;
+}
+#endif

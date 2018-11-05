@@ -2,27 +2,10 @@
 #include <stdio.h>
 #include "9cc.h"
 
-
-
 Node *expr();
 Node *mul();
 Node *term();
 static void error(char *, char *);
-
-Node *new_node(int ty, Node *lhs, Node *rhs) {
-  Node *node = malloc(sizeof(Node));
-  node->ty = ty;
-  node->lhs = lhs;
-  node->rhs = rhs;
-  return node;
-}
-
-Node *new_node_num(int val) {
-  Node *node = malloc(sizeof(Node));
-  node->ty = ND_NUM;
-  node->val = val;
-  return node;
-}
 
 Node *parse() {
   return expr();
@@ -39,6 +22,7 @@ Node *expr() {
       return new_node(*ptr, lhs, expr());
     }
   }
+  // TODO: epsilon case
   error("unexpected token: %s\n", tokens[pos].input);
 }
   

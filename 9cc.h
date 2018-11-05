@@ -31,3 +31,12 @@ void gen(Node *);
 extern Token tokens[];
 extern int pos;
 
+typedef struct {
+  Node stack[100];
+  Node *cur;
+} Node_Ite;
+
+Node_Ite *setup_ite(Node *);
+Node *next_node(Node_Ite *);
+Node *new_node(int, Node *, Node *);
+Node *new_node_num(int);
