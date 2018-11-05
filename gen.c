@@ -4,12 +4,21 @@
 void gen(Node *node) {
   if (node->ty == ND_NUM) {
     printf("\tmov rax, %d\n", node->val);
+    return;
   }
 
   if (node->ty == '+') {
     printf("\tmov rax, %d\n", node->lhs->val);
     printf("\tadd rax, %d\n", node->rhs->val);
+    return;
   }
+
+  if (node->ty == '-') {
+    printf("\tmov rax, %d\n", node->lhs->val);
+    printf("\tsub rax, %d\n", node->rhs->val);
+    return;
+  }
+
 
   return;
 }
