@@ -47,14 +47,16 @@ Node *mul() {
   Node *lhs = term();
   if (tokens[pos].ty == TK_EOF)
     return lhs;
-  pos++;
+  //pos++;
   for (char *ptr = ops; *ptr != '\0'; ptr++) {
     if (tokens[pos].ty == *ptr) {
       pos++;
       return new_node(*ptr, lhs, mul());
     }
   }
-  error("unexpected token: %s\n", tokens[pos].input);
+  
+  //error("unexpected token: %s\n", tokens[pos].input);
+  return lhs; // epsilon
 }
 
 Node *term() {
