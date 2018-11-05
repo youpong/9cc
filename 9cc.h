@@ -20,6 +20,9 @@ typedef struct Node {
   int val;
 } Node;
 
+Node *new_node(int, Node *, Node *);
+Node *new_node_num(int);
+
 Node *parse();
 void gen(Node *);
 

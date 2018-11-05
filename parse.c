@@ -4,8 +4,6 @@
 
 
 
-Node *new_node(int, Node *, Node *);
-Node *new_node_num(int);
 Node *expr();
 Node *mul();
 Node *term();
