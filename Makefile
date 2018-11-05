@@ -7,7 +7,7 @@ node.o: node.c 9cc.h
 parse.o: parse.c 9cc.h
 gen.o: gen.c 9cc.h
 
-test: 9cc
+test: 9cc gen_test node_test
 	./test.sh
 
 gen_test: gen_test.o node.o
