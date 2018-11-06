@@ -20,6 +20,8 @@ void tokenize(char *p) {
     case '-':
     case '*':
     case '/':
+    case '(':
+    case ')':
       tokens[i].ty = *p;
       tokens[i].input = p;
       i++;

@@ -21,8 +21,7 @@ Node *expr() {
       return new_node(*ptr, lhs, expr());
     }
   }
-  // TODO: epsilon case
-  error("unexpected token: %s\n", tokens[pos].input);
+  return lhs; // epsilon
 }
   
 Node *mul() {
@@ -40,6 +39,8 @@ Node *mul() {
 }
 
 Node *term() {
+  if(tokens[pos].ty == TK_EOF)
+    error("unexpected EOF");
   if (tokens[pos].ty == TK_NUM) 
     return new_node_num(tokens[pos++].val);
   if (tokens[pos].ty == '(') {
