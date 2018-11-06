@@ -4,8 +4,6 @@
 #include <string.h>
 #include "9cc.h"
 
-static void error(int);
-
 Token tokens[100];
 int pos = 0;
 
@@ -30,16 +28,10 @@ void tokenize(char *p) {
       i++;
       continue;
     }
-    fprintf(stderr, "トークナイズできません: %s\n", p);
-    exit(1);
+    error("トークナイズできません: %s\n", p);
   }
   tokens[i].ty = TK_EOF;
   tokens[i].input = p;
-}
-
-void error(int i) {
-  fprintf(stderr, "unexpected token: %s\n", tokens[i].input);
-  exit(1);
 }
 
 int main(int argc, char ** argv) {

@@ -5,7 +5,6 @@
 Node *expr();
 Node *mul();
 Node *term();
-static void error(char *, char *);
 
 Node *parse() {
   return expr();
@@ -52,9 +51,4 @@ Node *term() {
     return node;
   }
   error("unexpected token: %s\n", tokens[pos].input);
-}
-
-void error(char *fmt, char *input) {
-  fprintf(stderr, fmt, input);
-  exit(1);
 }

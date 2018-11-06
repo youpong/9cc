@@ -1,7 +1,7 @@
 CFLAGS=-g
 
 all: 9cc
-9cc: 9cc.o node.o parse.o gen.o
+9cc: 9cc.o node.o parse.o gen.o util.o
 9cc.o: 9cc.c 9cc.h
 node.o: node.c 9cc.h
 parse.o: parse.c 9cc.h

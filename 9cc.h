@@ -33,3 +33,6 @@ Node *parse();
 
 // Generate
 void gen(Node *);
+
+// Utility
+void error(char *, ...);
