@@ -33,6 +33,7 @@ extern int pos;
 
 typedef struct {
   Node stack[100];
+  int top;
   Node *cur;
 } Node_Ite;
 
