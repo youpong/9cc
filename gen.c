@@ -22,7 +22,7 @@ void gen(Node *node) {
     printf("\tsub rax, rdi\n");
     break;
   case '*':
-    printf("\tmul rax, rdi\n");
+    printf("\tmul rdi\n");
     break;
   case '/':
     printf("\tmov rdx, 0\n");

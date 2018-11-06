@@ -14,13 +14,19 @@ void tokenize(char *p) {
       p++;
       continue;
     }
-    if (*p == '+' || *p == '-') {
+    
+    switch (*p) {
+    case '+':
+    case '-':
+    case '*':
+    case '/':
       tokens[i].ty = *p;
       tokens[i].input = p;
       i++;
       p++;
       continue;
     }
+    
     if (isdigit(*p)) {
       tokens[i].ty = TK_NUM;
       tokens[i].input = p;
