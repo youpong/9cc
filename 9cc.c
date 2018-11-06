@@ -58,6 +58,7 @@ int main(int argc, char ** argv) {
 
   gen(node);
 
+  printf("\tpop rax\n");
   printf("\tret\n");
     
   return 0;
