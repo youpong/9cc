@@ -2,12 +2,42 @@
 #include <stdlib.h>
 #include "9cc.h"
 
+void gen_lval(Node *node) {
+  if (node->ty == ND_IDENT) {
+    printf("\tmov rax, rbp\n");
+    printf("\tsub rax, %d\n",
+	   ('z' - node->name + 1) * 8);
+    printf("\tpush rax\n");
+    return;
+  }
+  error("変数ではありません\n");
+}
+
 void gen(Node *node) {
   if (node->ty == ND_NUM) {
     printf("\tpush %d\n", node->val);
     return;
   }
 
+  if (node->ty == ND_IDENT) {
+    gen_lval(node);
+    printf("\tpop rax\n");
+    printf("\tmov rax, [rax]\n");
+    printf("\tpush rax\n");
+    return;
+  }
+
+  if (node->ty == '=') {
+    gen_lval(node->lhs);
+    gen(node->rhs);
+
+    printf("\tpop rdi\n");
+    printf("\tpop rax\n");
+    printf("\tmov [rax], rdi\n");
+    printf("\tpush rdi\n");
+    return;
+  }
+  
   gen(node->lhs);
   gen(node->rhs);
 
