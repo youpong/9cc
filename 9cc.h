@@ -13,6 +13,7 @@ typedef struct {
 
 extern Token tokens[];
 extern int pos;
+void tokenize(char *);
 
 // Abstract Syntax Node
 enum {

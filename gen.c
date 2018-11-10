@@ -27,6 +27,8 @@ void gen(Node *node) {
     return;
   }
 
+  // TODO: pass test.sh t101
+  // 'a=b=8'
   if (node->ty == '=') {
     gen_lval(node->lhs);
     gen(node->rhs);

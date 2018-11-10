@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "9cc.h"
 
 void program();
@@ -108,3 +109,16 @@ Node *term() {
   
   error("unexpected token: %s\n", tokens[pos].input);
 }
+
+#ifdef UNIT_TEST
+Token tokens[100];
+int pos = 0;
+Node *code[100];
+
+int main() {
+  char buf[100];
+  strcpy("a=b=8;", buf);
+  tokenize(buf);
+  parse();
+}
+#endif
