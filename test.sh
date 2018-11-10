@@ -44,9 +44,8 @@ try 10    'c=10;'    t100
 try  8    'a=b=8;'   t101
 try 11    'd=11;e=d;' t102
 
-# a = 3;
-# b = 5 * 6 - 8;
-# a + b/2;
+try 14    'a = 3; b = 5 * 6 - 8; a + b/2;' t110
+
 
 #try 99 '(1' t200 # missing ')'
 #try 99 ''   't201 missing expr'

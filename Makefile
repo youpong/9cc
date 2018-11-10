@@ -14,15 +14,15 @@ test: 9cc gen_test node_test parse_test
 
 gen_test: gen_test.o node.o
 gen_test.o: gen.c 9cc.h
-	$(CC) -c -D UNIT_TEST -o $@ $<
+	$(CC) $(CFLAGS) -c -D UNIT_TEST -o $@ $<
 
 node_test: node_test.o
 node_test.o: node.c 9cc.h
-	$(CC) -c -D UNIT_TEST -o $@ $<
+	$(CC) $(CFLAGS) -c -D UNIT_TEST -o $@ $<
 
 parse_test: parse_test.o node.o tokenize.o
 parse_test.o: parse.c 9cc.h
-	$(CC) -c -D UNIT_TEST -o $@ $<
+	$(CC) $(CFLAGS) -c -D UNIT_TEST -o $@ $<
 
 clean:
 	rm -f 9cc gen_test node_test parse_test a.out *.o *~ tmp*

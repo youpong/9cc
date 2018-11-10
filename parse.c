@@ -18,7 +18,6 @@ program: assign program'
 program': ε | assign program'
 */
 void program() {
-  // TODO: test
   int i=0;
   while(tokens[pos].ty != TK_EOF) {
     code[i] = assign();
@@ -35,9 +34,9 @@ Node *assign() {
   // TODO: test
   Node *lhs = expr();
 
-  while (tokens[pos].ty == '=') {
+  if (tokens[pos].ty == '=') {
     pos++;
-    lhs = new_node('=', lhs, expr());
+    return new_node('=', lhs, assign());
   }
   
   if (tokens[pos].ty == ';') {
@@ -117,8 +116,26 @@ Node *code[100];
 
 int main() {
   char buf[100];
-  strcpy("a=b=8;", buf);
+  
+  strcpy(buf, "a=b=8;");
+  
   tokenize(buf);
   parse();
+  
+  printf("%d\n", code[0]->ty);
+  printf("%c\n", code[0]->lhs->name);  
+  printf("%d\n", code[0]->rhs->ty);
+  printf("%c\n", code[0]->rhs->lhs->name);
+  printf("%d\n", code[0]->rhs->rhs->val);
+  /*  
+  printf("%d\n", code[0]->lhs->lhs->ty);
+  printf("%c\n", code[0]->lhs->lhs->name);
+  printf("%d\n", code[0]->lhs->rhs->ty);
+  printf("%c\n", code[0]->lhs->rhs->name);
+
+  printf("%d\n", code[0]->rhs->ty);
+  printf("%d\n", code[0]->rhs->val);
+  */
+  return 0;
 }
 #endif
