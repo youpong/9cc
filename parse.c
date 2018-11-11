@@ -31,7 +31,6 @@ assign: expr assign' ";"
 assign': ε | "=" expr assign'
 */
 Node *assign() {
-  // TODO: test
   Node *lhs = expr();
 
   if (tokens[pos].ty == '=') {
