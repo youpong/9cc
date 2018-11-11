@@ -60,7 +60,7 @@ void gen(Node *node) {
     printf("\tmov rdx, 0\n");
     printf("\tdiv rdi\n");
     break;
-  defalt:
+  default:
     fprintf(stderr, "unexpected type of node");
     exit(1);
   }

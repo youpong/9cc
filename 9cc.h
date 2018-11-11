@@ -42,4 +42,4 @@ void parse();
 void gen(Node *);
 
 // Utility
-void error(char *, ...);
+_Noreturn void error(char *, ...);

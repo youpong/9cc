@@ -4,7 +4,6 @@ SRCS=main.c node.c tokenize.c parse.c codegen.c util.c
 OBJS=$(SRCS:.c=.o)
 
 all: 9cc
-#9cc: main.o node.o tokenize.o parse.o codegen.o util.o
 9cc: $(OBJS)
 	$(CC) -o $@ $^
 

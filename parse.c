@@ -42,6 +42,7 @@ Node *assign() {
     pos++;
     return lhs;
   }
+
   error("unexpected token: %s\n", tokens[pos].input);
 }
 
