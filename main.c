@@ -1,14 +1,14 @@
+#include "9cc.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "9cc.h"
 
 Token tokens[100];
 int pos = 0;
 Node *code[100];
 
-int main(int argc, char ** argv) {
+int main(int argc, char **argv) {
   if (argc != 2) {
     fprintf(stderr, "引数の数が正しくありません\n");
     return 1;
@@ -39,6 +39,6 @@ int main(int argc, char ** argv) {
   printf("\tmov rsp, rbp\n");
   printf("\tpop rbp\n");
   printf("\tret\n");
-    
+
   return 0;
 }

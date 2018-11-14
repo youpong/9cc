@@ -1,6 +1,6 @@
-#include <stdlib.h>
-#include <stdio.h>
 #include "9cc.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 Node *new_node(int ty, Node *lhs, Node *rhs) {
   Node *node = malloc(sizeof(Node));
@@ -17,7 +17,7 @@ Node *new_node_num(int val) {
   return node;
 }
 
-Node *new_node_id(char name){
+Node *new_node_id(char name) {
   Node *node = malloc(sizeof(Node));
   node->ty = ND_IDENT;
   node->name = name;
@@ -25,8 +25,5 @@ Node *new_node_id(char name){
 }
 
 #ifdef UNIT_TEST
-int main() {
-  
-  return 0;
-}
+int main() { return 0; }
 #endif

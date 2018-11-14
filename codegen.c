@@ -1,12 +1,11 @@
+#include "9cc.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "9cc.h"
 
 void gen_lval(Node *node) {
   if (node->ty == ND_IDENT) {
     printf("\tmov rax, rbp\n");
-    printf("\tsub rax, %d\n",
-	   ('z' - node->name + 1) * 8);
+    printf("\tsub rax, %d\n", ('z' - node->name + 1) * 8);
     printf("\tpush rax\n");
     return;
   }
@@ -44,7 +43,7 @@ void gen(Node *node) {
   printf("\tpop rdi\n");
   printf("\tpop rax\n");
 
-  switch(node->ty) {
+  switch (node->ty) {
   case '+':
     printf("\tadd rax, rdi\n");
     break;
@@ -79,18 +78,11 @@ void gen(Node *node) {
 int pos;
 Token tokens[100];
 
-void test10() {
-  gen(new_node_num(1047));
-}
+void test10() { gen(new_node_num(1047)); }
 
-void test20() {
-  gen(new_node('+', new_node_num(1), new_node_num(2)));
-}
-    
+void test20() { gen(new_node('+', new_node_num(1), new_node_num(2))); }
 
-void test30() {
-  gen( new_node('/', new_node_num(3), new_node_num(4)));
-}
+void test30() { gen(new_node('/', new_node_num(3), new_node_num(4))); }
 
 void test40() {
   Node *node = new_node('+', new_node_num(5), new_node_num(6));
@@ -102,13 +94,9 @@ void test41() {
   gen(new_node('-', new_node_num(10), node));
 }
 
-void test50() {
-  gen(new_node('*', new_node_num(11), new_node_num(12)));
-}
+void test50() { gen(new_node('*', new_node_num(11), new_node_num(12))); }
 
-void test51() {
-  gen(new_node('/', new_node_num(13), new_node_num(14)));
-}
+void test51() { gen(new_node('/', new_node_num(13), new_node_num(14))); }
 
 void test100() {
   Node *me = new_node('+', new_node_num(15), new_node_num(16));
@@ -119,7 +107,7 @@ void test100() {
 
 int main() {
   test100();
-  
+
   return 0;
 }
 #endif

@@ -1,12 +1,12 @@
+#include "9cc.h"
+#include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
-#include "9cc.h"
 
 void tokenize(char *p) {
   int i = 0;
   while (*p) {
-    
+
     // ignore space
     if (isspace(*p)) {
       p++;
@@ -29,26 +29,26 @@ void tokenize(char *p) {
       continue;
     }
 
-    if ( *p == '=' ) {
-      if( *(p+1) == '=' ) {
-	tokens[i].ty = TK_EQ;
-	tokens[i].input = p;
-	i++;
-	p+=2;
+    if (*p == '=') {
+      if (*(p + 1) == '=') {
+        tokens[i].ty = TK_EQ;
+        tokens[i].input = p;
+        i++;
+        p += 2;
       } else {
-	tokens[i].ty = *p;
-	tokens[i].input = p;
-	i++;
-	p++;
+        tokens[i].ty = *p;
+        tokens[i].input = p;
+        i++;
+        p++;
       }
       continue;
     }
 
-    if ( *p == '!' && *(p+1) == '=' ) {
+    if (*p == '!' && *(p + 1) == '=') {
       tokens[i].ty = TK_NE;
       tokens[i].input = p;
       i++;
-      p+=2;
+      p += 2;
       continue;
     }
 
@@ -69,10 +69,9 @@ void tokenize(char *p) {
       p++;
       continue;
     }
-    
+
     error("トークナイズできません: %s\n", p);
   }
   tokens[i].ty = TK_EOF;
   tokens[i].input = p;
 }
-

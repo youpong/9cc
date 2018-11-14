@@ -1,7 +1,7 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
 #include "9cc.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 void program();
 Node *assign();
@@ -9,17 +9,15 @@ Node *expr();
 Node *mul();
 Node *term();
 
-void parse() {
-  program();
-}
+void parse() { program(); }
 
 /*
 program: assign program'
 program': ε | assign program'
 */
 void program() {
-  int i=0;
-  while(tokens[pos].ty != TK_EOF) {
+  int i = 0;
+  while (tokens[pos].ty != TK_EOF) {
     code[i] = assign();
     i++;
   }
@@ -39,7 +37,7 @@ Node *assign() {
     pos++;
     return new_node('=', lhs, assign());
   }
-  
+
   if (tokens[pos].ty == TK_EQ) {
     pos++;
     return new_node(ND_EQ, lhs, assign());
@@ -48,7 +46,7 @@ Node *assign() {
     pos++;
     return new_node(ND_NE, lhs, assign());
   }
-  
+
   if (tokens[pos].ty == ';') {
     pos++;
     return lhs;
@@ -69,7 +67,7 @@ Node *expr() {
     pos++;
     return new_node('+', lhs, expr());
   }
-  
+
   if (tokens[pos].ty == '-') {
     pos++;
     return new_node('-', lhs, expr());
@@ -88,9 +86,9 @@ Node *mul() {
 
   if (tokens[pos].ty == '*') {
     pos++;
-      return new_node('*', lhs, mul());
+    return new_node('*', lhs, mul());
   }
-  
+
   if (tokens[pos].ty == '/') {
     pos++;
     return new_node('/', lhs, mul());
@@ -103,7 +101,7 @@ Node *mul() {
 term: NUMBER | IDENT | "(" expr ")"
  */
 Node *term() {
-  if (tokens[pos].ty == TK_NUM) 
+  if (tokens[pos].ty == TK_NUM)
     return new_node_num(tokens[pos++].val);
   if (tokens[pos].ty == TK_IDENT) {
     return new_node_id(tokens[pos++].input[0]);
@@ -111,12 +109,12 @@ Node *term() {
   if (tokens[pos].ty == '(') {
     pos++;
     Node *node = expr();
-    if(tokens[pos].ty != ')')
+    if (tokens[pos].ty != ')')
       error("対応する閉じカッコがありません: %s\n", tokens[pos].input);
     pos++;
     return node;
   }
-  
+
   error("unexpected token: %s\n", tokens[pos].input);
 }
 
@@ -127,18 +125,18 @@ Node *code[100];
 
 int main() {
   char buf[100];
-  
+
   strcpy(buf, "a=b=8;");
-  
+
   tokenize(buf);
   parse();
-  
+
   printf("%d\n", code[0]->ty);
-  printf("%c\n", code[0]->lhs->name);  
+  printf("%c\n", code[0]->lhs->name);
   printf("%d\n", code[0]->rhs->ty);
   printf("%c\n", code[0]->rhs->lhs->name);
   printf("%d\n", code[0]->rhs->rhs->val);
-  /*  
+  /*
   printf("%d\n", code[0]->lhs->lhs->ty);
   printf("%c\n", code[0]->lhs->lhs->name);
   printf("%d\n", code[0]->lhs->rhs->ty);
