@@ -21,12 +21,34 @@ void tokenize(char *p) {
     case '/':
     case '(':
     case ')':
-    case '=':
     case ';':
       tokens[i].ty = *p;
       tokens[i].input = p;
       i++;
       p++;
+      continue;
+    }
+
+    if ( *p == '=' ) {
+      if( *(p+1) == '=' ) {
+	tokens[i].ty = TK_EQ;
+	tokens[i].input = p;
+	i++;
+	p+=2;
+      } else {
+	tokens[i].ty = *p;
+	tokens[i].input = p;
+	i++;
+	p++;
+      }
+      continue;
+    }
+
+    if ( *p == '!' && *(p+1) == '=' ) {
+      tokens[i].ty = TK_NE;
+      tokens[i].input = p;
+      i++;
+      p+=2;
       continue;
     }
 
@@ -53,3 +75,4 @@ void tokenize(char *p) {
   tokens[i].ty = TK_EOF;
   tokens[i].input = p;
 }
+

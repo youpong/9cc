@@ -2,6 +2,8 @@
 enum {
   TK_NUM = 256, // integer
   TK_IDENT, // 識別子
+  TK_EQ, // '=='
+  TK_NE, // '!='
   TK_EOF,   // end of file
 };
 
@@ -18,6 +20,8 @@ void tokenize(char *);
 // Abstract Syntax Node
 enum {
   ND_NUM = 256, // 整数
+  ND_EQ, // '=='
+  ND_NE, // '!='
   ND_IDENT, // 識別子
 };
 

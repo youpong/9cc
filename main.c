@@ -16,7 +16,6 @@ int main(int argc, char ** argv) {
 
   tokenize(argv[1]);
   parse();
-  //Node *node = parse();
 
   printf(".intel_syntax noprefix\n");
   printf(".global main\n");

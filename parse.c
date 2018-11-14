@@ -28,7 +28,9 @@ void program() {
 
 /*
 assign: expr assign' ";"
-assign': ε | "=" expr assign'
+assign': ε | "="  expr assign'
+assign':     "==" expr assign'
+assign':     "!=" expr assign'
 */
 Node *assign() {
   Node *lhs = expr();
@@ -36,6 +38,15 @@ Node *assign() {
   if (tokens[pos].ty == '=') {
     pos++;
     return new_node('=', lhs, assign());
+  }
+  
+  if (tokens[pos].ty == TK_EQ) {
+    pos++;
+    return new_node(ND_EQ, lhs, assign());
+  }
+  if (tokens[pos].ty == TK_NE) {
+    pos++;
+    return new_node(ND_NE, lhs, assign());
   }
   
   if (tokens[pos].ty == ';') {

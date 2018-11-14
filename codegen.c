@@ -27,8 +27,6 @@ void gen(Node *node) {
     return;
   }
 
-  // TODO: pass test.sh t101
-  // 'a=b=8'
   if (node->ty == '=') {
     gen_lval(node->lhs);
     gen(node->rhs);
@@ -39,7 +37,7 @@ void gen(Node *node) {
     printf("\tpush rdi\n");
     return;
   }
-  
+
   gen(node->lhs);
   gen(node->rhs);
 
@@ -60,9 +58,18 @@ void gen(Node *node) {
     printf("\tmov rdx, 0\n");
     printf("\tdiv rdi\n");
     break;
+  case ND_EQ:
+    printf("\tcmp rdi, rax\n");
+    printf("\tsete al\n");
+    printf("\tmovzb rax, al\n");
+    break;
+  case ND_NE:
+    printf("\tcmp rdi, rax\n");
+    printf("\tsetne al\n");
+    printf("\tmovzb rax, al\n");
+    break;
   default:
-    fprintf(stderr, "unexpected type of node");
-    exit(1);
+    error("unexpected type of node\n");
   }
 
   printf("\tpush rax\n");
