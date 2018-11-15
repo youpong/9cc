@@ -1,4 +1,5 @@
 #include "9cc.h"
+#include "util.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,6 +13,11 @@ int main(int argc, char **argv) {
   if (argc != 2) {
     fprintf(stderr, "引数の数が正しくありません\n");
     return 1;
+  }
+
+  if (strcmp(argv[1], "-test") == 0) {
+    run_utiltest();
+    return 0;
   }
 
   tokenize(argv[1]);

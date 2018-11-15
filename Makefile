@@ -1,6 +1,6 @@
 CFLAGS=-Wall -std=c11 -g
 
-SRCS=main.c node.c tokenize.c parse.c codegen.c util.c
+SRCS=codegen.c main.c node.c parse.c tokenize.c util.c util_test.c
 OBJS=$(SRCS:.c=.o)
 
 all: 9cc
@@ -8,8 +8,10 @@ all: 9cc
 	$(CC) -o $@ $^
 
 $(OBJS): 9cc.h
+codegen.c main.c parse.c tokenize.c util.c util_test.c: util.h
 
 test: 9cc codegen_test node_test parse_test
+	./9cc -test
 	./test.sh
 
 codegen_test: codegen_test.o node.o

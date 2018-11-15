@@ -1,15 +1,15 @@
 // Tokenize
 enum {
   TK_NUM = 256, // integer
-  TK_IDENT, // 識別子
-  TK_EQ, // '=='
-  TK_NE, // '!='
-  TK_EOF,   // end of file
+  TK_IDENT,     // 識別子
+  TK_EQ,        // '=='
+  TK_NE,        // '!='
+  TK_EOF,       // end of file
 };
 
 typedef struct {
-  int ty; // type of token
-  int val; // ty が TK_NUM の場合のその値
+  int ty;      // type of token
+  int val;     // ty が TK_NUM の場合のその値
   char *input; // token string(for error message)
 } Token;
 
@@ -20,9 +20,9 @@ void tokenize(char *);
 // Abstract Syntax Node
 enum {
   ND_NUM = 256, // 整数
-  ND_EQ, // '=='
-  ND_NE, // '!='
-  ND_IDENT, // 識別子
+  ND_EQ,        // '=='
+  ND_NE,        // '!='
+  ND_IDENT,     // 識別子
 };
 
 typedef struct Node {
@@ -44,6 +44,3 @@ void parse();
 
 // Generate
 void gen(Node *);
-
-// Utility
-_Noreturn void error(char *, ...);
