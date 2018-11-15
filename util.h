@@ -1,3 +1,5 @@
+#ifndef UTIL_H
+#define UTIL_H
 // util
 typedef struct {
   void **data;
@@ -23,3 +25,4 @@ _Noreturn void error(char *, ...);
 
 // util_test
 void run_utiltest();
+#endif

@@ -1,3 +1,5 @@
+#include "util.h"
+
 // Tokenize
 enum {
   TK_NUM = 256, // integer
@@ -33,7 +35,7 @@ typedef struct Node {
   char name;
 } Node;
 
-extern Node *code[];
+extern Vector *code;
 
 Node *new_node(int, Node *, Node *);
 Node *new_node_num(int);

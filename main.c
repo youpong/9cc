@@ -7,10 +7,11 @@
 
 Vector *tokens;
 int pos = 0;
-Node *code[100];
+Vector *code;
 
 int main(int argc, char **argv) {
   tokens = new_vector();
+  code = new_vector();
 
   if (argc != 2) {
     fprintf(stderr, "引数の数が正しくありません\n");
@@ -35,8 +36,8 @@ int main(int argc, char **argv) {
   printf("\tmov rbp, rsp\n");
   printf("\tsub rsp, 208\n");
 
-  for (int i = 0; code[i]; i++) {
-    gen(code[i]);
+  for (int i = 0; i < code->len; i++) {
+    gen((Node *)code->data[i]);
     // 式の評価結果としてスタックに一つの値が残っているはずなので
     // スタックが溢れないようにポップしておく
     printf("\tpop rax\n");

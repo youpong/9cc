@@ -17,12 +17,8 @@ program: assign program'
 program': ε | assign program'
 */
 void program() {
-  int i = 0;
-  while (((Token *)(tokens->data[pos]))->ty != TK_EOF) {
-    code[i] = assign();
-    i++;
-  }
-  code[i] = NULL;
+  while (((Token *)(tokens->data[pos]))->ty != TK_EOF)
+    vec_push(code, assign());
 }
 
 /*
@@ -123,10 +119,11 @@ Node *term() {
 #ifdef UNIT_TEST
 Vector *tokens;
 int pos = 0;
-Node *code[100];
+Vector *code;
 
 int main() {
   tokens = new_vector();
+  code = new_vector();
   char buf[100];
 
   strcpy(buf, "a=b=8;");
@@ -134,11 +131,13 @@ int main() {
   tokenize(buf);
   parse();
 
-  printf("%d\n", code[0]->ty);
-  printf("%c\n", code[0]->lhs->name);
-  printf("%d\n", code[0]->rhs->ty);
-  printf("%c\n", code[0]->rhs->lhs->name);
-  printf("%d\n", code[0]->rhs->rhs->val);
+  Node *node = (Node *)code->data[0];
+  // TODO: test
+  printf("%d\n", node->ty);
+  printf("%c\n", node->lhs->name);
+  printf("%d\n", node->rhs->ty);
+  printf("%c\n", node->rhs->lhs->name);
+  printf("%d\n", node->rhs->rhs->val);
 
   return 0;
 }
