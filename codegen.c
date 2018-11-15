@@ -77,7 +77,7 @@ void gen(Node *node) {
 
 #ifdef UNIT_TEST
 int pos;
-Token tokens[100];
+Vector *tokens;
 
 void test10() { gen(new_node_num(1047)); }
 
@@ -107,6 +107,7 @@ void test100() {
 }
 
 int main() {
+  tokens = new_vector();
   test100();
 
   return 0;

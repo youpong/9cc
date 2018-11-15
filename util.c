@@ -6,7 +6,7 @@
 
 Vector *new_vector() {
   Vector *vec = malloc(sizeof(Vector));
-  vec->capacity = 16;  
+  vec->capacity = 16;
   vec->data = malloc(sizeof(void *) * vec->capacity);
   vec->len = 0;
   return vec;

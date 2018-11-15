@@ -5,11 +5,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-Token tokens[100];
+Vector *tokens;
 int pos = 0;
 Node *code[100];
 
 int main(int argc, char **argv) {
+  tokens = new_vector();
+
   if (argc != 2) {
     fprintf(stderr, "引数の数が正しくありません\n");
     return 1;

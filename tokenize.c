@@ -5,7 +5,8 @@
 #include <string.h>
 
 void tokenize(char *p) {
-  int i = 0;
+  Token *token;
+
   while (*p) {
 
     // ignore space
@@ -13,6 +14,8 @@ void tokenize(char *p) {
       p++;
       continue;
     }
+
+    token = malloc(sizeof(Token));
 
     // 演算子, ";"
     switch (*p) {
@@ -23,56 +26,58 @@ void tokenize(char *p) {
     case '(':
     case ')':
     case ';':
-      tokens[i].ty = *p;
-      tokens[i].input = p;
-      i++;
+      token->ty = *p;
+      token->input = p;
+      vec_push(tokens, token);
       p++;
       continue;
     }
 
     if (*p == '=') {
       if (*(p + 1) == '=') {
-        tokens[i].ty = TK_EQ;
-        tokens[i].input = p;
-        i++;
+        token->ty = TK_EQ;
+        token->input = p;
+        vec_push(tokens, token);
         p += 2;
       } else {
-        tokens[i].ty = *p;
-        tokens[i].input = p;
-        i++;
+        token->ty = *p;
+        token->input = p;
+        vec_push(tokens, token);
         p++;
       }
       continue;
     }
 
     if (*p == '!' && *(p + 1) == '=') {
-      tokens[i].ty = TK_NE;
-      tokens[i].input = p;
-      i++;
+      token->ty = TK_NE;
+      token->input = p;
+      vec_push(tokens, token);
       p += 2;
       continue;
     }
 
     // NUMBER
     if (isdigit(*p)) {
-      tokens[i].ty = TK_NUM;
-      tokens[i].input = p;
-      tokens[i].val = strtol(p, &p, 10);
-      i++;
+      token->ty = TK_NUM;
+      token->input = p;
+      token->val = strtol(p, &p, 10);
+      vec_push(tokens, token);
       continue;
     }
 
     // 識別子
     if ('a' <= *p && 'z' >= *p) {
-      tokens[i].ty = TK_IDENT;
-      tokens[i].input = p;
-      i++;
+      token->ty = TK_IDENT;
+      token->input = p;
+      vec_push(tokens, token);
       p++;
       continue;
     }
 
     error("トークナイズできません: %s\n", p);
   }
-  tokens[i].ty = TK_EOF;
-  tokens[i].input = p;
+  token = malloc(sizeof(Token));
+  token->ty = TK_EOF;
+  token->input = p;
+  vec_push(tokens, token);
 }

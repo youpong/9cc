@@ -18,7 +18,7 @@ program': ε | assign program'
 */
 void program() {
   int i = 0;
-  while (tokens[pos].ty != TK_EOF) {
+  while (((Token *)(tokens->data[pos]))->ty != TK_EOF) {
     code[i] = assign();
     i++;
   }
@@ -34,26 +34,26 @@ assign':     "!=" expr assign'
 Node *assign() {
   Node *lhs = expr();
 
-  if (tokens[pos].ty == '=') {
+  if (((Token *)tokens->data[pos])->ty == '=') {
     pos++;
     return new_node('=', lhs, assign());
   }
 
-  if (tokens[pos].ty == TK_EQ) {
+  if (((Token *)tokens->data[pos])->ty == TK_EQ) {
     pos++;
     return new_node(ND_EQ, lhs, assign());
   }
-  if (tokens[pos].ty == TK_NE) {
+  if (((Token *)tokens->data[pos])->ty == TK_NE) {
     pos++;
     return new_node(ND_NE, lhs, assign());
   }
 
-  if (tokens[pos].ty == ';') {
+  if (((Token *)tokens->data[pos])->ty == ';') {
     pos++;
     return lhs;
   }
 
-  error("unexpected token: %s\n", tokens[pos].input);
+  error("unexpected token: %s\n", ((Token *)tokens->data[pos])->input);
 }
 
 /*
@@ -64,12 +64,12 @@ expr: mul ( "+" expr | "-" expr | ε )
 Node *expr() {
   Node *lhs = mul();
 
-  if (tokens[pos].ty == '+') {
+  if (((Token *)tokens->data[pos])->ty == '+') {
     pos++;
     return new_node('+', lhs, expr());
   }
 
-  if (tokens[pos].ty == '-') {
+  if (((Token *)tokens->data[pos])->ty == '-') {
     pos++;
     return new_node('-', lhs, expr());
   }
@@ -85,12 +85,12 @@ mul: term ( "*" mul | "/" mul | ε )
 Node *mul() {
   Node *lhs = term();
 
-  if (tokens[pos].ty == '*') {
+  if (((Token *)tokens->data[pos])->ty == '*') {
     pos++;
     return new_node('*', lhs, mul());
   }
 
-  if (tokens[pos].ty == '/') {
+  if (((Token *)tokens->data[pos])->ty == '/') {
     pos++;
     return new_node('/', lhs, mul());
   }
@@ -102,29 +102,31 @@ Node *mul() {
 term: NUMBER | IDENT | "(" expr ")"
  */
 Node *term() {
-  if (tokens[pos].ty == TK_NUM)
-    return new_node_num(tokens[pos++].val);
-  if (tokens[pos].ty == TK_IDENT) {
-    return new_node_id(tokens[pos++].input[0]);
+  if (((Token *)tokens->data[pos])->ty == TK_NUM)
+    return new_node_num(((Token *)tokens->data[pos++])->val);
+  if (((Token *)tokens->data[pos])->ty == TK_IDENT) {
+    return new_node_id(((Token *)tokens->data[pos++])->input[0]);
   }
-  if (tokens[pos].ty == '(') {
+  if (((Token *)tokens->data[pos])->ty == '(') {
     pos++;
     Node *node = expr();
-    if (tokens[pos].ty != ')')
-      error("対応する閉じカッコがありません: %s\n", tokens[pos].input);
+    if (((Token *)tokens->data[pos])->ty != ')')
+      error("対応する閉じカッコがありません: %s\n",
+            ((Token *)tokens->data[pos])->input);
     pos++;
     return node;
   }
 
-  error("unexpected token: %s\n", tokens[pos].input);
+  error("unexpected token: %s\n", ((Token *)tokens->data[pos])->input);
 }
 
 #ifdef UNIT_TEST
-Token tokens[100];
+Vector *tokens;
 int pos = 0;
 Node *code[100];
 
 int main() {
+  tokens = new_vector();
   char buf[100];
 
   strcpy(buf, "a=b=8;");
@@ -137,15 +139,7 @@ int main() {
   printf("%d\n", code[0]->rhs->ty);
   printf("%c\n", code[0]->rhs->lhs->name);
   printf("%d\n", code[0]->rhs->rhs->val);
-  /*
-  printf("%d\n", code[0]->lhs->lhs->ty);
-  printf("%c\n", code[0]->lhs->lhs->name);
-  printf("%d\n", code[0]->lhs->rhs->ty);
-  printf("%c\n", code[0]->lhs->rhs->name);
 
-  printf("%d\n", code[0]->rhs->ty);
-  printf("%d\n", code[0]->rhs->val);
-  */
   return 0;
 }
 #endif

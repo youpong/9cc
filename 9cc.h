@@ -13,7 +13,7 @@ typedef struct {
   char *input; // token string(for error message)
 } Token;
 
-extern Token tokens[];
+extern Vector *tokens;
 extern int pos;
 void tokenize(char *);
 
