@@ -2,6 +2,7 @@
 #include "util.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 Node *new_node(int ty, Node *lhs, Node *rhs) {
   Node *node = malloc(sizeof(Node));
@@ -18,10 +19,11 @@ Node *new_node_num(int val) {
   return node;
 }
 
-Node *new_node_id(char name) {
+Node *new_node_id(char *name) {
   Node *node = malloc(sizeof(Node));
   node->ty = ND_IDENT;
-  node->name = name;
+  node->name = malloc(sizeof(char) * strlen(name));
+  strcpy(node->name, name);
   return node;
 }
 

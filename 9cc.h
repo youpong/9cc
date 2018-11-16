@@ -12,6 +12,7 @@ enum {
 typedef struct {
   int ty;      // type of token
   int val;     // ty が TK_NUM の場合のその値
+  char *name;  // ty が TK_IDENT の場合その名前
   char *input; // token string(for error message)
 } Token;
 
@@ -22,9 +23,9 @@ void tokenize(char *);
 // Abstract Syntax Node
 enum {
   ND_NUM = 256, // 整数
+  ND_IDENT,     // 識別子
   ND_EQ,        // '=='
   ND_NE,        // '!='
-  ND_IDENT,     // 識別子
 };
 
 typedef struct Node {
@@ -32,14 +33,14 @@ typedef struct Node {
   struct Node *lhs;
   struct Node *rhs;
   int val;
-  char name;
+  char *name;
 } Node;
 
 extern Vector *code;
 
 Node *new_node(int, Node *, Node *);
 Node *new_node_num(int);
-Node *new_node_id(char name);
+Node *new_node_id(char *name);
 
 // Parse
 void parse();

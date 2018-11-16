@@ -4,9 +4,10 @@
 #include <stdlib.h>
 
 void gen_lval(Node *node) {
+  // TODO
   if (node->ty == ND_IDENT) {
     printf("\tmov rax, rbp\n");
-    printf("\tsub rax, %d\n", ('z' - node->name + 1) * 8);
+    printf("\tsub rax, %d\n", ('z' - node->name[0] + 1) * 8);
     printf("\tpush rax\n");
     return;
   }

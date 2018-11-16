@@ -1,6 +1,7 @@
 #include "9cc.h"
 #include "util.h"
 #include <ctype.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -33,6 +34,7 @@ void tokenize(char *p) {
       continue;
     }
 
+    // "=", "=="
     if (*p == '=') {
       if (*(p + 1) == '=') {
         token->ty = TK_EQ;
@@ -48,6 +50,7 @@ void tokenize(char *p) {
       continue;
     }
 
+    // "!="
     if (*p == '!' && *(p + 1) == '=') {
       token->ty = TK_NE;
       token->input = p;
@@ -66,11 +69,21 @@ void tokenize(char *p) {
     }
 
     // 識別子
-    if ('a' <= *p && 'z' >= *p) {
+    if (isalpha(*p)) {
+
+      int len = 1;
+      for (char *q = p + 1; isalnum(*q); q++)
+        len++;
+      token->name = malloc(sizeof(char) * (len + 1));
+      strncpy(token->name, p, len + 1);
+      token->name[len] = '\0';
+
       token->ty = TK_IDENT;
       token->input = p;
       vec_push(tokens, token);
       p++;
+      // fprintf(stderr, "token->name: %s,token->input: %s\n", token->name,
+      // token->input);
       continue;
     }
 

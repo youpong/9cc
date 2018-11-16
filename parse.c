@@ -101,7 +101,7 @@ Node *term() {
   if (((Token *)tokens->data[pos])->ty == TK_NUM)
     return new_node_num(((Token *)tokens->data[pos++])->val);
   if (((Token *)tokens->data[pos])->ty == TK_IDENT) {
-    return new_node_id(((Token *)tokens->data[pos++])->input[0]);
+    return new_node_id(((Token *)tokens->data[pos++])->name);
   }
   if (((Token *)tokens->data[pos])->ty == '(') {
     pos++;
@@ -134,9 +134,9 @@ int main() {
   Node *node = (Node *)code->data[0];
   // TODO: test
   printf("%d\n", node->ty);
-  printf("%c\n", node->lhs->name);
+  printf("%s\n", node->lhs->name);
   printf("%d\n", node->rhs->ty);
-  printf("%c\n", node->rhs->lhs->name);
+  printf("%s\n", node->rhs->lhs->name);
   printf("%d\n", node->rhs->rhs->val);
 
   return 0;
