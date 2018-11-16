@@ -1,5 +1,6 @@
 #include "9cc.h"
 #include "util.h"
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -7,7 +8,8 @@ void gen_lval(Node *node) {
   // TODO
   if (node->ty == ND_IDENT) {
     printf("\tmov rax, rbp\n");
-    printf("\tsub rax, %d\n", ('z' - node->name[0] + 1) * 8);
+    printf("\tsub rax, %ld\n",
+           ((intptr_t)map_get(var_tab, node->name) + 1) * 8);
     printf("\tpush rax\n");
     return;
   }
@@ -79,6 +81,8 @@ void gen(Node *node) {
 #ifdef UNIT_TEST
 int pos;
 Vector *tokens;
+Map *var_tab;
+int var_cnt;
 
 void test10() { gen(new_node_num(1047)); }
 
@@ -109,6 +113,7 @@ void test100() {
 
 int main() {
   tokens = new_vector();
+  var_tab = new_map();
   test100();
 
   return 0;

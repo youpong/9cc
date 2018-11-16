@@ -47,3 +47,7 @@ void parse();
 
 // Generate
 void gen(Node *);
+
+// Variables table
+extern Map *var_tab;
+extern int var_cnt;

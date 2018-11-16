@@ -101,6 +101,8 @@ Node *term() {
   if (((Token *)tokens->data[pos])->ty == TK_NUM)
     return new_node_num(((Token *)tokens->data[pos++])->val);
   if (((Token *)tokens->data[pos])->ty == TK_IDENT) {
+    if (map_get(var_tab, ((Token *)tokens->data[pos])->name) == NULL)
+      map_put(var_tab, ((Token *)tokens->data[pos])->name, (void *)var_cnt++);
     return new_node_id(((Token *)tokens->data[pos++])->name);
   }
   if (((Token *)tokens->data[pos])->ty == '(') {
@@ -120,10 +122,13 @@ Node *term() {
 Vector *tokens;
 int pos = 0;
 Vector *code;
+Map *var_tab;
+int var_cnt;
 
 int main() {
   tokens = new_vector();
   code = new_vector();
+  var_tab = new_map();
   char buf[100];
 
   strcpy(buf, "a=b=8;");

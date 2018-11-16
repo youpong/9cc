@@ -8,10 +8,13 @@
 Vector *tokens;
 int pos = 0;
 Vector *code;
+Map *var_tab;
+int var_cnt = 0;
 
 int main(int argc, char **argv) {
   tokens = new_vector();
   code = new_vector();
+  var_tab = new_map();
 
   if (argc != 2) {
     fprintf(stderr, "引数の数が正しくありません\n");
@@ -34,7 +37,7 @@ int main(int argc, char **argv) {
   // 変数26個分の領域を確保する
   printf("\tpush rbp\n");
   printf("\tmov rbp, rsp\n");
-  printf("\tsub rsp, 208\n");
+  printf("\tsub rsp, %d\n", var_cnt * 8);
 
   for (int i = 0; i < code->len; i++) {
     gen((Node *)code->data[i]);
