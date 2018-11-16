@@ -81,9 +81,7 @@ void tokenize(char *p) {
       token->ty = TK_IDENT;
       token->input = p;
       vec_push(tokens, token);
-      p++;
-      // fprintf(stderr, "token->name: %s,token->input: %s\n", token->name,
-      // token->input);
+      p += len;
       continue;
     }
 
