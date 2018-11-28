@@ -1,5 +1,11 @@
 # 終端記号を大文字.非終端記号を小文字で表す。
 # 変数と四則演算 ver.
+%{
+#include "9cc.h"
+%}
+
+%%
+
 program: assign program'
 program': ε | assign program'
 
@@ -14,6 +20,7 @@ expr: mul "-" expr
 mul: term
 mul: term "*" mul
 mul: term "/" mul
-term: NUMBER | IDENT
+term: TK_NUM | TK_IDENT
 term: "(" expr ")"
 
+%%
