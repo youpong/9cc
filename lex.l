@@ -1,6 +1,9 @@
 %{
 #include "9cc.h"
+/* #include "y.tab.h" */
 %}
+
+%option nounput noinput
 
 %%
 
@@ -26,3 +29,9 @@
 } 
 
 %%
+#ifdef DEBUG
+int main() {
+    yylex();
+    return EXIT_SUCCESS;
+}
+#endif
