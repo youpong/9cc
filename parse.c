@@ -101,8 +101,11 @@ Node *term() {
   if (((Token *)tokens->data[pos])->ty == TK_NUM)
     return new_node_num(((Token *)tokens->data[pos++])->val);
   if (((Token *)tokens->data[pos])->ty == TK_IDENT) {
-    if (map_get(var_tab, ((Token *)tokens->data[pos])->name) == NULL)
-      map_put(var_tab, ((Token *)tokens->data[pos])->name, (void *)var_cnt++);
+    if (map_get(var_tab, ((Token *)tokens->data[pos])->name) == NULL) {
+      int *num = (int *)malloc(sizeof(int));
+      *num = var_cnt++;
+      map_put(var_tab, ((Token *)tokens->data[pos])->name, (void *)num);
+    }
     return new_node_id(((Token *)tokens->data[pos++])->name);
   }
   if (((Token *)tokens->data[pos])->ty == '(') {

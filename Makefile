@@ -1,3 +1,4 @@
+CC = clang
 CFLAGS=-Wall -std=c11 -g
 
 SRCS=codegen.c main.c node.c parse.c tokenize.c util.c util_test.c

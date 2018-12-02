@@ -5,11 +5,11 @@
 #include <stdlib.h>
 
 void gen_lval(Node *node) {
-  // TODO
   if (node->ty == ND_IDENT) {
+    int *num = (int *)map_get(var_tab, node->name);
     printf("\tmov rax, rbp\n");
-    printf("\tsub rax, %ld\n",
-           ((intptr_t)map_get(var_tab, node->name) + 1) * 8);
+    printf("\tsub rax, %d\n",
+           (*num + 1) * 8);
     printf("\tpush rax\n");
     return;
   }
