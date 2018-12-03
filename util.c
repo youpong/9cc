@@ -43,6 +43,12 @@ void *map_get(Map *map, char *key) {
   return NULL;
 }
 
+int *intdup(int n) {
+  int *num = malloc(sizeof(int));
+  *num = n;
+  return num;
+}
+
 _Noreturn void error(char *fmt, ...) {
   va_list ap;
   va_start(ap, fmt);
