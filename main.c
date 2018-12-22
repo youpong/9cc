@@ -1,10 +1,10 @@
 #include "9cc.h"
 #include "util.h"
 #include <ctype.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
 
 Vector *tokens;
 int pos = 0;
@@ -18,36 +18,33 @@ int main(int argc, char **argv) {
   code = new_vector();
   var_tab = new_map();
 
-
   if (argc >= 2 && strcmp(argv[1], "-test") == 0) {
     run_utiltest();
     return 0;
   }
-  if (argc >= 2 && strcmp(argv[1], "-ast") == 0 ) {
+  if (argc >= 2 && strcmp(argv[1], "-ast") == 0) {
     ast_flg = true;
-    argc --;
+    argc--;
     argv++;
   }
 
   if (argc != 2) {
     fprintf(stderr, "引数の数が正しくありません\n");
-    fprintf(stderr, "%s: [-ast] program", argv[0]);    
+    fprintf(stderr, "%s: [-ast] program", argv[0]);
     fprintf(stderr, "%s: [-test]", argv[0]);
     return EXIT_FAILURE;
   }
-  
 
   tokenize(argv[1]);
   parse();
 
-  if(ast_flg == true) {
+  if (ast_flg == true) {
     printf("graph graphname {\n");
-    for (int i = 0; i < code->len; i++) 
+    for (int i = 0; i < code->len; i++)
       p_tree((Node *)code->data[i]);
     printf("}\n");
     return EXIT_SUCCESS;
   }
-
 
   printf(".intel_syntax noprefix\n");
   printf(".global main\n");

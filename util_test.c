@@ -33,7 +33,7 @@ static void test_vector() {
 
 static void test_map() {
   Map *map = new_map();
-  
+
   expect_ptr(__LINE__, NULL, map_get(map, "foo"));
 
   map_put(map, "foo", intdup(2));
