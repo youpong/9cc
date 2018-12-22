@@ -5,6 +5,12 @@ SRCS=codegen.c main.c node.c parse.c tokenize.c util.c util_test.c debug.c
 OBJS=$(SRCS:.c=.o)
 
 all: 9cc
+clean:
+	rm -f 9cc codegen_test node_test parse_test a.out\
+	      $(OBJS) tmp*
+format:
+	clang-format -i $(SRCS) *.h
+
 9cc: $(OBJS)
 	$(CC) -o $@ $^
 
@@ -26,9 +32,6 @@ parse_test: parse_test.o node.o tokenize.o util.o
 parse_test.o: parse.c 9cc.h
 	$(CC) $(CFLAGS) -c -D UNIT_TEST -o $@ $<
 
-clean:
-	rm -f 9cc codegen_test node_test parse_test \
-	      a.out *.o *~ tmp*
 
 
 
