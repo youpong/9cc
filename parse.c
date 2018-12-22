@@ -3,21 +3,29 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 void program();
 Node *assign();
 Node *expr();
 Node *mul();
 Node *term();
+static void match(int);
 
+/*
+ *
+ */
 void parse() { program(); }
 
+Token *lookahead;
 /*
 program: assign program'
 program': ε | assign program'
 */
 void program() {
-  while (((Token *)(tokens->data[pos]))->ty != TK_EOF)
+  lookahead = (Token *)tokens->data[0];
+  
+  while (lookahead->ty != TK_EOF)
     vec_push(code, assign());
 }
 
@@ -30,26 +38,27 @@ assign':     "!=" expr assign'
 Node *assign() {
   Node *lhs = expr();
 
-  if (((Token *)tokens->data[pos])->ty == '=') {
-    pos++;
+  if (lookahead->ty == '=') {
+    match('=');
     return new_node('=', lhs, assign());
   }
 
-  if (((Token *)tokens->data[pos])->ty == TK_EQ) {
-    pos++;
+  if (lookahead->ty == TK_EQ) {
+    match(TK_EQ);
     return new_node(ND_EQ, lhs, assign());
   }
-  if (((Token *)tokens->data[pos])->ty == TK_NE) {
-    pos++;
+  
+  if (lookahead->ty == TK_NE) {
+    match(TK_NE);
     return new_node(ND_NE, lhs, assign());
   }
 
-  if (((Token *)tokens->data[pos])->ty == ';') {
-    pos++;
+  if (lookahead->ty == ';') {
+    match(';');
     return lhs;
   }
 
-  error("unexpected token: %s\n", ((Token *)tokens->data[pos])->input);
+  error("unexpected token: %s", lookahead->input);
 }
 
 /*
@@ -57,16 +66,17 @@ expr: mul | mul "+" expr | mul "-" expr
 --
 expr: mul ( "+" expr | "-" expr | ε )
 */
+
 Node *expr() {
   Node *lhs = mul();
 
-  if (((Token *)tokens->data[pos])->ty == '+') {
-    pos++;
+  if (lookahead->ty == '+') {
+    match('+');
     return new_node('+', lhs, expr());
   }
-
-  if (((Token *)tokens->data[pos])->ty == '-') {
-    pos++;
+  
+  if (lookahead->ty == '-') {
+    match('-');
     return new_node('-', lhs, expr());
   }
 
@@ -81,13 +91,13 @@ mul: term ( "*" mul | "/" mul | ε )
 Node *mul() {
   Node *lhs = term();
 
-  if (((Token *)tokens->data[pos])->ty == '*') {
-    pos++;
+  if (lookahead->ty == '*') {
+    match('*');
     return new_node('*', lhs, mul());
   }
 
-  if (((Token *)tokens->data[pos])->ty == '/') {
-    pos++;
+  if (lookahead->ty == '/') {
+    match('/');
     return new_node('/', lhs, mul());
   }
 
@@ -98,27 +108,36 @@ Node *mul() {
 term: NUMBER | IDENT | "(" expr ")"
  */
 Node *term() {
-  if (((Token *)tokens->data[pos])->ty == TK_NUM)
-    return new_node_num(((Token *)tokens->data[pos++])->val);
-  if (((Token *)tokens->data[pos])->ty == TK_IDENT) {
-    if (map_get(var_tab, ((Token *)tokens->data[pos])->name) == NULL) {
-      int *num = (int *)malloc(sizeof(int));
-      *num = var_cnt++;
-      map_put(var_tab, ((Token *)tokens->data[pos])->name, (void *)num);
-    }
-    return new_node_id(((Token *)tokens->data[pos++])->name);
-  }
-  if (((Token *)tokens->data[pos])->ty == '(') {
-    pos++;
-    Node *node = expr();
-    if (((Token *)tokens->data[pos])->ty != ')')
-      error("対応する閉じカッコがありません: %s\n",
-            ((Token *)tokens->data[pos])->input);
-    pos++;
+  Node *node;
+  if (lookahead->ty == TK_NUM) {
+    node = new_node_num(lookahead->val);
+    match(TK_NUM);
     return node;
   }
+  if (lookahead->ty == TK_IDENT) {
+    if (map_get(var_tab, lookahead->name) == NULL) {
+      int *num = (int *)malloc(sizeof(int));
+      *num = var_cnt++;
+      map_put(var_tab, lookahead->name, (void *)num);
+    }
+    node = new_node_id(lookahead->name);
+    match(TK_IDENT);
+    return node;
+  }
+  if (lookahead->ty == '(') {
+    match('(');
+    node = expr();
+    match(')');
+    return node;
+  }
+  error("unexpected token: %s", lookahead->input);
+}
 
-  error("unexpected token: %s\n", ((Token *)tokens->data[pos])->input);
+static void match(int ty) {
+  if ( lookahead->ty != ty ) 
+    error("unexpected %c : expected %c", lookahead->ty, ty);
+  
+  lookahead = (Token *)tokens->data[++pos];
 }
 
 #ifdef UNIT_TEST
@@ -150,3 +169,4 @@ int main() {
   return 0;
 }
 #endif
+
