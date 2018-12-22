@@ -17,7 +17,6 @@ try() {
 
     if [ "$actual" != "$expected" ]; then
 	echo "$msg: $expected expected, but got $actual"
-	exit 1
     fi
 }
 
