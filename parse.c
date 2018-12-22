@@ -1,9 +1,9 @@
 #include "9cc.h"
 #include "util.h"
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
 
 void program();
 Node *assign();
@@ -24,7 +24,7 @@ program': ε | assign program'
 */
 void program() {
   lookahead = (Token *)tokens->data[0];
-  
+
   while (lookahead->ty != TK_EOF)
     vec_push(code, assign());
 }
@@ -47,7 +47,7 @@ Node *assign() {
     match(TK_EQ);
     return new_node(ND_EQ, lhs, assign());
   }
-  
+
   if (lookahead->ty == TK_NE) {
     match(TK_NE);
     return new_node(ND_NE, lhs, assign());
@@ -62,46 +62,49 @@ Node *assign() {
 }
 
 /*
-expr: mul | mul "+" expr | mul "-" expr
---
-expr: mul ( "+" expr | "-" expr | ε )
-*/
-
+ * expr:  expr "+" mul | expr "-" mul | mul
+ * --
+ * expr:  mul rest2
+ * rest2: "+" mul rest2 | "-" mul rest2 | ε
+ * --
+ * expr:  mul ("+" mul | "-" mul )*
+ */
 Node *expr() {
   Node *lhs = mul();
-
-  if (lookahead->ty == '+') {
-    match('+');
-    return new_node('+', lhs, expr());
+  while (true) {
+    if (lookahead->ty == '+') {
+      match('+');
+      lhs = new_node('+', lhs, mul());
+    } else if (lookahead->ty == '-') {
+      match('-');
+      lhs = new_node('-', lhs, mul());
+    } else
+      break;
   }
-  
-  if (lookahead->ty == '-') {
-    match('-');
-    return new_node('-', lhs, expr());
-  }
-
-  return lhs; // epsilon
+  return lhs;
 }
 
 /*
-mul: term | term "*" mul | term "/" mul
---
-mul: term ( "*" mul | "/" mul | ε )
+ * mul:   mul "*" term | mul "/" term | term
+ * --
+ * mul:   term rest1
+ * rest1: "*" term rest1 | "/" term rest1 | ε
+ * --
+ * mul: term ("*" term | "/" term)*
  */
 Node *mul() {
   Node *lhs = term();
-
-  if (lookahead->ty == '*') {
-    match('*');
-    return new_node('*', lhs, mul());
+  while (true) {
+    if (lookahead->ty == '*') {
+      match('*');
+      lhs = new_node('*', lhs, term());
+    } else if (lookahead->ty == '/') {
+      match('/');
+      lhs = new_node('/', lhs, term());
+    } else
+      break;
   }
-
-  if (lookahead->ty == '/') {
-    match('/');
-    return new_node('/', lhs, mul());
-  }
-
-  return lhs; // epsilon
+  return lhs;
 }
 
 /*
@@ -134,9 +137,9 @@ Node *term() {
 }
 
 static void match(int ty) {
-  if ( lookahead->ty != ty ) 
+  if (lookahead->ty != ty)
     error("unexpected %c : expected %c", lookahead->ty, ty);
-  
+
   lookahead = (Token *)tokens->data[++pos];
 }
 
@@ -169,4 +172,3 @@ int main() {
   return 0;
 }
 #endif
-
