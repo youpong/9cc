@@ -31,8 +31,8 @@ int main(int argc, char **argv) {
 
   if (argc != 2) {
     fprintf(stderr, "引数の数が正しくありません\n");
-    fprintf(stderr, "%s: [-ast] program");    
-    fprintf(stderr, "%s: [-test]");
+    fprintf(stderr, "%s: [-ast] program", argv[0]);    
+    fprintf(stderr, "%s: [-test]", argv[0]);
     return EXIT_FAILURE;
   }
   
