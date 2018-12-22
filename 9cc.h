@@ -51,3 +51,6 @@ void gen(Node *);
 // Variables table
 extern Map *var_tab;
 extern int var_cnt;
+
+// debug.c
+void p_tree(Node *);
