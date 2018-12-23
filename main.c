@@ -35,6 +35,7 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
   }
 
+  init();
   tokenize(argv[1]);
   parse();
 

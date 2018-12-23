@@ -6,6 +6,7 @@ enum {
   TK_IDENT,     // 識別子
   TK_EQ,        // '=='
   TK_NE,        // '!='
+  TK_IF,        // "if"
   TK_EOF,       // end of file
 };
 
@@ -56,8 +57,12 @@ typedef struct {
   int addr;
 } SYM_REC;
 
-void insert(char *name, int ty);
-SYM_REC *lookup(char *name); 
+void insert(char *, int);
+SYM_REC *lookup(char *); 
+
+// init.c
+void init();
 
 // debug.c
 void p_tree(Node *);
+

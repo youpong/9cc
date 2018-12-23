@@ -2,7 +2,7 @@ CC = clang
 CFLAGS=-Wall -std=c11 -g
 
 SRCS=codegen.c main.c node.c parse.c tokenize.c util.c symbol.c \
-     util_test.c debug.c 
+     init.c util_test.c debug.c 
 OBJS=$(SRCS:.c=.o)
 
 all: 9cc
