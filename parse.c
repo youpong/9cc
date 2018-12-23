@@ -5,73 +5,98 @@
 #include <stdlib.h>
 #include <string.h>
 
-void program();
-Node *assign();
-Node *expr();
-Node *mul();
-Node *term();
+static void program();
+static Node *expr();
+static Node *assign();
+static Node *logical();
+static Node *add();
+static Node *mul();
+static Node *term();
 static void match(int);
+
+Token *lookahead;
 
 /*
  *
  */
 void parse() { program(); }
 
-Token *lookahead;
 /*
-program: assign program'
-program': ε | assign program'
+program: program expr | ε
 */
-void program() {
+static void program() {
   lookahead = (Token *)tokens->data[0];
 
-  while (lookahead->ty != TK_EOF)
-    vec_push(code, assign());
+  while (lookahead->ty != TK_EOF) {
+    vec_push(code, expr());
+    match(';');
+  }
 }
 
 /*
-assign: expr assign' ";"
-assign': ε | "="  expr assign'
-assign':     "==" expr assign'
-assign':     "!=" expr assign'
-*/
-Node *assign() {
-  Node *lhs = expr();
+ */
+static Node *expr() {
+  return assign();
+}  
 
+/*
+production rules
+
+(1) original
+assign: logical | logical "=" assign 
+*/
+static Node *assign() {
+  Node *lhs = logical();
+  
   if (lookahead->ty == '=') {
     match('=');
     return new_node('=', lhs, assign());
   }
 
-  if (lookahead->ty == TK_EQ) {
-    match(TK_EQ);
-    return new_node(ND_EQ, lhs, assign());
-  }
-
-  if (lookahead->ty == TK_NE) {
-    match(TK_NE);
-    return new_node(ND_NE, lhs, assign());
-  }
-
-  if (lookahead->ty == ';') {
-    match(';');
-    return lhs;
-  }
-
-  error("unexpected token: %s", lookahead->input);
+  return lhs;
 }
 
 /*
- * expr:  expr "+" mul | expr "-" mul | mul
- * --
- * expr:  mul rest2
+(1) original
+logical: logical "==" add | logical "!=" add
+(3) 
+logical: add ( "==" add | "!=" add)*
+*/
+static Node *logical() {
+  Node *lhs = add();
+  while(true)
+    if(lookahead->ty == TK_EQ) {
+      match(TK_EQ);
+      lhs = new_node(TK_EQ, lhs, add());
+    } else if(lookahead->ty == TK_NE) {
+      match(TK_NE);
+      lhs = new_node(TK_NE, lhs, add());
+    } else
+      break;
+  
+  return lhs;
+}
+
+/*
+ * Production Rules
+ *
+ * (1) original
+ * add:  add "+" mul | add "-" mul | mul 
+ *
+ * (2) elimination of left recursion
+ * add:  mul rest2
  * rest2: "+" mul rest2 | "-" mul rest2 | ε
- * --
- * expr:  mul ("+" mul | "-" mul )*
+ *
+ * (3) elimination of non-terminal rest2
+ * add:  mul ("+" mul | "-" mul )*
+ * "*" はカッコで囲まれた生成規則を0回以上繰り返す
+ *
+ * 左結合を実現するため、
+ * トークンを読むにつれノードを左に伸ばす
  */
-Node *expr() {
+static Node *add() {
   Node *lhs = mul();
-  while (true) {
+  while (true) 
     if (lookahead->ty == '+') {
       match('+');
       lhs = new_node('+', lhs, mul());
@@ -80,21 +105,30 @@ Node *expr() {
       lhs = new_node('-', lhs, mul());
     } else
       break;
-  }
+
   return lhs;
 }
 
 /*
+ * Production Rule
+ *
+ * (1) original
  * mul:   mul "*" term | mul "/" term | term
- * --
+ *
+ * (2) elemination of left recursion
  * mul:   term rest1
  * rest1: "*" term rest1 | "/" term rest1 | ε
- * --
+ *
+ * (3) elimination of non-terminal rest1
  * mul: term ("*" term | "/" term)*
+ * "*" はカッコで囲まれた生成規則を0回以上繰り返す
+ *
+ * 左結合を実現するため、
+ * トークンを読むにつれノードを左に伸ばす
  */
-Node *mul() {
+static Node *mul() {
   Node *lhs = term();
-  while (true) {
+  while (true) 
     if (lookahead->ty == '*') {
       match('*');
       lhs = new_node('*', lhs, term());
@@ -103,37 +137,34 @@ Node *mul() {
       lhs = new_node('/', lhs, term());
     } else
       break;
-  }
+
   return lhs;
 }
 
 /*
-term: NUMBER | IDENT | "(" expr ")"
+ * production rule
+ * term: NUMBER | IDENT | "(" expr ")"
  */
-Node *term() {
+static Node *term() {
   Node *node;
-  if (lookahead->ty == TK_NUM) {
+  switch (lookahead->ty) {
+  case TK_NUM:
     node = new_node_num(lookahead->val);
     match(TK_NUM);
-    return node;
-  }
-  if (lookahead->ty == TK_IDENT) {
-    if (map_get(var_tab, lookahead->name) == NULL) {
-      int *num = (int *)malloc(sizeof(int));
-      *num = var_cnt++;
-      map_put(var_tab, lookahead->name, (void *)num);
-    }
+    break;
+  case TK_IDENT:
     node = new_node_id(lookahead->name);
     match(TK_IDENT);
-    return node;
-  }
-  if (lookahead->ty == '(') {
+    break;
+  case '(':
     match('(');
     node = expr();
     match(')');
-    return node;
+    break;
+  default:
+    error("unexpected token: %s", lookahead->input);
   }
-  error("unexpected token: %s", lookahead->input);
+  return node;
 }
 
 static void match(int ty) {
