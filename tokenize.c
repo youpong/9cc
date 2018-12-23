@@ -78,9 +78,16 @@ void tokenize(char *p) {
       strncpy(token->name, p, len + 1);
       token->name[len] = '\0';
 
-      token->ty = TK_IDENT;
-      token->input = p;
+      SYM_REC *rec;
+      if((rec = lookup(token->name)) == NULL) {
+	insert(token->name, TK_IDENT);
+	token->ty = TK_IDENT;
+	token->input = p;
+      } else {
+	token->ty = rec->token;
+      }
       vec_push(tokens, token);
+      
       p += len;
       continue;
     }

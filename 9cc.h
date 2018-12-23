@@ -51,6 +51,13 @@ void gen(Node *);
 // Variables table
 extern Map *var_tab;
 extern int var_cnt;
+typedef struct {
+  int token;
+  int addr;
+} SYM_REC;
+
+void insert(char *name, int ty);
+SYM_REC *lookup(char *name); 
 
 // debug.c
 void p_tree(Node *);

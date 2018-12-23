@@ -6,9 +6,9 @@
 
 void gen_lval(Node *node) {
   if (node->ty == ND_IDENT) {
-    int *num = (int *)map_get(var_tab, node->name);
+    SYM_REC *rec = lookup(node->name);
     printf("\tmov rax, rbp\n");
-    printf("\tsub rax, %d\n", (*num + 1) * 8);
+    printf("\tsub rax, %d\n", (rec->addr + 1) * 8);
     printf("\tpush rax\n");
     return;
   }
