@@ -6,6 +6,7 @@
 #include <string.h>
 
 static void program();
+static Node *ifthen();
 static Node *expr();
 static Node *assign();
 static Node *logical();
@@ -22,17 +23,42 @@ Token *lookahead;
 void parse() { program(); }
 
 /*
-program: program expr | ε
+Production rule
+(1) original
+program: program expr ";" | ε
+
+(2)
+program: ( expr ";" )*
 */
 static void program() {
   lookahead = (Token *)tokens->data[0];
 
   while (lookahead->ty != TK_EOF) {
-    vec_push(code, expr());
-    match(';');
+    if(lookahead->ty == TK_IF)
+      vec_push(code, ifthen());
+    else {
+      vec_push(code, expr());
+      match(';');
+    }
   }
 }
 
+/*
+ * "if" ( cond ) then "else" els
+ */
+static Node *ifthen() {
+  Node *node = (Node *)malloc(sizeof(Node));
+
+  node->ty = ND_IF;
+  match(TK_IF);
+  match('(');
+  node->cond = expr();
+  match(')');
+  node->then = expr();
+  match(';');
+
+  return node;
+}
 /*
  */
 static Node *expr() {

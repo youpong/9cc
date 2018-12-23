@@ -16,6 +16,23 @@ void gen_lval(Node *node) {
 }
 
 void gen(Node *node) {
+  if (node->ty == ND_IF) {
+    // ラベルの作成 l
+    // cond
+    gen(node->cond);
+    // スタックトップの値でlへ条件分岐
+    printf("\tpop rdi\n");
+    printf("\tcmp rdi,0\n");
+    printf("\tje L0\n");
+    
+    // then
+    gen(node->then);
+    // ラベルの印字
+    printf("L0:\n");
+    
+    return;
+  }
+  
   if (node->ty == ND_NUM) {
     printf("\tpush %d\n", node->val);
     return;
