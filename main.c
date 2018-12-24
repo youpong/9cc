@@ -14,6 +14,7 @@ Map *var_tab;
 int var_cnt = 0;
 bool cmdln_flg = false;
 bool ast_flg = false;
+char **ARGV;
 
 int main(int argc, char **argv) {
   tokens = new_vector();
@@ -42,9 +43,10 @@ int main(int argc, char **argv) {
     fprintf(stderr, "%s -test\n", argv[0]);
     return EXIT_FAILURE;
   }
+  ARGV = argv;
 
   init();
-  tokenize(argv[1]);
+  tokenize();
   parse();
 
   if (ast_flg == true) {

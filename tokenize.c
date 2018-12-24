@@ -10,24 +10,25 @@ static char *buf_ptr;
 static int mygetc();
 static int myungetc(int);
 
-void tokenize(char *p) {
+void tokenize() {
   Token *token;
+  char buf[100];
+  int c;
 
   if(cmdln_flg == true)
-    buf_ptr = p;
+    buf_ptr = ARGV[1];
   
-  while (*p) {
-
+  while (true) {
+    token = (Token *)malloc(sizeof(Token));
+    c = mygetc();
+    
     // ignore space
-    if (isspace(*p)) {
-      p++;
+    if (isspace(c)) {
       continue;
     }
 
-    token = malloc(sizeof(Token));
-
     // 演算子, ";"
-    switch (*p) {
+    switch (c) {
     case '+':
     case '-':
     case '*':
@@ -35,88 +36,108 @@ void tokenize(char *p) {
     case '(':
     case ')':
     case ';':
-      token->ty = *p;
-      token->input = p;
+      token->ty = c;
+      //      token->input = p;
       vec_push(tokens, token);
-      p++;
       continue;
     }
 
     // "=", "=="
-    if (*p == '=') {
-      if (*(p + 1) == '=') {
+    if (c == '=') {
+      c = mygetc();
+      if (c == '=') {
         token->ty = TK_EQ;
-        token->input = p;
+	//        token->input = p;
         vec_push(tokens, token);
-        p += 2;
       } else {
-        token->ty = *p;
-        token->input = p;
+	myungetc(c);	
+        token->ty = '=';
+	//        token->input = p;
         vec_push(tokens, token);
-        p++;
       }
       continue;
     }
 
     // "!="
-    if (*p == '!' && *(p + 1) == '=') {
-      token->ty = TK_NE;
-      token->input = p;
-      vec_push(tokens, token);
-      p += 2;
+    if (c == '!') {
+      c = mygetc();
+      if( c == '=') {
+	token->ty = TK_NE;
+	//token->input = p;
+	vec_push(tokens, token);
+	continue;
+      } else {
+	token->ty = c;
+	//        token->input = p;
+	vec_push(tokens, token);
+	myungetc(c);
+      }
       continue;
     }
 
     // NUMBER
-    if (isdigit(*p)) {
-      token->ty = TK_NUM;
-      token->input = p;
-      token->val = strtol(p, &p, 10);
+    if (isdigit(c)) {
+      //      token->input = p;
+      token->val = c - '0';
+      c = mygetc();
+      while( isdigit(c) ) {
+	token->val = token->val * 10 + c - '0';
+	c = mygetc();
+      }
+      myungetc(c);
+      token->ty = TK_NUM;      
       vec_push(tokens, token);
       continue;
     }
 
     // 識別子
-    if (isalpha(*p)) {
-
-      int len = 1;
-      for (char *q = p + 1; isalnum(*q); q++)
-        len++;
-      token->name = malloc(sizeof(char) * (len + 1));
-      strncpy(token->name, p, len + 1);
-      token->name[len] = '\0';
+    if (isalpha(c)) {
+      char *p = buf;
+      *p++ = c;
+      c = mygetc();
+      while (isalnum(c)) {
+	*p++ = c;
+	c = mygetc();
+      }
+      myungetc(c);
+      *p = '\0';
+      
+      token->name = (char *)malloc(( strlen(buf) + 1) * sizeof(char));
+      strcpy(token->name, buf);
 
       SYM_REC *rec;
       if((rec = lookup(token->name)) == NULL) {
 	insert(token->name, TK_IDENT);
 	token->ty = TK_IDENT;
-	token->input = p;
+	//	token->input = p;
       } else {
 	token->ty = rec->token;
       }
       vec_push(tokens, token);
-      
-      p += len;
-      continue;
-    }
 
-    error("トークナイズできません: %s\n", p);
+      continue;
+      
+    }
+    if( c == EOF ) {
+      token = (Token *)malloc(sizeof(Token));
+      token->ty = TK_EOF;
+      //  token->input = p;
+      vec_push(tokens, token);
+      return;
+    }
+    error("トークナイズできません: (%c)\n", c);
   }
-  token = malloc(sizeof(Token));
-  token->ty = TK_EOF;
-  token->input = p;
-  vec_push(tokens, token);
 }
 
 int mygetc() {
   if(cmdln_flg == true) 
-    return *buf_ptr++;
+    return (*buf_ptr == '\0') ? EOF : *buf_ptr++;
   return fgetc(yyin);
 }
 
 int myungetc(int c){
   if(cmdln_flg == true) {
-    *buf_ptr-- = c;
+    *--buf_ptr = c;
     return *buf_ptr;
   }
   return ungetc(c, yyin);

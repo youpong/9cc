@@ -22,7 +22,7 @@ typedef struct {
 
 extern Vector *tokens;
 extern int pos;
-void tokenize(char *);
+void tokenize();
 
 FILE *yyin;
 
@@ -77,3 +77,4 @@ void p_tree(Node *);
 
 extern bool cmdln_flg;
 extern bool ast_flg;
+extern char **ARGV;

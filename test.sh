@@ -5,7 +5,7 @@ try() {
     input="$2"
     msg="$3"
 
-    ./9cc "$input" > tmp.s
+    ./9cc -e "$input" > tmp.s
     if [ $? != 0 ]; then
 	echo "$3: cann't compile"
 	exit 1
