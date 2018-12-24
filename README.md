@@ -16,7 +16,8 @@ Sample
 ------
 
      $ 9cc -e '9-5+2;'
-     $ 9cc -ast -e '9-5+2;'
+     $ 9cc -ast -e '9-5+2;' > tmp.dot
+     $ dot -Tpng tmp.dot > tmp.png
      $ 9cc -test
     
 # 実装済み
