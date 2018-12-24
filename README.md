@@ -1,9 +1,24 @@
-# 9cc
-
+9cc
+===
 低レイヤを知りたい人のためのCコンパイラ作成入門[*1]を
 参考に作り始める。 ドラゴンブック[*2]を参考に作り続けている。
 目標は self-hosting。
 
+Usage
+-----
+Command Line interface.
+
+    -ast       Output AST(Abstract Syntax Tree). 
+    -e program Specifies program from command-line.   
+    -test      Do test.
+
+Sample
+------
+
+     $ 9cc -e '9-5+2;'
+     $ 9cc -ast -e '9-5+2;'
+     $ 9cc -test
+    
 # 実装済み
 
 * 四則演算
