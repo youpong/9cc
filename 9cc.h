@@ -1,4 +1,6 @@
 #include "util.h"
+#include <stdio.h>
+#include <stdbool.h>
 
 // Tokenize
 enum {
@@ -21,6 +23,8 @@ typedef struct {
 extern Vector *tokens;
 extern int pos;
 void tokenize(char *);
+
+FILE *yyin;
 
 // Abstract Syntax Node
 enum {
@@ -71,3 +75,5 @@ void init();
 // debug.c
 void p_tree(Node *);
 
+extern bool cmdln_flg;
+extern bool ast_flg;

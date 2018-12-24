@@ -4,10 +4,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
+
+static char *buf_ptr;
+static int mygetc();
+static int myungetc(int);
 
 void tokenize(char *p) {
   Token *token;
 
+  if(cmdln_flg == true)
+    buf_ptr = p;
+  
   while (*p) {
 
     // ignore space
@@ -98,4 +106,18 @@ void tokenize(char *p) {
   token->ty = TK_EOF;
   token->input = p;
   vec_push(tokens, token);
+}
+
+int mygetc() {
+  if(cmdln_flg == true) 
+    return *buf_ptr++;
+  return fgetc(yyin);
+}
+
+int myungetc(int c){
+  if(cmdln_flg == true) {
+    *buf_ptr-- = c;
+    return *buf_ptr;
+  }
+  return ungetc(c, yyin);
 }

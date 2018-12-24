@@ -6,14 +6,16 @@
 #include <stdlib.h>
 #include <string.h>
 
+FILE *yyin;
 Vector *tokens;
 int pos = 0;
 Vector *code;
 Map *var_tab;
 int var_cnt = 0;
+bool cmdln_flg = false;
+bool ast_flg = false;
 
 int main(int argc, char **argv) {
-  bool ast_flg = false;
   tokens = new_vector();
   code = new_vector();
   var_tab = new_map();
@@ -27,11 +29,17 @@ int main(int argc, char **argv) {
     argc--;
     argv++;
   }
+  if (argc >= 2 && strcmp(argv[1], "-e") == 0) {
+    cmdln_flg = true;
+    argc--;
+    argv++;
+  }
 
   if (argc != 2) {
     fprintf(stderr, "引数の数が正しくありません\n");
-    fprintf(stderr, "%s: [-ast] program", argv[0]);
-    fprintf(stderr, "%s: [-test]", argv[0]);
+    fprintf(stderr, "%s [-ast] [-e program]\n", argv[0]);
+    fprintf(stderr, "%s [-ast] [programfile]\n", argv[0]);
+    fprintf(stderr, "%s -test\n", argv[0]);
     return EXIT_FAILURE;
   }
 

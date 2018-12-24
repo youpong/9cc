@@ -7,7 +7,7 @@ OBJS=$(SRCS:.c=.o)
 
 all: 9cc
 clean:
-	rm -f 9cc codegen_test node_test parse_test a.out\
+	rm -f 9cc codegen_test node_test a.out\
 	      $(OBJS) tmp* *.png
 format:
 	clang-format -i $(SRCS) *.h
@@ -17,7 +17,7 @@ format:
 
 $(OBJS): 9cc.h util.h
 
-test: 9cc codegen_test node_test parse_test
+test: 9cc codegen_test node_test 
 	./9cc -test
 	./test.sh
 
@@ -28,11 +28,3 @@ codegen_test.o: codegen.c 9cc.h
 node_test: node_test.o util.o
 node_test.o: node.c 9cc.h
 	$(CC) $(CFLAGS) -c -D UNIT_TEST -o $@ $<
-
-parse_test: parse_test.o node.o tokenize.o util.o symbol.o
-parse_test.o: parse.c 9cc.h
-	$(CC) $(CFLAGS) -c -D UNIT_TEST -o $@ $<
-
-
-
-
