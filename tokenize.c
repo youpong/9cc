@@ -37,7 +37,6 @@ void tokenize() {
     case ')':
     case ';':
       token->ty = c;
-      //      token->input = p;
       vec_push(tokens, token);
       continue;
     }
@@ -47,12 +46,10 @@ void tokenize() {
       c = mygetc();
       if (c == '=') {
         token->ty = TK_EQ;
-	//        token->input = p;
         vec_push(tokens, token);
       } else {
 	myungetc(c);	
         token->ty = '=';
-	//        token->input = p;
         vec_push(tokens, token);
       }
       continue;
@@ -63,12 +60,10 @@ void tokenize() {
       c = mygetc();
       if( c == '=') {
 	token->ty = TK_NE;
-	//token->input = p;
 	vec_push(tokens, token);
 	continue;
       } else {
 	token->ty = c;
-	//        token->input = p;
 	vec_push(tokens, token);
 	myungetc(c);
       }
@@ -77,7 +72,6 @@ void tokenize() {
 
     // NUMBER
     if (isdigit(c)) {
-      //      token->input = p;
       token->val = c - '0';
       c = mygetc();
       while( isdigit(c) ) {
@@ -109,7 +103,6 @@ void tokenize() {
       if((rec = lookup(token->name)) == NULL) {
 	insert(token->name, TK_IDENT);
 	token->ty = TK_IDENT;
-	//	token->input = p;
       } else {
 	token->ty = rec->token;
       }
@@ -121,7 +114,6 @@ void tokenize() {
     if( c == EOF ) {
       token = (Token *)malloc(sizeof(Token));
       token->ty = TK_EOF;
-      //  token->input = p;
       vec_push(tokens, token);
       return;
     }

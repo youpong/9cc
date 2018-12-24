@@ -188,7 +188,7 @@ static Node *term() {
     match(')');
     break;
   default:
-    error("unexpected token: %s", lookahead->input);
+    error("unexpected token: %d", lookahead->ty);
   }
   return node;
 }

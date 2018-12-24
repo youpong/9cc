@@ -17,7 +17,6 @@ typedef struct {
   int ty;      // type of token
   int val;     // ty が TK_NUM の場合のその値
   char *name;  // ty が TK_IDENT の場合その名前
-  char *input; // token string(for error message)
 } Token;
 
 extern Vector *tokens;
