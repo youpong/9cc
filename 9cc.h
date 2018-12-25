@@ -35,18 +35,19 @@ enum {
   ND_IF,        // if statement
 };
 
-typedef struct Node {
+typedef struct Node Node;
+struct Node {
   int ty; // 演算子 | ND_NUM | ND_IDENT
-  struct Node *lhs;
-  struct Node *rhs;
+  Node *lhs;
+  Node *rhs;
   int val;
   char *name;
   Vector *stmts; // compound statements
   
-  struct Node *cond;
-  struct Node *then;
-  struct Node *els;
-} Node;
+  Node *cond;
+  Node *then;
+  Node *els;
+};
 
 extern Vector *code;
 
