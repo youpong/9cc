@@ -71,6 +71,8 @@ void tokenize() {
     case '*':
     case '(':
     case ')':
+    case '{':
+    case '}':
     case ';':
       token->ty = c;
       vec_push(tokens, token);

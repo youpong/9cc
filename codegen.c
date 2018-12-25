@@ -33,6 +33,16 @@ void gen(Node *node) {
     return;
   }
   
+  if (node->ty == ND_COMP_STMT) {
+    Vector *v = node->stmts;
+    for(int i = 0; i < v->len; i++) {
+      gen((Node *)v->data[i]);
+      printf("\tpop rax\n");
+    }
+    printf("\tpush rax\n");
+    return;
+  }
+  
   if (node->ty == ND_NUM) {
     printf("\tpush %d\n", node->val);
     return;
@@ -94,44 +104,3 @@ void gen(Node *node) {
   printf("\tpush rax\n");
 }
 
-#ifdef UNIT_TEST
-int pos;
-Vector *tokens;
-Map *var_tab;
-int var_cnt;
-
-void test10() { gen(new_node_num(1047)); }
-
-void test20() { gen(new_node('+', new_node_num(1), new_node_num(2))); }
-
-void test30() { gen(new_node('/', new_node_num(3), new_node_num(4))); }
-
-void test40() {
-  Node *node = new_node('+', new_node_num(5), new_node_num(6));
-  gen(new_node('-', node, new_node_num(7)));
-}
-
-void test41() {
-  Node *node = new_node('+', new_node_num(8), new_node_num(9));
-  gen(new_node('-', new_node_num(10), node));
-}
-
-void test50() { gen(new_node('*', new_node_num(11), new_node_num(12))); }
-
-void test51() { gen(new_node('/', new_node_num(13), new_node_num(14))); }
-
-void test100() {
-  Node *me = new_node('+', new_node_num(15), new_node_num(16));
-  Node *fater = new_node('-', me, new_node_num(18));
-  Node *grand = new_node('*', fater, new_node_num(19));
-  gen(grand);
-}
-
-int main() {
-  tokens = new_vector();
-  var_tab = new_map();
-  test100();
-
-  return 0;
-}
-#endif

@@ -6,6 +6,7 @@
 #include <string.h>
 
 static Node *stmt();
+static Node *compound_stmt();
 static Node *ifthen();
 static Node *expr();
 static Node *assign();
@@ -39,6 +40,8 @@ static Node *stmt() {
 
   if(lookahead->ty == TK_IF)
     return ifthen();
+  else if (lookahead->ty == '{') 
+    return compound_stmt();
   else {
     node = expr();
     match(';');
@@ -57,8 +60,7 @@ static Node *ifthen() {
   match('(');
   node->cond = expr();
   match(')');
-  node->then = expr();
-  match(';');
+  node->then = stmt();
 
   return node;
 }
@@ -66,9 +68,13 @@ static Node *ifthen() {
 static Node *compound_stmt() {
   Node *node = new_node(ND_COMP_STMT, NULL, NULL);
   node->stmts = new_vector();
+  
   match('{');
-  while(lookahead->ty != '}')
+  while(lookahead->ty != '}') {
     vec_push(node->stmts, stmt());
+  }
+  match('}');
+  
   return node;
 }
     
