@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+static int label = 0;
+
 void gen_lval(Node *node) {
   if (node->ty == ND_IDENT) {
     SYM_REC *rec = lookup(node->name);
@@ -18,24 +20,27 @@ void gen_lval(Node *node) {
 void gen(Node *node) {
   if (node->ty == ND_IF) {
     // ラベルの作成 l
+    int l0 = label++;
+    int l1 = label++;
+    
     // cond
     gen(node->cond);
     // スタックトップの値でlへ条件分岐
     printf("\tpop rdi\n");
     printf("\tcmp rdi,0\n");
-    printf("\tje L0\n");
+    printf("\tje L%d\n", l0);  // L0 - lelse
     
     // then
     gen(node->then);
-    printf("\t jmp L1\n");
+    printf("\tjmp L%d\n", l1);  // L1 l lthen
     
     // ラベルの印字
-    printf("L0:\n");
+    printf("L%d:\n", l0);        // L0
     if(node->els != NULL) {
       gen(node->els);
     }
     
-    printf("L1:\n");
+    printf("L%d:\n", l1);        // L1
     printf("\tpush rax\n");
     
     return;
