@@ -62,8 +62,11 @@ try  3    'a = 3; if ( 0 ) a = 2;a;' t141
 try  2    'if(1)a=2; else a=3;a;' t142
 try  3    'if(0)a=2; else a=3;a;' t143
 
-try 34    '/* comment */34;'   t150
-try 35    '/** comment **/35;' t151
+try  1     'a=1; while(0)a=2; a;' t150
+try  2     'a=1; while(a==1)a=2; a;' t151
+
+try 34    '/* comment */34;'   t160
+try 35    '/** comment **/35;' t161
 
 #try 99 '(1' t200 # missing ')'
 #try 99 ''   't201 missing expr'

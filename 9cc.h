@@ -10,6 +10,7 @@ enum {
   TK_NE,        // '!='
   TK_IF,        // "if"
   TK_ELSE,      // "else"
+  TK_WHILE,     // "while"
   TK_EOF,       // end of file
 };
 
@@ -33,6 +34,7 @@ enum {
   ND_EQ,        // '=='
   ND_NE,        // '!='
   ND_IF,        // if statement
+  ND_WHILE,     // while statement
 };
 
 typedef struct Node Node;
@@ -47,6 +49,7 @@ struct Node {
   Node *cond;
   Node *then;
   Node *els;
+  Node *body;
 };
 
 extern Vector *code;

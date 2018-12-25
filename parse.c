@@ -7,7 +7,8 @@
 
 static Node *stmt();
 static Node *compound_stmt();
-static Node *ifthen();
+static Node *if_stmt();
+static Node *while_stmt();
 static Node *expr();
 static Node *assign();
 static Node *logical();
@@ -39,7 +40,9 @@ static Node *stmt() {
   Node *node;
 
   if(lookahead->ty == TK_IF)
-    return ifthen();
+    return if_stmt();
+  if(lookahead->ty == TK_WHILE)
+    return while_stmt();
   else if (lookahead->ty == '{') 
     return compound_stmt();
   else {
@@ -50,9 +53,25 @@ static Node *stmt() {
 }
 
 /*
+ * "while" ( cond ) body
+ */
+static Node *while_stmt() {
+  Node *node = (Node *)malloc(sizeof(Node));
+
+  node->ty = ND_WHILE;
+  match(TK_WHILE);
+  match('(');
+  node->cond = expr();
+  match(')');
+  node->body = stmt();
+  
+  return node;
+}
+
+/*
  * "if" ( cond ) then "else" els
  */
-static Node *ifthen() {
+static Node *if_stmt() {
   Node *node = (Node *)malloc(sizeof(Node));
 
   node->ty = ND_IF;

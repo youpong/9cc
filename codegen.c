@@ -18,6 +18,31 @@ void gen_lval(Node *node) {
 }
 
 void gen(Node *node) {
+  if (node->ty == ND_WHILE) {
+    // ラベルの作成 l
+    int l0 = label++;
+    int l1 = label++;
+    
+    printf("L%d:\n", l0);        // L0
+    
+    // cond
+    gen(node->cond);
+    
+    // スタックトップの値でlへ条件分岐
+    printf("\tpop rdi\n");
+    printf("\tcmp rdi,0\n");
+    printf("\tje L%d\n", l1);  // L1 
+
+    // body
+    gen(node->body);
+    
+    printf("\tjmp L%d\n", l0);  // L0
+    
+    printf("L%d:\n", l1);        // L1
+    printf("\tpush rax\n");
+    
+    return;
+  }
   if (node->ty == ND_IF) {
     // ラベルの作成 l
     int l0 = label++;
