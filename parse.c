@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-static void program();
+static Node *stmt();
 static Node *ifthen();
 static Node *expr();
 static Node *assign();
@@ -20,7 +20,11 @@ Token *lookahead;
 /*
  *
  */
-void parse() { program(); }
+void parse() {
+  lookahead = (Token *)tokens->data[0];
+  while(lookahead->ty != TK_EOF)
+    vec_push(code,  stmt());
+}
 
 /*
 Production rule
@@ -30,16 +34,15 @@ program: program expr ";" | ε
 (2)
 program: ( expr ";" )*
 */
-static void program() {
-  lookahead = (Token *)tokens->data[0];
+static Node *stmt() {
+  Node *node;
 
-  while (lookahead->ty != TK_EOF) {
-    if(lookahead->ty == TK_IF)
-      vec_push(code, ifthen());
-    else {
-      vec_push(code, expr());
-      match(';');
-    }
+  if(lookahead->ty == TK_IF)
+    return ifthen();
+  else {
+    node = expr();
+    match(';');
+    return node;
   }
 }
 
@@ -59,6 +62,16 @@ static Node *ifthen() {
 
   return node;
 }
+
+static Node *compound_stmt() {
+  Node *node = new_node(ND_COMP_STMT, NULL, NULL);
+  node->stmts = new_vector();
+  match('{');
+  while(lookahead->ty != '}')
+    vec_push(node->stmts, stmt());
+  return node;
+}
+    
 /*
  */
 static Node *expr() {
@@ -93,10 +106,10 @@ static Node *logical() {
   while(true)
     if(lookahead->ty == TK_EQ) {
       match(TK_EQ);
-      lhs = new_node(TK_EQ, lhs, add());
+      lhs = new_node(ND_EQ, lhs, add());
     } else if(lookahead->ty == TK_NE) {
       match(TK_NE);
-      lhs = new_node(TK_NE, lhs, add());
+      lhs = new_node(ND_NE, lhs, add());
     } else
       break;
   

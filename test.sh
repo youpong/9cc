@@ -8,7 +8,7 @@ try() {
     ./9cc -e "$input" > tmp.s
     if [ $? != 0 ]; then
 	echo "$3: cann't compile"
-	exit 1
+	return
     fi
     
     gcc -o tmp tmp.s
@@ -50,9 +50,9 @@ try 11    'd=11;e=d;' t104
 try 14    'a = 3; b = 5 * 6 - 8; a + b/2;' t110
 try  0    '19==22;'    t120
 try  1    '19!=22;'    t121
-try  1    '16==33-17;' t121
-try  1    '23+24 != 25;' t122
-try  0    '26+27 != 53;' t123
+try  1    '16==33-17;' t122
+try  1    '23+24 != 25;' t123
+try  0    '26+27 != 53;' t124
 try 29    'aa=28+1;'     t130
 
 try 31    'if ( 30 ) 31;'     t140

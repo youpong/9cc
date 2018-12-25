@@ -29,6 +29,7 @@ FILE *yyin;
 enum {
   ND_NUM = 256, // 整数
   ND_IDENT,     // 識別子
+  ND_COMP_STMT, // compound statement
   ND_EQ,        // '=='
   ND_NE,        // '!='
   ND_IF,        // if statement
@@ -40,6 +41,8 @@ typedef struct Node {
   struct Node *rhs;
   int val;
   char *name;
+  Vector *stmts; // compound statements
+  
   struct Node *cond;
   struct Node *then;
   struct Node *els;
