@@ -8,13 +8,15 @@ Usage
 -----
 Command Line interface.
 
-    -ast       Output AST(Abstract Syntax Tree). 
-    -e program Specifies program from command-line.   
-    -test      Do test.
+    program_file Specifiles program filename.
+    -ast         Output AST(Abstract Syntax Tree). 
+    -e program   Specifies program from command-line.   
+    -test        Do test.
 
 Sample
 ------
 
+     $ 9cc main.c > main.s
      $ 9cc -e '9-5+2;'
      $ 9cc -ast -e '9-5+2;' > tmp.dot
      $ dot -Tpng tmp.dot > tmp.png

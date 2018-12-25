@@ -17,6 +17,11 @@ void tokenize() {
 
   if(cmdln_flg == true)
     buf_ptr = ARGV[1];
+  else {
+    yyin = fopen(ARGV[1], "r");
+    if(yyin == NULL)
+      error("file cannot open");
+  }
   
   while (true) {
     token = (Token *)malloc(sizeof(Token));
