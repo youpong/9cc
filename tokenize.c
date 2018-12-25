@@ -10,9 +10,15 @@ static char *buf_ptr;
 static int mygetc();
 static int myungetc(int);
 
+enum {
+  IN_COMMENT = 1,
+  NOT_IN_COMMENT = 0,
+};
+
 void tokenize() {
   Token *token;
   char buf[100];
+  int status = NOT_IN_COMMENT;
   int c;
 
   if(cmdln_flg == true)
@@ -26,7 +32,33 @@ void tokenize() {
   while (true) {
     token = (Token *)malloc(sizeof(Token));
     c = mygetc();
+
+    // comment 終端処理
+    if (status == IN_COMMENT) {
+      if (c == '*') {
+	c = mygetc();
+	if(c == '/') {
+	  status = NOT_IN_COMMENT;
+	  continue;
+	}
+	myungetc(c);
+      }
+      continue;
+    }
     
+    // commnent 開始処理
+    if (c == '/') {
+      c = mygetc();
+      if (c == '*') {
+	status = IN_COMMENT;
+	continue;
+      }
+      myungetc(c);
+      token->ty = '/';
+      vec_push(tokens, token);
+      continue;
+    }
+
     // ignore space
     if (isspace(c)) {
       continue;
@@ -37,7 +69,6 @@ void tokenize() {
     case '+':
     case '-':
     case '*':
-    case '/':
     case '(':
     case ')':
     case ';':

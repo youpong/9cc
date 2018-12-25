@@ -17,9 +17,12 @@ Sample
 ------
 
      $ 9cc main.c > main.s
+     $ 9cc -ast main.c > main.dot
+     $ dot -Tpng main.dot > main.png
+     
      $ 9cc -e '9-5+2;'
      $ 9cc -ast -e '9-5+2;' > tmp.dot
-     $ dot -Tpng tmp.dot > tmp.png
+
      $ 9cc -test
     
 # 実装済み
@@ -27,6 +30,7 @@ Sample
 * 四則演算
 * 論理演算(!=, ==)
 * if 文(else なし)
+* コメント文
 
 # 実装予定
 
@@ -43,7 +47,6 @@ Sample
 * 構造体
 * extern
 * #include
-* コメント文
 
 # 環境
 

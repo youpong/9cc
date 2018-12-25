@@ -58,6 +58,9 @@ try 29    'aa=28+1;'     t130
 try 31    'if ( 30 ) 31;'     t140
 #try 32    '32; if (  0 ) 33;' t141
 
+try 34    '/* comment */34;'   t150
+try 35    '/** comment **/35;' t151
+
 #try 99 '(1' t200 # missing ')'
 #try 99 ''   't201 missing expr'
 #try 99 '()' 't202 unexpected )'
