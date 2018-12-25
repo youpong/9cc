@@ -46,6 +46,7 @@ try  8    'a=b=8;'   t101
 try 54    'a=b=54;a;' t102
 try 55    'a=b=55;b;' t103
 try 11    'd=11;e=d;' t104
+try 36    'a=36;b=37;a;' t105
 
 try 14    'a = 3; b = 5 * 6 - 8; a + b/2;' t110
 try  0    '19==22;'    t120
@@ -55,8 +56,11 @@ try  1    '23+24 != 25;' t123
 try  0    '26+27 != 53;' t124
 try 29    'aa=28+1;'     t130
 
-try 31    'if ( 30 ) 31;'     t140
-#try 32    '32; if (  0 ) 33;' t141
+try  2    'a = 3; if ( 1 ) a = 2;a;' t140
+try  3    'a = 3; if ( 0 ) a = 2;a;' t141
+
+try  2    'if(1)a=2; else a=3;a;' t142
+try  3    'if(0)a=2; else a=3;a;' t143
 
 try 34    '/* comment */34;'   t150
 try 35    '/** comment **/35;' t151

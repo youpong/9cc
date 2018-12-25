@@ -27,8 +27,16 @@ void gen(Node *node) {
     
     // then
     gen(node->then);
+    printf("\t jmp L1\n");
+    
     // ラベルの印字
     printf("L0:\n");
+    if(node->els != NULL) {
+      gen(node->els);
+    }
+    
+    printf("L1:\n");
+    printf("\tpush rax\n");
     
     return;
   }

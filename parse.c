@@ -62,6 +62,11 @@ static Node *ifthen() {
   match(')');
   node->then = stmt();
 
+  if(lookahead->ty == TK_ELSE) {
+    match(TK_ELSE);
+    node->els = stmt();
+  }
+
   return node;
 }
 
