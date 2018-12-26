@@ -9,6 +9,7 @@ static Node *stmt();
 static Node *compound_stmt();
 static Node *if_stmt();
 static Node *while_stmt();
+static Node *break_stmt(); 
 static Node *expr();
 static Node *assign();
 static Node *logical();
@@ -17,12 +18,20 @@ static Node *mul();
 static Node *term();
 static void match(int);
 
+// extern
 Token *lookahead;
+
+// static
+Vector *breaks;
+Vector *continues;
 
 /*
  *
  */
 void parse() {
+  breaks = new_vector();
+  continues = new_vector();
+  
   lookahead = (Token *)tokens->data[0];
   while(lookahead->ty != TK_EOF)
     vec_push(code,  stmt());
@@ -43,6 +52,8 @@ static Node *stmt() {
     return if_stmt();
   if(lookahead->ty == TK_WHILE)
     return while_stmt();
+  if(lookahead->ty == TK_BREAK)
+    return break_stmt();
   else if (lookahead->ty == '{') 
     return compound_stmt();
   else {
@@ -53,17 +64,36 @@ static Node *stmt() {
 }
 
 /*
+ * "break"
+ */
+static Node *break_stmt() {
+  Node *node = (Node *)malloc(sizeof(Node));
+  
+  node->ty = ND_BREAK;
+  node->target = vec_last(breaks);
+  match(TK_BREAK);
+  
+  return node;
+}
+
+/*
  * "while" ( cond ) body
  */
 static Node *while_stmt() {
   Node *node = (Node *)malloc(sizeof(Node));
 
+  vec_push(breaks, node);
+  vec_push(continues, node);
+  
   node->ty = ND_WHILE;
   match(TK_WHILE);
   match('(');
   node->cond = expr();
   match(')');
   node->body = stmt();
+
+  vec_pop(breaks);
+  vec_pop(continues);
   
   return node;
 }

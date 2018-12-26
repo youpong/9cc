@@ -22,6 +22,15 @@ void vec_push(Vector *vec, void *elem) {
   vec->data[vec->len++] = elem;
 }
 
+void *vec_pop(Vector *vec) {
+  return vec->data[--vec->len];
+}
+
+void *vec_last(Vector *vec) {
+  return vec->data[vec->len-1];
+}
+  
+
 Map *new_map() {
   Map *map = malloc(sizeof(Map));
   map->keys = new_vector();

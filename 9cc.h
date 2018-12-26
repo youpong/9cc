@@ -11,6 +11,7 @@ enum {
   TK_IF,        // "if"
   TK_ELSE,      // "else"
   TK_WHILE,     // "while"
+  TK_BREAK,     // "break"
   TK_EOF,       // end of file
 };
 
@@ -35,6 +36,7 @@ enum {
   ND_NE,        // '!='
   ND_IF,        // if statement
   ND_WHILE,     // while statement
+  ND_BREAK,     // break statement
 };
 
 typedef struct Node Node;
@@ -50,6 +52,11 @@ struct Node {
   Node *then;
   Node *els;
   Node *body;
+
+  // For break/continue
+  Node *target;
+  char *label_head;
+  char *label_tail;
 };
 
 extern Vector *code;

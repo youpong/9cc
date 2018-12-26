@@ -1,6 +1,6 @@
 #ifndef UTIL_H
 #define UTIL_H
-// util
+/* util.c */
 typedef struct {
   void **data;
   int capacity;
@@ -9,6 +9,8 @@ typedef struct {
 
 Vector *new_vector();
 void vec_push(Vector *, void *);
+void *vec_pop(Vector *);
+void *vec_last(Vector *);
 
 typedef struct {
   Vector *keys;
@@ -23,6 +25,6 @@ int *intdup(int);
 
 _Noreturn void error(char *, ...);
 
-// util_test
+/* util_test.c */
 void run_utiltest();
 #endif
