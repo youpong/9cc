@@ -47,6 +47,11 @@ void gen(Node *node) {
     
     return;
   }
+  if (node->ty == ND_CONTINUE) {
+    //printf("\tpush rax\n");
+    printf("\tjmp %s\n", node->target->label_head);
+    return;
+  }
   if (node->ty == ND_BREAK) {
     //printf("\tpush rax\n");
     printf("\tjmp %s\n", node->target->label_tail);

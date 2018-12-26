@@ -12,6 +12,7 @@ enum {
   TK_ELSE,      // "else"
   TK_WHILE,     // "while"
   TK_BREAK,     // "break"
+  TK_CONTINUE,  // "continue"
   TK_EOF,       // end of file
 };
 
@@ -37,6 +38,7 @@ enum {
   ND_IF,        // if statement
   ND_WHILE,     // while statement
   ND_BREAK,     // break statement
+  ND_CONTINUE,  // continue statement
 };
 
 typedef struct Node Node;

@@ -9,7 +9,8 @@ static Node *stmt();
 static Node *compound_stmt();
 static Node *if_stmt();
 static Node *while_stmt();
-static Node *break_stmt(); 
+static Node *break_stmt();
+static Node *continue_stmt(); 
 static Node *expr();
 static Node *assign();
 static Node *logical();
@@ -54,17 +55,32 @@ static Node *stmt() {
     return while_stmt();
   if(lookahead->ty == TK_BREAK)
     return break_stmt();
-  else if (lookahead->ty == '{') 
+  if(lookahead->ty == TK_CONTINUE)
+    return continue_stmt();
+  if (lookahead->ty == '{') 
     return compound_stmt();
-  else {
-    node = expr();
-    match(';');
-    return node;
-  }
+
+  node = expr();
+  match(';');
+  return node;
 }
 
 /*
- * "break"
+ * "continue" ;
+ */
+static Node *continue_stmt() {
+  Node *node = (Node *)malloc(sizeof(Node));
+  
+  node->ty = ND_CONTINUE;
+  node->target = vec_last(continues);
+  match(TK_CONTINUE);
+  match(';');
+  
+  return node;
+}
+
+/*
+ * "break" ;
  */
 static Node *break_stmt() {
   Node *node = (Node *)malloc(sizeof(Node));

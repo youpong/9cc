@@ -4,4 +4,5 @@ void init() {
   insert("else", TK_ELSE);
   insert("while", TK_WHILE);
   insert("break", TK_BREAK);
+  insert("continue", TK_CONTINUE);
 }
