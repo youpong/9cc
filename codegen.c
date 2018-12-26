@@ -18,14 +18,14 @@ void gen_lval(Node *node) {
 }
 
 void gen(Node *node) {
-  char buf[100];
+  //char buf[100];
   
   if (node->ty == ND_WHILE) {
     // ラベルの作成 l
     node->label_head = (char *)malloc((3+1) * sizeof(char));
     node->label_tail = (char *)malloc((3+1) * sizeof(char));    
-    sprintf(node_lable_head, "L%02d", label++);
-    sprintf(node_lable_tail, "L%02d", label++);    
+    sprintf(node->label_head, "L%02d", label++);
+    sprintf(node->label_tail, "L%02d", label++);    
     int l0 = label++;
     int l1 = label++;
     
