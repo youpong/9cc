@@ -24,12 +24,10 @@ void gen(Node *node) {
     // ラベルの作成 l
     node->label_head = (char *)malloc((3+1) * sizeof(char));
     node->label_tail = (char *)malloc((3+1) * sizeof(char));    
-    sprintf(node->label_head, "L%02d", label++);
-    sprintf(node->label_tail, "L%02d", label++);    
-    int l0 = label++;
-    int l1 = label++;
+    sprintf(node->label_head, "L%02d", label++); // L0
+    sprintf(node->label_tail, "L%02d", label++); // L1   
     
-    printf("L%d:\n", l0);        // L0
+    printf("%s:\n", node->label_head);        // L0
     
     // cond
     gen(node->cond);
@@ -37,16 +35,21 @@ void gen(Node *node) {
     // スタックトップの値でlへ条件分岐
     printf("\tpop rdi\n");
     printf("\tcmp rdi,0\n");
-    printf("\tje L%d\n", l1);  // L1 
+    printf("\tje %s\n", node->label_tail);  // L1 
 
     // body
     gen(node->body);
     
-    printf("\tjmp L%d\n", l0);  // L0
+    printf("\tjmp %s\n", node->label_head);  // L0
     
-    printf("L%d:\n", l1);        // L1
+    printf("%s:\n", node->label_tail);        // L1
     printf("\tpush rax\n");
     
+    return;
+  }
+  if (node->ty == ND_BREAK) {
+    //printf("\tpush rax\n");
+    printf("\tjmp %s\n", node->target->label_tail);
     return;
   }
   if (node->ty == ND_IF) {

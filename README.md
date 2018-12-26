@@ -30,11 +30,12 @@ Sample
 * 四則演算
 * 論理演算(!=, ==)
 * if, while 文
+* break 文
 * コメント文
 
 # 実装予定
 
-* break/continue 文
+* continue 文
 * 論理演算(&&, ||, &, |)
 * ローカル変数
 * グローバル変数

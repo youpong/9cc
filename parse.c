@@ -72,6 +72,7 @@ static Node *break_stmt() {
   node->ty = ND_BREAK;
   node->target = vec_last(breaks);
   match(TK_BREAK);
+  match(';');
   
   return node;
 }
