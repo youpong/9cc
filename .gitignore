@@ -1,5 +1,8 @@
 *~
 *.o
+*.gcno
+*.gcda
+*.gcov
 tmp*
 9cc
 a.out

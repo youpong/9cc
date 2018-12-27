@@ -22,7 +22,8 @@ void p_tree(Node *node) {
   if (node->rhs != NULL)
     p_tree(node->rhs);
 
-  p_node(node); printf("\n");
+  p_node(node);
+  printf("\n");
 }
 
 static void p_node(Node *node) {

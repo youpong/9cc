@@ -18,42 +18,42 @@ void gen_lval(Node *node) {
 }
 
 void gen(Node *node) {
-  //char buf[100];
-  
+  // char buf[100];
+
   if (node->ty == ND_WHILE) {
     // ラベルの作成 l
-    node->label_head = (char *)malloc((3+1) * sizeof(char));
-    node->label_tail = (char *)malloc((3+1) * sizeof(char));    
+    node->label_head = (char *)malloc((3 + 1) * sizeof(char));
+    node->label_tail = (char *)malloc((3 + 1) * sizeof(char));
     sprintf(node->label_head, "L%02d", label++); // L0
-    sprintf(node->label_tail, "L%02d", label++); // L1   
-    
-    printf("%s:\n", node->label_head);        // L0
-    
+    sprintf(node->label_tail, "L%02d", label++); // L1
+
+    printf("%s:\n", node->label_head); // L0
+
     // cond
     gen(node->cond);
-    
+
     // スタックトップの値でlへ条件分岐
     printf("\tpop rdi\n");
     printf("\tcmp rdi,0\n");
-    printf("\tje %s\n", node->label_tail);  // L1 
+    printf("\tje %s\n", node->label_tail); // L1
 
     // body
     gen(node->body);
-    
-    printf("\tjmp %s\n", node->label_head);  // L0
-    
-    printf("%s:\n", node->label_tail);        // L1
+
+    printf("\tjmp %s\n", node->label_head); // L0
+
+    printf("%s:\n", node->label_tail); // L1
     printf("\tpush rax\n");
-    
+
     return;
   }
   if (node->ty == ND_CONTINUE) {
-    //printf("\tpush rax\n");
+    // printf("\tpush rax\n");
     printf("\tjmp %s\n", node->target->label_head);
     return;
   }
   if (node->ty == ND_BREAK) {
-    //printf("\tpush rax\n");
+    // printf("\tpush rax\n");
     printf("\tjmp %s\n", node->target->label_tail);
     return;
   }
@@ -61,40 +61,40 @@ void gen(Node *node) {
     // ラベルの作成 l
     int l0 = label++;
     int l1 = label++;
-    
+
     // cond
     gen(node->cond);
     // スタックトップの値でlへ条件分岐
     printf("\tpop rdi\n");
     printf("\tcmp rdi,0\n");
-    printf("\tje L%d\n", l0);  // L0 - lelse
-    
+    printf("\tje L%d\n", l0); // L0 - lelse
+
     // then
     gen(node->then);
-    printf("\tjmp L%d\n", l1);  // L1 l lthen
-    
+    printf("\tjmp L%d\n", l1); // L1 l lthen
+
     // ラベルの印字
-    printf("L%d:\n", l0);        // L0
-    if(node->els != NULL) {
+    printf("L%d:\n", l0); // L0
+    if (node->els != NULL) {
       gen(node->els);
     }
-    
-    printf("L%d:\n", l1);        // L1
+
+    printf("L%d:\n", l1); // L1
     printf("\tpush rax\n");
-    
+
     return;
   }
-  
+
   if (node->ty == ND_COMP_STMT) {
     Vector *v = node->stmts;
-    for(int i = 0; i < v->len; i++) {
+    for (int i = 0; i < v->len; i++) {
       gen((Node *)v->data[i]);
       printf("\tpop rax\n");
     }
     printf("\tpush rax\n");
     return;
   }
-  
+
   if (node->ty == ND_NUM) {
     printf("\tpush %d\n", node->val);
     return;
@@ -155,4 +155,3 @@ void gen(Node *node) {
 
   printf("\tpush rax\n");
 }
-

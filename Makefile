@@ -1,26 +1,26 @@
 CC = gcc
-CFLAGS=-Wall -std=c11 -g
+CFLAGS = -Wall -std=c11 -g --coverage
+LIBS = -lgcov
 
-SRCS=codegen.c main.c node.c parse.c tokenize.c util.c symbol.c \
-     init.c util_test.c debug.c 
-OBJS=$(SRCS:.c=.o)
+TARGET = 9cc
+SRCS = main.c init.c  symbol.c tokenize.c  parse.c codegen.c \
+       node.c debug.c util.c   util_test.c
+OBJS = $(SRCS:.c=.o)
 
-all: 9cc
+all: $(TARGET)
 clean:
-	rm -f 9cc node_test a.out\
+	rm -f $(TARGET) node_test a.out\
 	      $(OBJS) tmp* *.png
 format:
 	clang-format -i $(SRCS) *.h
+gcov:
+	gcov $(SRCS)
 
-9cc: $(OBJS)
-	$(CC) -o $@ $^
+$(TARGET): $(OBJS)
+	$(CC) -o $@ $(OBJS) $(LIBS)
 
 $(OBJS): 9cc.h util.h
 
-test: 9cc node_test 
-	./9cc -test
+test: $(TARGET)
+	./$(TARGET) -test
 	./test.sh
-
-node_test: node_test.o util.o
-node_test.o: node.c 9cc.h
-	$(CC) $(CFLAGS) -c -D UNIT_TEST -o $@ $<

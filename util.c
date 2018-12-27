@@ -27,9 +27,8 @@ void *vec_pop(Vector *vec) {
 }
 
 void *vec_last(Vector *vec) {
-  return vec->data[vec->len-1];
+  return vec->data[vec->len - 1];
 }
-  
 
 Map *new_map() {
   Map *map = malloc(sizeof(Map));

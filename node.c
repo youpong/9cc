@@ -26,7 +26,3 @@ Node *new_node_id(char *name) {
   strcpy(node->name, name);
   return node;
 }
-
-#ifdef UNIT_TEST
-int main() { return 0; }
-#endif

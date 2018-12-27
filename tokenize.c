@@ -1,10 +1,10 @@
 #include "9cc.h"
 #include "util.h"
 #include <ctype.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
 
 static char *buf_ptr;
 static int mygetc();
@@ -21,14 +21,14 @@ void tokenize() {
   int status = NOT_IN_COMMENT;
   int c;
 
-  if(cmdln_flg == true)
+  if (cmdln_flg == true)
     buf_ptr = ARGV[1];
   else {
     yyin = fopen(ARGV[1], "r");
-    if(yyin == NULL)
+    if (yyin == NULL)
       error("file cannot open");
   }
-  
+
   while (true) {
     token = (Token *)malloc(sizeof(Token));
     c = mygetc();
@@ -36,22 +36,22 @@ void tokenize() {
     // comment 終端処理
     if (status == IN_COMMENT) {
       if (c == '*') {
-	c = mygetc();
-	if(c == '/') {
-	  status = NOT_IN_COMMENT;
-	  continue;
-	}
-	myungetc(c);
+        c = mygetc();
+        if (c == '/') {
+          status = NOT_IN_COMMENT;
+          continue;
+        }
+        myungetc(c);
       }
       continue;
     }
-    
+
     // commnent 開始処理
     if (c == '/') {
       c = mygetc();
       if (c == '*') {
-	status = IN_COMMENT;
-	continue;
+        status = IN_COMMENT;
+        continue;
       }
       myungetc(c);
       token->ty = '/';
@@ -86,7 +86,7 @@ void tokenize() {
         token->ty = TK_EQ;
         vec_push(tokens, token);
       } else {
-	myungetc(c);	
+        myungetc(c);
         token->ty = '=';
         vec_push(tokens, token);
       }
@@ -96,14 +96,14 @@ void tokenize() {
     // "!="
     if (c == '!') {
       c = mygetc();
-      if( c == '=') {
-	token->ty = TK_NE;
-	vec_push(tokens, token);
-	continue;
+      if (c == '=') {
+        token->ty = TK_NE;
+        vec_push(tokens, token);
+        continue;
       } else {
-	token->ty = c;
-	vec_push(tokens, token);
-	myungetc(c);
+        token->ty = c;
+        vec_push(tokens, token);
+        myungetc(c);
       }
       continue;
     }
@@ -112,12 +112,12 @@ void tokenize() {
     if (isdigit(c)) {
       token->val = c - '0';
       c = mygetc();
-      while( isdigit(c) ) {
-	token->val = token->val * 10 + c - '0';
-	c = mygetc();
+      while (isdigit(c)) {
+        token->val = token->val * 10 + c - '0';
+        c = mygetc();
       }
       myungetc(c);
-      token->ty = TK_NUM;      
+      token->ty = TK_NUM;
       vec_push(tokens, token);
       continue;
     }
@@ -128,28 +128,27 @@ void tokenize() {
       *p++ = c;
       c = mygetc();
       while (isalnum(c)) {
-	*p++ = c;
-	c = mygetc();
+        *p++ = c;
+        c = mygetc();
       }
       myungetc(c);
       *p = '\0';
-      
-      token->name = (char *)malloc(( strlen(buf) + 1) * sizeof(char));
+
+      token->name = (char *)malloc((strlen(buf) + 1) * sizeof(char));
       strcpy(token->name, buf);
 
       SYM_REC *rec;
-      if((rec = lookup(token->name)) == NULL) {
-	insert(token->name, TK_IDENT);
-	token->ty = TK_IDENT;
+      if ((rec = lookup(token->name)) == NULL) {
+        insert(token->name, TK_IDENT);
+        token->ty = TK_IDENT;
       } else {
-	token->ty = rec->token;
+        token->ty = rec->token;
       }
       vec_push(tokens, token);
 
       continue;
-      
     }
-    if( c == EOF ) {
+    if (c == EOF) {
       token = (Token *)malloc(sizeof(Token));
       token->ty = TK_EOF;
       vec_push(tokens, token);
@@ -160,13 +159,13 @@ void tokenize() {
 }
 
 int mygetc() {
-  if(cmdln_flg == true) 
+  if (cmdln_flg == true)
     return (*buf_ptr == '\0') ? EOF : *buf_ptr++;
   return fgetc(yyin);
 }
 
-int myungetc(int c){
-  if(cmdln_flg == true) {
+int myungetc(int c) {
+  if (cmdln_flg == true) {
     *--buf_ptr = c;
     return *buf_ptr;
   }

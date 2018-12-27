@@ -1,6 +1,6 @@
 #include "util.h"
-#include <stdio.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 // Tokenize
 enum {
@@ -17,9 +17,9 @@ enum {
 };
 
 typedef struct {
-  int ty;      // type of token
-  int val;     // ty が TK_NUM の場合のその値
-  char *name;  // ty が TK_IDENT の場合その名前
+  int ty;     // type of token
+  int val;    // ty が TK_NUM の場合のその値
+  char *name; // ty が TK_IDENT の場合その名前
 } Token;
 
 extern Vector *tokens;
@@ -49,7 +49,7 @@ struct Node {
   int val;
   char *name;
   Vector *stmts; // compound statements
-  
+
   Node *cond;
   Node *then;
   Node *els;
@@ -82,7 +82,7 @@ typedef struct {
 } SYM_REC;
 
 void insert(char *, int);
-SYM_REC *lookup(char *); 
+SYM_REC *lookup(char *);
 
 // init.c
 void init();

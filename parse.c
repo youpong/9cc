@@ -10,7 +10,7 @@ static Node *compound_stmt();
 static Node *if_stmt();
 static Node *while_stmt();
 static Node *break_stmt();
-static Node *continue_stmt(); 
+static Node *continue_stmt();
 static Node *expr();
 static Node *assign();
 static Node *logical();
@@ -32,10 +32,10 @@ Vector *continues;
 void parse() {
   breaks = new_vector();
   continues = new_vector();
-  
+
   lookahead = (Token *)tokens->data[0];
-  while(lookahead->ty != TK_EOF)
-    vec_push(code,  stmt());
+  while (lookahead->ty != TK_EOF)
+    vec_push(code, stmt());
 }
 
 /*
@@ -49,15 +49,15 @@ program: ( expr ";" )*
 static Node *stmt() {
   Node *node;
 
-  if(lookahead->ty == TK_IF)
+  if (lookahead->ty == TK_IF)
     return if_stmt();
-  if(lookahead->ty == TK_WHILE)
+  if (lookahead->ty == TK_WHILE)
     return while_stmt();
-  if(lookahead->ty == TK_BREAK)
+  if (lookahead->ty == TK_BREAK)
     return break_stmt();
-  if(lookahead->ty == TK_CONTINUE)
+  if (lookahead->ty == TK_CONTINUE)
     return continue_stmt();
-  if (lookahead->ty == '{') 
+  if (lookahead->ty == '{')
     return compound_stmt();
 
   node = expr();
@@ -70,12 +70,12 @@ static Node *stmt() {
  */
 static Node *continue_stmt() {
   Node *node = (Node *)malloc(sizeof(Node));
-  
+
   node->ty = ND_CONTINUE;
   node->target = vec_last(continues);
   match(TK_CONTINUE);
   match(';');
-  
+
   return node;
 }
 
@@ -84,12 +84,12 @@ static Node *continue_stmt() {
  */
 static Node *break_stmt() {
   Node *node = (Node *)malloc(sizeof(Node));
-  
+
   node->ty = ND_BREAK;
   node->target = vec_last(breaks);
   match(TK_BREAK);
   match(';');
-  
+
   return node;
 }
 
@@ -101,7 +101,7 @@ static Node *while_stmt() {
 
   vec_push(breaks, node);
   vec_push(continues, node);
-  
+
   node->ty = ND_WHILE;
   match(TK_WHILE);
   match('(');
@@ -111,7 +111,7 @@ static Node *while_stmt() {
 
   vec_pop(breaks);
   vec_pop(continues);
-  
+
   return node;
 }
 
@@ -128,7 +128,7 @@ static Node *if_stmt() {
   match(')');
   node->then = stmt();
 
-  if(lookahead->ty == TK_ELSE) {
+  if (lookahead->ty == TK_ELSE) {
     match(TK_ELSE);
     node->els = stmt();
   }
@@ -139,31 +139,31 @@ static Node *if_stmt() {
 static Node *compound_stmt() {
   Node *node = new_node(ND_COMP_STMT, NULL, NULL);
   node->stmts = new_vector();
-  
+
   match('{');
-  while(lookahead->ty != '}') {
+  while (lookahead->ty != '}') {
     vec_push(node->stmts, stmt());
   }
   match('}');
-  
+
   return node;
 }
-    
+
 /*
  */
 static Node *expr() {
   return assign();
-}  
+}
 
 /*
 production rules
 
 (1) original
-assign: logical | logical "=" assign 
+assign: logical | logical "=" assign
 */
 static Node *assign() {
   Node *lhs = logical();
-  
+
   if (lookahead->ty == '=') {
     match('=');
     return new_node('=', lhs, assign());
@@ -175,21 +175,21 @@ static Node *assign() {
 /*
 (1) original
 logical: logical "==" add | logical "!=" add
-(3) 
+(3)
 logical: add ( "==" add | "!=" add)*
 */
 static Node *logical() {
   Node *lhs = add();
-  while(true)
-    if(lookahead->ty == TK_EQ) {
+  while (true)
+    if (lookahead->ty == TK_EQ) {
       match(TK_EQ);
       lhs = new_node(ND_EQ, lhs, add());
-    } else if(lookahead->ty == TK_NE) {
+    } else if (lookahead->ty == TK_NE) {
       match(TK_NE);
       lhs = new_node(ND_NE, lhs, add());
     } else
       break;
-  
+
   return lhs;
 }
 
@@ -197,7 +197,7 @@ static Node *logical() {
  * Production Rules
  *
  * (1) original
- * add:  add "+" mul | add "-" mul | mul 
+ * add:  add "+" mul | add "-" mul | mul
  *
  * (2) elimination of left recursion
  * add:  mul rest2
@@ -212,7 +212,7 @@ static Node *logical() {
  */
 static Node *add() {
   Node *lhs = mul();
-  while (true) 
+  while (true)
     if (lookahead->ty == '+') {
       match('+');
       lhs = new_node('+', lhs, mul());
@@ -244,7 +244,7 @@ static Node *add() {
  */
 static Node *mul() {
   Node *lhs = term();
-  while (true) 
+  while (true)
     if (lookahead->ty == '*') {
       match('*');
       lhs = new_node('*', lhs, term());
