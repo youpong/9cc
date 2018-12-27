@@ -1,6 +1,8 @@
 CC = gcc
 CFLAGS = -Wall -std=c11 -g --coverage
-LIBS = -lgcov
+# electrice fence
+# LIBS = -lgcov -lefence
+LIBS = -lgcov 
 
 TARGET = 9cc
 SRCS = main.c init.c  symbol.c tokenize.c  parse.c codegen.c \
@@ -9,11 +11,14 @@ OBJS = $(SRCS:.c=.o)
 
 all: $(TARGET)
 clean:
-	rm -f $(TARGET) node_test a.out\
-	      $(OBJS) tmp* *.png
+	rm -f $(TARGET) $(OBJS) a.out tmp* \
+               *.gcov *.gcno *.gcda *.png
+test: $(TARGET)
+	./$(TARGET) -test
+	./test.sh
 format:
 	clang-format -i $(SRCS) *.h
-gcov:
+gcov: $(TARGET)
 	gcov $(SRCS)
 
 $(TARGET): $(OBJS)
@@ -21,6 +26,3 @@ $(TARGET): $(OBJS)
 
 $(OBJS): 9cc.h util.h
 
-test: $(TARGET)
-	./$(TARGET) -test
-	./test.sh

@@ -29,6 +29,7 @@ static void test_vector() {
   expect(__LINE__, 0, *(int *)vec->data[0]);
   expect(__LINE__, 50, *(int *)vec->data[50]);
   expect(__LINE__, 99, *(int *)vec->data[99]);
+  expect(__LINE__, 99, *(int *)vec_last(vec));
 }
 
 static void test_map() {
