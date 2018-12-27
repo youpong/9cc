@@ -64,6 +64,8 @@ try  3    'if(0)a=2; else a=3;a;' t143
 
 try  1     'a=1; while(0)a=2; a;' t150
 try  2     'a=1; while(a==1)a=2; a;' t151
+try  1 'a=1; while(1) { break; a = 2; } a;' t152
+try  2 'a = 1; while(a==1) { a = a + 1; continue; a = 3; } a;' t153
 
 try 34    '/* comment */34;'   t160
 try 35    '/** comment **/35;' t161
