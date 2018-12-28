@@ -1,8 +1,14 @@
-*~
+9cc
+a.out
+core
+tmp*
 *.o
+
+# gcov files
 *.gcno
 *.gcda
 *.gcov
-tmp*
-9cc
-a.out
+
+# emacs temporary files
+*~
+\#*\#

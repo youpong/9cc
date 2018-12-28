@@ -20,6 +20,7 @@ void gen_lval(Node *node) {
 void gen(Node *node) {
   if (node->ty == ND_FUNC_CALL) {
     printf("\tcall %s\n", node->name);
+    printf("\tpush rax\n");
     return;
   }
   if (node->ty == ND_FUNC_DEF) {

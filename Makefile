@@ -1,8 +1,8 @@
 CC = gcc
-#CFLAGS = -Wall -std=c11 -g --coverage -D_POSIX_C_SOURCE=200809L --coverage
+#CFLAGS = -Wall -std=c11 -g -D_POSIX_C_SOURCE=200809L --coverage
 CFLAGS = -Wall -std=c11 -g -D_POSIX_C_SOURCE=200809L
 # electrice fence
-# LIBS = -lgcov -lefence
+#LIBS = -lgcov -lefence
 LIBS = -lgcov 
 
 TARGET = 9cc
