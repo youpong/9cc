@@ -59,27 +59,33 @@ int main(int argc, char **argv) {
 
   printf(".intel_syntax noprefix\n");
   printf(".global main\n");
-  printf("main:\n");
 
   // プロローグ
   // 変数分の領域を確保する
-  printf("\tpush rbp\n");
-  printf("\tmov rbp, rsp\n");
-  printf("\tsub rsp, %d\n", var_cnt * 8);
+  if (cmdln_flg == true) {
+    printf("main:\n");  
+    printf("\tpush rbp\n");
+    printf("\tmov rbp, rsp\n");
+    printf("\tsub rsp, %d\n", var_cnt * 8);
+  }
 
   for (int i = 0; i < code->len; i++) {
-    gen((Node *)code->data[i]);
-
+    Node *node = (Node *)code->data[i];
+    gen(node);
+    //printf("--\n");
     // 式の評価結果としてスタックに一つの値が残っているはずなので
     // スタックが溢れないようにポップしておく
-    printf("\tpop rax\n");
+    if (node->ty < ND_COMP_STMT)
+      printf("\tpop rax\n");
   }
 
   // エピローグ
   // 最後の式の結果が RAX に残っているのでそれが返り値になる
-  printf("\tmov rsp, rbp\n");
-  printf("\tpop rbp\n");
-  printf("\tret\n");
+  if (cmdln_flg == true) {
+    printf("\tmov rsp, rbp\n");
+    printf("\tpop rbp\n");
+    printf("\tret\n");
+  }
 
   return EXIT_SUCCESS;
 }

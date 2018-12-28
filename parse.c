@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+static Node *func_def();
 static Node *stmt();
 static Node *compound_stmt();
 static Node *if_stmt();
@@ -34,8 +35,30 @@ void parse() {
   continues = new_vector();
 
   lookahead = (Token *)tokens->data[0];
-  while (lookahead->ty != TK_EOF)
-    vec_push(code, stmt());
+  while (lookahead->ty != TK_EOF) {
+    if (cmdln_flg == true)
+      vec_push(code, stmt());
+    else
+      vec_push(code, func_def());
+  }
+}
+
+/*
+ * func_def: name() body
+ * body: compound_stmt
+ */
+static Node *func_def() {
+  Node *node = (Node *)malloc(sizeof(Node));
+
+  node->ty = ND_FUNC_DEF;
+  
+  node->name = strdup(lookahead->name);
+  match(TK_IDENT);
+  match('(');
+  match(')');
+  node->body = compound_stmt();
+
+  return node;
 }
 
 /*
@@ -260,17 +283,27 @@ static Node *mul() {
 /*
  * production rule
  * term: NUMBER | IDENT | "(" expr ")"
+ *     | IDENT() 
  */
 static Node *term() {
   Node *node;
+  char *name;
   switch (lookahead->ty) {
   case TK_NUM:
     node = new_node_num(lookahead->val);
     match(TK_NUM);
     break;
   case TK_IDENT:
-    node = new_node_id(lookahead->name);
+    name = lookahead->name;
     match(TK_IDENT);
+    if (lookahead->ty == '(') {
+      node = (Node *)malloc(sizeof(Node));
+      node->ty = ND_FUNC_CALL;
+      node->name = name;
+      match('(');
+      match(')');
+    } else 
+      node = new_node_id(name);
     break;
   case '(':
     match('(');

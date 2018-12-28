@@ -32,13 +32,16 @@ FILE *yyin;
 enum {
   ND_NUM = 256, // 整数
   ND_IDENT,     // 識別子
-  ND_COMP_STMT, // compound statement
   ND_EQ,        // '=='
   ND_NE,        // '!='
+  /* これより下の node は返り値を持たない */
+  ND_COMP_STMT, // compound statement 
   ND_IF,        // if statement
   ND_WHILE,     // while statement
   ND_BREAK,     // break statement
   ND_CONTINUE,  // continue statement
+  ND_FUNC_DEF,  // function definition
+  ND_FUNC_CALL, // function call
 };
 
 typedef struct Node Node;

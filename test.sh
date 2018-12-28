@@ -1,5 +1,5 @@
 #!/bin/bash
-
+succeed=1
 try() {
     expected="$1"
     input="$2"
@@ -8,6 +8,7 @@ try() {
     ./9cc -e "$input" > tmp.s
     if [ $? != 0 ]; then
 	echo "$3: cann't compile"
+	succeed=0
 	return
     fi
     
@@ -17,6 +18,7 @@ try() {
 
     if [ "$actual" != "$expected" ]; then
 	echo "$msg: $expected expected, but got $actual"
+	succeed=0
     fi
 }
 
@@ -76,4 +78,9 @@ try 35    '/** comment **/35;' t161
 
 #try 0 256 60
 
-echo OK
+if [[ $succeed == 1 ]]; then
+    echo OK
+else
+    echo FAILED
+fi
+
