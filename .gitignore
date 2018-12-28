@@ -1,6 +1,7 @@
 9cc
 a.out
 core
+TAGS
 tmp*
 *.o
 

@@ -1,4 +1,4 @@
-9cc
+9cc C compiler
 ===
 低レイヤを知りたい人のためのCコンパイラ作成入門[*1]を
 参考に作り始める。 ドラゴンブック[*2]を参考に作り続けている。
@@ -10,7 +10,7 @@ Command Line interface.
 
     program_file Specifiles program filename.
     -ast         Output AST(Abstract Syntax Tree). 
-    -e program   Specifies program from command-line.   
+    -e stmt      Specifies stmt from command-line.    
     -test        Do test.
 
 Sample
@@ -32,16 +32,19 @@ Sample
 * if, while 文
 * break/continue 文
 * コメント文
+* 引数[なし]の関数定義
+* 引数[なし]の関数呼び出し
 
 # 実装予定
 
 * 論理演算(&&, ||, &, |)
 * ローカル変数
 * グローバル変数
-* 引数[あり|なし]の関数呼び出し
-* 引数[あり|なし]の関数定義
+* 引数[あり]の関数呼び出し
+* 引数[あり]の関数定義
 * 配列
 * ポインタ
+* 単項演算子(-/+)
 * ++/--
 * char/int型
 * 文字列リテラル

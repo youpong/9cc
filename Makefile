@@ -21,6 +21,8 @@ format:
 	clang-format -i $(SRCS) *.h
 gcov: $(TARGET)
 	gcov $(SRCS)
+tags:
+	etags $(SRCS) *.h
 
 $(TARGET): $(OBJS)
 	$(CC) -o $@ $(OBJS) $(LIBS)
