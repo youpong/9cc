@@ -13,7 +13,7 @@ OBJS = $(SRCS:.c=.o)
 all: $(TARGET)
 clean:
 	rm -f $(TARGET) $(OBJS) a.out tmp* \
-               *.gcov *.gcno *.gcda *.png
+              TAGS core *.gcov *.gcno *.gcda *.png
 test: $(TARGET)
 	./$(TARGET) -test
 	./test.sh

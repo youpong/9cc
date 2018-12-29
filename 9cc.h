@@ -32,11 +32,11 @@ FILE *yyin;
 enum {
   ND_NUM = 256, // 整数
   ND_IDENT,     // 識別子
-  ND_FUNC_CALL, // function call  
+  ND_FUNC_CALL, // function call
   ND_EQ,        // '=='
   ND_NE,        // '!='
   /* これより下の node は返り値を持たない */
-  ND_COMP_STMT, // compound statement 
+  ND_COMP_STMT, // compound statement
   ND_IF,        // if statement
   ND_WHILE,     // while statement
   ND_BREAK,     // break statement

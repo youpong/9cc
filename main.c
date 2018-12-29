@@ -63,7 +63,7 @@ int main(int argc, char **argv) {
   // プロローグ
   // 変数分の領域を確保する
   if (cmdln_flg == true) {
-    printf("main:\n");  
+    printf("main:\n");
     printf("\tpush rbp\n");
     printf("\tmov rbp, rsp\n");
     printf("\tsub rsp, %d\n", var_cnt * 8);
@@ -72,7 +72,7 @@ int main(int argc, char **argv) {
   for (int i = 0; i < code->len; i++) {
     Node *node = (Node *)code->data[i];
     gen(node);
-    //printf("--\n");
+
     // 式の評価結果としてスタックに一つの値が残っているはずなので
     // スタックが溢れないようにポップしておく
     if (node->ty < ND_COMP_STMT)

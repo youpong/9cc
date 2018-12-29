@@ -51,7 +51,7 @@ static Node *func_def() {
   Node *node = (Node *)malloc(sizeof(Node));
 
   node->ty = ND_FUNC_DEF;
-  
+
   node->name = strdup(lookahead->name);
   match(TK_IDENT);
   match('(');
@@ -283,7 +283,7 @@ static Node *mul() {
 /*
  * production rule
  * term: NUMBER | IDENT | "(" expr ")"
- *     | IDENT() 
+ *     | IDENT()
  */
 static Node *term() {
   Node *node;
@@ -302,7 +302,7 @@ static Node *term() {
       node->name = name;
       match('(');
       match(')');
-    } else 
+    } else
       node = new_node_id(name);
     break;
   case '(':
