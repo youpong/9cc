@@ -53,6 +53,7 @@ void tokenize() {
         status = IN_COMMENT;
         continue;
       }
+      // comment の開始記号ではない単なる '/'
       myungetc(c);
       token->ty = '/';
       vec_push(tokens, token);
@@ -99,7 +100,6 @@ void tokenize() {
       if (c == '=') {
         token->ty = TK_NE;
         vec_push(tokens, token);
-        continue;
       } else {
         token->ty = c;
         vec_push(tokens, token);
@@ -148,12 +148,13 @@ void tokenize() {
 
       continue;
     }
+    
     if (c == EOF) {
-      token = (Token *)malloc(sizeof(Token));
       token->ty = TK_EOF;
       vec_push(tokens, token);
       return;
     }
+    
     error("トークナイズできません: (%c)\n", c);
   }
 }
