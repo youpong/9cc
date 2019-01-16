@@ -19,6 +19,10 @@ void gen_lval(Node *node) {
 
 void gen(Node *node) {
   if (node->ty == ND_FUNC_CALL) {
+    // TODO: 引数の設定
+    gen(node->args[0]);
+    printf("\tpop rdi\n");
+    
     printf("\tcall %s\n", node->name);
     printf("\tpush rax\n");
     return;

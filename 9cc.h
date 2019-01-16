@@ -62,6 +62,9 @@ struct Node {
   Node *target;
   char *label_head;
   char *label_tail;
+
+  // Function call
+  Node *args[1];
 };
 
 extern Vector *code;
@@ -93,6 +96,7 @@ void init();
 // debug.c
 void p_tree(Node *);
 
+// main.c
 extern bool cmdln_flg;
 extern bool ast_flg;
 extern char **ARGV;

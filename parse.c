@@ -301,6 +301,10 @@ static Node *term() {
       node->ty = ND_FUNC_CALL;
       node->name = name;
       match('(');
+      // TODO: 引数の読み取り
+      node->args[0] = expr();
+      //      match(',');
+      //      node->args[1] = expr();
       match(')');
     } else
       node = new_node_id(name);
