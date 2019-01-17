@@ -298,14 +298,22 @@ static Node *term() {
     match(TK_IDENT);
     if (lookahead->ty == '(') {
       node = (Node *)malloc(sizeof(Node));
+      node->args = new_vector();
+
       node->ty = ND_FUNC_CALL;
       node->name = name;
+
       match('(');
-      // TODO: 引数の読み取り
-      node->args[0] = expr();
-      //      match(',');
-      //      node->args[1] = expr();
+      if (lookahead->ty != ')') {
+        while (true) {
+          vec_push(node->args, expr());
+          if (lookahead->ty == ')')
+            break;
+          match(',');
+        }
+      }
       match(')');
+      //      printf("len(%d)\n", node->args->len);
     } else
       node = new_node_id(name);
     break;

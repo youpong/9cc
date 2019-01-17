@@ -1,5 +1,4 @@
-#ifndef UTIL_H
-#define UTIL_H
+#pragma once
 /* util.c */
 typedef struct {
   void **data;
@@ -27,4 +26,3 @@ _Noreturn void error(char *, ...);
 
 /* util_test.c */
 void run_utiltest();
-#endif

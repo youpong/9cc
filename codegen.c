@@ -18,11 +18,20 @@ void gen_lval(Node *node) {
 }
 
 void gen(Node *node) {
+  char *arg_rg[] = {"rdi", "rsi", "rdx", "rcx", "r8", "r9", NULL};
+
   if (node->ty == ND_FUNC_CALL) {
     // TODO: 引数の設定
-    gen(node->args[0]);
-    printf("\tpop rdi\n");
-    
+    //    for(int len = node->args->len; len > 0; len--) {
+    int len = node->args->len;
+    for (int i = 0; i < len; i++) {
+      if (arg_rg[i] == NULL)
+        error("too match args");
+      Node *arg = (Node *)node->args->data[i];
+      gen(arg);
+      printf("\tpop %s\n", arg_rg[i]);
+    }
+
     printf("\tcall %s\n", node->name);
     printf("\tpush rax\n");
     return;

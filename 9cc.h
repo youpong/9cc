@@ -64,7 +64,7 @@ struct Node {
   char *label_tail;
 
   // Function call
-  Node *args[1];
+  Vector *args;
 };
 
 extern Vector *code;

@@ -74,6 +74,7 @@ void tokenize() {
     case ')':
     case '{':
     case '}':
+    case ',':
     case ';':
       token->ty = c;
       vec_push(tokens, token);
@@ -148,13 +149,13 @@ void tokenize() {
 
       continue;
     }
-    
+
     if (c == EOF) {
       token->ty = TK_EOF;
       vec_push(tokens, token);
       return;
     }
-    
+
     error("トークナイズできません: (%c)\n", c);
   }
 }
