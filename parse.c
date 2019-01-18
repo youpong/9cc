@@ -45,17 +45,29 @@ void parse() {
 }
 
 /*
- * func_def: name() body
+ * func_def: name(params) body
+ * params: ε | IDENT("," IDENT)*
  * body: compound_stmt
  */
 static Node *func_def() {
   Node *node = (Node *)malloc(sizeof(Node));
+  node->params = new_vector();
 
   node->ty = ND_FUNC_DEF;
 
   node->name = strdup(lookahead->name);
   match(TK_IDENT);
   match('(');
+
+  if (lookahead->ty != ')') {
+    while (true) {
+      vec_push(node->params, new_node_id(lookahead->name));
+      match(TK_IDENT);
+      if (lookahead->ty == ')')
+        break;
+      match(',');
+    }
+  }
   match(')');
   node->body = compound_stmt();
 

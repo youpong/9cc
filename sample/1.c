@@ -1,9 +1,8 @@
 main() {
   a = 2;
-  func();
-  a;
+  a = a + func();
 }
 
 func() {
-  a = a + 1;
+  1;
 }

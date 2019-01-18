@@ -56,6 +56,19 @@ void gen(Node *node) {
     printf("\tsub rsp, %d\n", var_cnt * 8);
     rsp_cur -= var_cnt * 8 + 8;
 
+    // params
+    int len = node->params->len;
+    for (int i = 0; i < len; i++) {
+      Node *param = (Node *)node->params->data[i];
+      gen_lval(param);
+      printf("\tpush %s\n", arg_rg[i]);
+
+      printf("\tpop rdi\n");
+      printf("\tpop rax\n");
+      printf("\tmov [rax], rdi\n");
+    }
+
+    // body
     gen(node->body);
 
     // epi-logue

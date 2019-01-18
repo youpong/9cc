@@ -65,6 +65,9 @@ struct Node {
   char *label_head;
   char *label_tail;
 
+  // Function definition
+  Vector *params;
+
   // Function call
   Vector *args;
 };

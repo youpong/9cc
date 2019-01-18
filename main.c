@@ -58,11 +58,20 @@ int main(int argc, char **argv) {
   }
 
   printf(".intel_syntax noprefix\n");
-  printf(".global main\n");
-
-  // プロローグ
-  // 変数分の領域を確保する
-  if (cmdln_flg == true) {
+  if (cmdln_flg != true) {
+    // function name
+    char *delim = "";
+    printf(".global ");
+    for (int i = 0; i < code->len; i++) {
+      Node *node = (Node *)code->data[i];
+      if (node->ty == ND_FUNC_DEF) {
+	printf("%s%s", delim, node->name);
+	delim = ", ";
+      }
+    }
+    printf("\n");
+  } else {
+    printf(".global main\n");
     printf("main:\n");
     printf("\tpush rbp\n");
     printf("\tmov rbp, rsp\n");
