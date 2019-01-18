@@ -65,8 +65,8 @@ int main(int argc, char **argv) {
     for (int i = 0; i < code->len; i++) {
       Node *node = (Node *)code->data[i];
       if (node->ty == ND_FUNC_DEF) {
-	printf("%s%s", delim, node->name);
-	delim = ", ";
+        printf("%s%s", delim, node->name);
+        delim = ", ";
       }
     }
     printf("\n");

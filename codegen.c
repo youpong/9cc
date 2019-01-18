@@ -141,6 +141,15 @@ void gen(Node *node) {
 
     return;
   }
+  if (node->ty == ND_RETURN) {
+    gen(node->lhs);
+    printf("\tpop rax\n");
+
+    printf("\tmov rsp, rbp\n");
+    printf("\tpop rbp\n");
+    printf("\tret\n");
+    return;
+  }
   if (node->ty == ND_COMP_STMT) {
     Vector *v = node->stmts;
     for (int i = 0; i < v->len; i++) {

@@ -14,6 +14,7 @@ enum {
   TK_BREAK,     // "break"
   TK_CONTINUE,  // "continue"
   TK_RETURN,    // "return"
+  TK_INT,       // "int"
   TK_EOF,       // end of file
 };
 

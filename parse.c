@@ -55,12 +55,14 @@ static Node *func_def() {
 
   node->ty = ND_FUNC_DEF;
 
+  match(TK_INT);
   node->name = strdup(lookahead->name);
   match(TK_IDENT);
   match('(');
 
   if (lookahead->ty != ')') {
     while (true) {
+      match(TK_INT);
       vec_push(node->params, new_node_id(lookahead->name));
       match(TK_IDENT);
       if (lookahead->ty == ')')
@@ -106,14 +108,14 @@ static Node *stmt() {
 /*
  * TOBE "return" expr?;
  * --
- * ASIS "return";
+ * ASIS "return" expr;
  */
 static Node *return_stmt() {
   Node *node = (Node *)malloc(sizeof(Node));
 
   node->ty = ND_RETURN;
   match(TK_RETURN);
-  //  node->lhs = expr();
+  node->lhs = expr();
   match(';');
 
   return node;
