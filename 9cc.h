@@ -13,6 +13,7 @@ enum {
   TK_WHILE,     // "while"
   TK_BREAK,     // "break"
   TK_CONTINUE,  // "continue"
+  TK_RETURN,    // "return"
   TK_EOF,       // end of file
 };
 
@@ -41,6 +42,7 @@ enum {
   ND_WHILE,     // while statement
   ND_BREAK,     // break statement
   ND_CONTINUE,  // continue statement
+  ND_RETURN,    // return statement
   ND_FUNC_DEF,  // function definition
 };
 

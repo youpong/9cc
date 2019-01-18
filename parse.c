@@ -12,6 +12,7 @@ static Node *if_stmt();
 static Node *while_stmt();
 static Node *break_stmt();
 static Node *continue_stmt();
+static Node *return_stmt();
 static Node *expr();
 static Node *assign();
 static Node *logical();
@@ -24,8 +25,8 @@ static void match(int);
 Token *lookahead;
 
 // static
-Vector *breaks;
-Vector *continues;
+static Vector *breaks;
+static Vector *continues;
 
 /*
  *
@@ -80,11 +81,29 @@ static Node *stmt() {
     return break_stmt();
   if (lookahead->ty == TK_CONTINUE)
     return continue_stmt();
+  if (lookahead->ty == TK_RETURN)
+    return return_stmt();
   if (lookahead->ty == '{')
     return compound_stmt();
 
   node = expr();
   match(';');
+  return node;
+}
+
+/*
+ * TOBE "return" expr?;
+ * --
+ * ASIS "return";
+ */
+static Node *return_stmt() {
+  Node *node = (Node *)malloc(sizeof(Node));
+
+  node->ty = ND_RETURN;
+  match(TK_RETURN);
+  //  node->lhs = expr();
+  match(';');
+
   return node;
 }
 
