@@ -39,6 +39,7 @@ enum {
   ND_NE,        // '!='
   /* これより下の node は返り値を持たない */
   ND_COMP_STMT, // compound statement
+  ND_VAR_DEF,   // variable definition
   ND_IF,        // if statement
   ND_WHILE,     // while statement
   ND_BREAK,     // break statement

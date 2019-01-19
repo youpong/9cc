@@ -7,6 +7,7 @@
 
 static Node *func_def();
 static Node *stmt();
+static Node *var_def();
 static Node *compound_stmt();
 static Node *if_stmt();
 static Node *while_stmt();
@@ -87,6 +88,8 @@ program: ( expr ";" )*
 static Node *stmt() {
   Node *node;
 
+  if (lookahead->ty == TK_INT)
+    return var_def();
   if (lookahead->ty == TK_IF)
     return if_stmt();
   if (lookahead->ty == TK_WHILE)
@@ -102,6 +105,20 @@ static Node *stmt() {
 
   node = expr();
   match(';');
+  return node;
+}
+
+/**
+ * "int" IDENT ";"
+ */
+static Node *var_def() {
+  Node *node = (Node *)malloc(sizeof(Node));
+
+  node->ty = ND_VAR_DEF;
+  match(TK_INT);
+  match(TK_IDENT);
+  match(';');
+
   return node;
 }
 

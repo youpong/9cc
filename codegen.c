@@ -46,6 +46,9 @@ void gen(Node *node) {
     rsp_cur -= 8;
     return;
   }
+  if (node->ty == ND_VAR_DEF) {
+    return;
+  }
   if (node->ty == ND_FUNC_DEF) {
     // label
     printf("%s:\n", node->name);

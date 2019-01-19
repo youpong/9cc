@@ -1,8 +1,10 @@
-main() {
-  a = 2;
-  a = a + func();
+int func() {
+  	return 1;
 }
 
-func() {
-  1;
+int main() {
+	int a;
+  	a = 2;
+  	return  a + func();
 }
+
