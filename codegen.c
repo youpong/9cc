@@ -34,7 +34,7 @@ void gen(Node *node) {
       printf("\tpop %s\n", arg_rg[i]);
       rsp_cur += 8;
     }
-    int offset = 16 - abs(rsp_cur % 16);
+    int offset = 8 - abs(rsp_cur % 16);
     if (offset % 16 != 0)
       printf("\tsub rsp, %d\n", offset);
 
@@ -69,6 +69,7 @@ void gen(Node *node) {
       printf("\tpop rdi\n");
       printf("\tpop rax\n");
       printf("\tmov [rax], rdi\n");
+      rsp_cur += 8;
     }
 
     // body
@@ -78,7 +79,7 @@ void gen(Node *node) {
     printf("\tmov rsp, rbp\n");
     printf("\tpop rbp\n");
     printf("\tret\n");
-    rsp_cur += 16;
+    rsp_cur += 8;
 
     return;
   }
@@ -151,6 +152,7 @@ void gen(Node *node) {
     printf("\tmov rsp, rbp\n");
     printf("\tpop rbp\n");
     printf("\tret\n");
+    rsp_cur += 16;
     return;
   }
   if (node->ty == ND_COMP_STMT) {
@@ -198,7 +200,7 @@ void gen(Node *node) {
 
   printf("\tpop rdi\n");
   printf("\tpop rax\n");
-  rsp_cur += 8;
+  rsp_cur += 16;
 
   switch (node->ty) {
   case '+':
