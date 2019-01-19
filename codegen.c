@@ -14,7 +14,6 @@ void gen_lval(Node *node) {
     printf("\tmov rax, rbp\n");
     printf("\tsub rax, %d\n", (rec->addr + 1) * 8);
     printf("\tpush rax\n");
-    rsp_cur -= 8;
     return;
   }
   error("変数ではありません\n");
@@ -32,9 +31,8 @@ void gen(Node *node) {
       Node *arg = (Node *)node->args->data[i];
       gen(arg);
       printf("\tpop %s\n", arg_rg[i]);
-      rsp_cur += 8;
     }
-    int offset = 8 - abs(rsp_cur % 16);
+    int offset = 16 - abs(rsp_cur % 16);
     if (offset % 16 != 0)
       printf("\tsub rsp, %d\n", offset);
 
@@ -43,7 +41,6 @@ void gen(Node *node) {
       printf("\tadd rsp, %d\n", offset);
 
     printf("\tpush rax\n");
-    rsp_cur -= 8;
     return;
   }
   if (node->ty == ND_VAR_DEF) {
@@ -57,7 +54,7 @@ void gen(Node *node) {
     printf("\tpush rbp\n");
     printf("\tmov rbp, rsp\n");
     printf("\tsub rsp, %d\n", var_cnt * 8);
-    rsp_cur -= var_cnt * 8 + 8;
+    rsp_cur -= var_cnt * 8;
 
     // params
     int len = node->params->len;
@@ -69,7 +66,6 @@ void gen(Node *node) {
       printf("\tpop rdi\n");
       printf("\tpop rax\n");
       printf("\tmov [rax], rdi\n");
-      rsp_cur += 8;
     }
 
     // body
@@ -79,7 +75,6 @@ void gen(Node *node) {
     printf("\tmov rsp, rbp\n");
     printf("\tpop rbp\n");
     printf("\tret\n");
-    rsp_cur += 8;
 
     return;
   }
@@ -99,7 +94,6 @@ void gen(Node *node) {
     printf("\tpop rdi\n");
     printf("\tcmp rdi,0\n");
     printf("\tje %s\n", node->label_tail); // L1
-    rsp_cur += 8;
 
     // body
     gen(node->body);
@@ -129,7 +123,6 @@ void gen(Node *node) {
     printf("\tpop rdi\n");
     printf("\tcmp rdi,0\n");
     printf("\tje L%d\n", l0); // L0 - lelse
-    rsp_cur += 8;
 
     // then
     gen(node->then);
@@ -152,7 +145,6 @@ void gen(Node *node) {
     printf("\tmov rsp, rbp\n");
     printf("\tpop rbp\n");
     printf("\tret\n");
-    rsp_cur += 16;
     return;
   }
   if (node->ty == ND_COMP_STMT) {
@@ -162,7 +154,6 @@ void gen(Node *node) {
       gen(n);
       if (n->ty < ND_COMP_STMT) {
         printf("\tpop rax\n");
-        rsp_cur += 8;
       }
     }
 
@@ -171,7 +162,6 @@ void gen(Node *node) {
 
   if (node->ty == ND_NUM) {
     printf("\tpush %d\n", node->val);
-    rsp_cur -= 8;
     return;
   }
 
@@ -191,7 +181,6 @@ void gen(Node *node) {
     printf("\tpop rax\n");
     printf("\tmov [rax], rdi\n");
     printf("\tpush rdi\n");
-    rsp_cur += 8;
     return;
   }
 
@@ -200,7 +189,6 @@ void gen(Node *node) {
 
   printf("\tpop rdi\n");
   printf("\tpop rax\n");
-  rsp_cur += 16;
 
   switch (node->ty) {
   case '+':
@@ -231,5 +219,4 @@ void gen(Node *node) {
   }
 
   printf("\tpush rax\n");
-  rsp_cur -= 8;
 }
