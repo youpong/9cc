@@ -2,14 +2,15 @@ CC = gcc
 CFLAGS = -Wall -g
 9CC = ../9cc
 
-SRC = 
+SRCS = test.c
 TARGET = test
 
 check: $(TARGET)
 	./$(TARGET) && echo "OK"
 clean:
 	rm -f *.s *.o a.out core $(TARGET)
-
+format:
+	clang-format -i $(SRCS)
 $(TARGET): test.o util.o
 	cc -o $@ $^
 
