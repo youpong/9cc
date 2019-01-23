@@ -29,8 +29,11 @@ Token *lookahead;
 static Vector *breaks;
 static Vector *continues;
 
-/*
- *
+/* cmdln_flg == true
+ * parse: stmt*
+ * --
+ * cmdln_flg != true
+ * parse: func_def*
  */
 void parse() {
   breaks = new_vector();
@@ -46,9 +49,8 @@ void parse() {
 }
 
 /*
- * func_def: name(params) body
- * params: ε | IDENT("," IDENT)*
- * body: compound_stmt
+ * func_def: INT IDENT '(' params_opt ')' '{' stmt_list '}'
+ * params_opt: ε | INT IDENT (',' INT IDENT)*
  */
 static Node *func_def() {
   Node *node = (Node *)malloc(sizeof(Node));
@@ -72,19 +74,51 @@ static Node *func_def() {
     }
   }
   match(')');
-  node->body = compound_stmt();
+  node->body = compound_stmt(); // TODO
 
   return node;
 }
 
-/*
-Production rule
-(1) original
-program: program expr ";" | ε
+/* ASIS
+ * compound_stmt: '{' stmt* '}'
+ * --
+ * TOBE ?
+ * compound_stmt: '{' stmt* '}' | stmt
+ */
+static Node *compound_stmt() {
+  Node *node = new_node(ND_COMP_STMT, NULL, NULL);
+  node->stmts = new_vector();
 
-(2)
-program: ( expr ";" )*
-*/
+  match('{');
+  while (lookahead->ty != '}') {
+    vec_push(node->stmts, stmt());
+  }
+  match('}');
+
+  return node;
+}
+
+/* ASIS
+ * stmt: var_def
+ *     | if_stmt
+ *     | while_stmt
+ *     | break_stmt
+ *     | continue_stmt
+ *     | return_stmt
+ *     | compound_stmt // TODO
+ *     | expr ';'
+ *     ;
+ * --
+ * TOBE
+ * stmt: var_def
+ *     | if_stmt
+ *     | while_stmt
+ *     | break_stmt
+ *     | continue_stmt
+ *     | return_stmt
+ *     | expr ';'
+ *     ;
+ */
 static Node *stmt() {
   Node *node;
 
@@ -101,15 +135,15 @@ static Node *stmt() {
   if (lookahead->ty == TK_RETURN)
     return return_stmt();
   if (lookahead->ty == '{')
-    return compound_stmt();
+    return compound_stmt(); // TODO
 
   node = expr();
   match(';');
   return node;
 }
 
-/**
- * "int" IDENT ";"
+/*
+ * var_def: INT IDENT ';'
  */
 static Node *var_def() {
   Node *node = (Node *)malloc(sizeof(Node));
@@ -122,74 +156,15 @@ static Node *var_def() {
   return node;
 }
 
-/*
- * TOBE "return" expr?;
+/* ASIS
+ * if_stmt: IF '(' expr ')' stmt 
+ *        | IF '(' expr ')' stmt ELSE stmt
+ *        ; 
  * --
- * ASIS "return" expr;
- */
-static Node *return_stmt() {
-  Node *node = (Node *)malloc(sizeof(Node));
-
-  node->ty = ND_RETURN;
-  match(TK_RETURN);
-  node->lhs = expr();
-  match(';');
-
-  return node;
-}
-
-/*
- * "continue" ;
- */
-static Node *continue_stmt() {
-  Node *node = (Node *)malloc(sizeof(Node));
-
-  node->ty = ND_CONTINUE;
-  node->target = vec_last(continues);
-  match(TK_CONTINUE);
-  match(';');
-
-  return node;
-}
-
-/*
- * "break" ;
- */
-static Node *break_stmt() {
-  Node *node = (Node *)malloc(sizeof(Node));
-
-  node->ty = ND_BREAK;
-  node->target = vec_last(breaks);
-  match(TK_BREAK);
-  match(';');
-
-  return node;
-}
-
-/*
- * "while" ( cond ) body
- */
-static Node *while_stmt() {
-  Node *node = (Node *)malloc(sizeof(Node));
-
-  vec_push(breaks, node);
-  vec_push(continues, node);
-
-  node->ty = ND_WHILE;
-  match(TK_WHILE);
-  match('(');
-  node->cond = expr();
-  match(')');
-  node->body = stmt();
-
-  vec_pop(breaks);
-  vec_pop(continues);
-
-  return node;
-}
-
-/*
- * "if" ( cond ) then "else" els
+ * TOBE
+ * if_stmt: IF '(' expr ')' compound_stmt 
+ *        | IF '(' expr ')' compound_stmt ELSE compound_stmt
+ *        ; 
  */
 static Node *if_stmt() {
   Node *node = (Node *)malloc(sizeof(Node));
@@ -209,20 +184,83 @@ static Node *if_stmt() {
   return node;
 }
 
-static Node *compound_stmt() {
-  Node *node = new_node(ND_COMP_STMT, NULL, NULL);
-  node->stmts = new_vector();
+/* ASIS
+ * while_stmt: WHILE '(' expr ')' stmt
+ *           ;
+ * --
+ * TOBE
+ * while_stmt: WHILE '(' expr ')' compound_stmt
+ *           ;
+ */
+static Node *while_stmt() {
+  Node *node = (Node *)malloc(sizeof(Node));
 
-  match('{');
-  while (lookahead->ty != '}') {
-    vec_push(node->stmts, stmt());
-  }
-  match('}');
+  vec_push(breaks, node);
+  vec_push(continues, node);
+
+  node->ty = ND_WHILE;
+  match(TK_WHILE);
+  match('(');
+  node->cond = expr();
+  match(')');
+  node->body = stmt(); // TODO
+
+  vec_pop(breaks);
+  vec_pop(continues);
 
   return node;
 }
 
 /*
+ * break_stmt: BREAK ';'
+ *           ;
+ */
+static Node *break_stmt() {
+  Node *node = (Node *)malloc(sizeof(Node));
+
+  node->ty = ND_BREAK;
+  node->target = vec_last(breaks);
+  match(TK_BREAK);
+  match(';');
+
+  return node;
+}
+
+/*
+ * continue_stmt: CONTINUE ';'
+ *              ;
+ */
+static Node *continue_stmt() {
+  Node *node = (Node *)malloc(sizeof(Node));
+
+  node->ty = ND_CONTINUE;
+  node->target = vec_last(continues);
+  match(TK_CONTINUE);
+  match(';');
+
+  return node;
+}
+
+/*
+ * TOBE
+ * return_stmt: RETURN expr? ';'
+ * --
+ * ASIS 
+ * return_stmt: RETURN expr ';'
+ */
+static Node *return_stmt() {
+  Node *node = (Node *)malloc(sizeof(Node));
+
+  node->ty = ND_RETURN;
+  match(TK_RETURN);
+  node->lhs = expr();
+  match(';');
+
+  return node;
+}
+
+/*
+ * expr: assign
  */
 static Node *expr() {
   return assign();
@@ -232,7 +270,7 @@ static Node *expr() {
 production rules
 
 (1) original
-assign: logical | logical "=" assign
+assign: logical | logical '=' assign
 */
 static Node *assign() {
   Node *lhs = logical();
@@ -246,10 +284,13 @@ static Node *assign() {
 }
 
 /*
+ TK_EQ ==
+ TK_NE !=
+
 (1) original
-logical: logical "==" add | logical "!=" add
+logical: logical (TK_EQ|TK_NE) add 
 (3)
-logical: add ( "==" add | "!=" add)*
+logical: add (TK_EQ add|TK_NE add)*
 */
 static Node *logical() {
   Node *lhs = add();
@@ -270,14 +311,14 @@ static Node *logical() {
  * Production Rules
  *
  * (1) original
- * add:  add "+" mul | add "-" mul | mul
+ * add:  add '+' mul | add '-' mul | mul
  *
  * (2) elimination of left recursion
  * add:  mul rest2
- * rest2: "+" mul rest2 | "-" mul rest2 | ε
+ * rest2: '+' mul rest2 | '-' mul rest2 | ε
  *
  * (3) elimination of non-terminal rest2
- * add:  mul ("+" mul | "-" mul )*
+ * add:  mul ('+' mul |'-' mul)*
  * "*" はカッコで囲まれた生成規則を0回以上繰り返す
  *
  * 左結合を実現するため、
@@ -302,14 +343,14 @@ static Node *add() {
  * Production Rule
  *
  * (1) original
- * mul:   mul "*" term | mul "/" term | term
+ * mul:   mul '*' term | mul '/' term | term
  *
  * (2) elemination of left recursion
  * mul:   term rest1
- * rest1: "*" term rest1 | "/" term rest1 | ε
+ * rest1: '*' term rest1 | '/' term rest1 | ε
  *
  * (3) elimination of non-terminal rest1
- * mul: term ("*" term | "/" term)*
+ * mul: term ('*' term | '/' term)*
  * "*" はカッコで囲まれた生成規則を0回以上繰り返す
  *
  * 左結合を実現するため、
@@ -332,8 +373,10 @@ static Node *mul() {
 
 /*
  * production rule
- * term: NUMBER | IDENT | "(" expr ")"
- *     | IDENT()
+ * term: NUMBER 
+ *     | IDENT | IDENT '(' args_opt ')' 
+ *     | '(' expr ')'
+ * args_opt: ε | expr ( ',' expr )*
  */
 static Node *term() {
   Node *node;
