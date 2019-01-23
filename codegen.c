@@ -44,6 +44,7 @@ void gen(Node *node) {
     return;
   }
   if (node->ty == ND_VAR_DEF) {
+    printf("\tpush rax\n");
     return;
   }
   if (node->ty == ND_FUNC_DEF) {
@@ -75,7 +76,7 @@ void gen(Node *node) {
     printf("\tmov rsp, rbp\n");
     printf("\tpop rbp\n");
     printf("\tret\n");
-
+    printf("\tpush rax\n"); 
     return;
   }
   if (node->ty == ND_WHILE) {
@@ -97,19 +98,22 @@ void gen(Node *node) {
 
     // body
     gen(node->body);
+    printf("\tpop rax\n");
 
     printf("\tjmp %s\n", node->label_head); // L0
 
     printf("%s:\n", node->label_tail); // L1
-
+    printf("\tpush rax\n");
     return;
   }
   if (node->ty == ND_CONTINUE) {
     printf("\tjmp %s\n", node->target->label_head);
+    printf("\tpush rax\n");
     return;
   }
   if (node->ty == ND_BREAK) {
     printf("\tjmp %s\n", node->target->label_tail);
+    printf("\tpush rax\n");
     return;
   }
   if (node->ty == ND_IF) {
@@ -126,16 +130,18 @@ void gen(Node *node) {
 
     // then
     gen(node->then);
+    printf("\tpop rax\n");
     printf("\tjmp L%d\n", l1); // L1 l lthen
 
     // ラベルの印字
     printf("L%d:\n", l0); // L0
     if (node->els != NULL) {
       gen(node->els);
+      printf("\tpop rax\n");
     }
 
     printf("L%d:\n", l1); // L1
-
+    printf("\tpush rax\n");
     return;
   }
   if (node->ty == ND_RETURN) {
@@ -145,6 +151,7 @@ void gen(Node *node) {
     printf("\tmov rsp, rbp\n");
     printf("\tpop rbp\n");
     printf("\tret\n");
+    printf("\tpush rax\n");
     return;
   }
   if (node->ty == ND_COMP_STMT) {
@@ -152,11 +159,11 @@ void gen(Node *node) {
     for (int i = 0; i < v->len; i++) {
       Node *n = (Node *)v->data[i];
       gen(n);
-      if (n->ty < ND_COMP_STMT) {
-        printf("\tpop rax\n");
-      }
+      //if (n->ty < ND_COMP_STMT) {
+      printf("\tpop rax\n");
+	//      }
     }
-
+    printf("\tpush rax\n");
     return;
   }
 

@@ -4,18 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static void expect(int line, int expected, int actual) {
-  if (expected == actual)
-    return;
-  error("%d: %d expected, but got %d\n", line, expected, actual);
-}
-
-static void expect_ptr(int line, void *expected, void *actual) {
-  if (expected == actual)
-    return;
-  error("%d: %d expected, but got %d\n", line, expected, actual);
-}
-
 static void test_vector() {
   Vector *vec = new_vector();
 

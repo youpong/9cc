@@ -62,3 +62,15 @@ _Noreturn void error(char *fmt, ...) {
   fprintf(stderr, "\n");
   exit(1);
 }
+
+void expect(int line, int expected, int actual) {
+  if (expected == actual)
+    return;
+  error("%d: %d expected, but got %d\n", line, expected, actual);
+}
+
+void expect_ptr(int line, void *expected, void *actual) {
+  if (expected == actual)
+    return;
+  error("%d: %d expected, but got %d\n", line, expected, actual);
+}

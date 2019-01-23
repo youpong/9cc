@@ -74,16 +74,13 @@ static Node *func_def() {
     }
   }
   match(')');
-  node->body = compound_stmt(); // TODO
+  node->body = compound_stmt();
 
   return node;
 }
 
-/* ASIS
+/* 
  * compound_stmt: '{' stmt* '}'
- * --
- * TOBE ?
- * compound_stmt: '{' stmt* '}' | stmt
  */
 static Node *compound_stmt() {
   Node *node = new_node(ND_COMP_STMT, NULL, NULL);
@@ -98,24 +95,14 @@ static Node *compound_stmt() {
   return node;
 }
 
-/* ASIS
+/* 
  * stmt: var_def
  *     | if_stmt
  *     | while_stmt
  *     | break_stmt
  *     | continue_stmt
  *     | return_stmt
- *     | compound_stmt // TODO
- *     | expr ';'
- *     ;
- * --
- * TOBE
- * stmt: var_def
- *     | if_stmt
- *     | while_stmt
- *     | break_stmt
- *     | continue_stmt
- *     | return_stmt
+ *     | compound_stmt
  *     | expr ';'
  *     ;
  */
@@ -135,7 +122,7 @@ static Node *stmt() {
   if (lookahead->ty == TK_RETURN)
     return return_stmt();
   if (lookahead->ty == '{')
-    return compound_stmt(); // TODO
+    return compound_stmt(); 
 
   node = expr();
   match(';');
@@ -156,14 +143,9 @@ static Node *var_def() {
   return node;
 }
 
-/* ASIS
+/* 
  * if_stmt: IF '(' expr ')' stmt 
  *        | IF '(' expr ')' stmt ELSE stmt
- *        ; 
- * --
- * TOBE
- * if_stmt: IF '(' expr ')' compound_stmt 
- *        | IF '(' expr ')' compound_stmt ELSE compound_stmt
  *        ; 
  */
 static Node *if_stmt() {
@@ -184,12 +166,8 @@ static Node *if_stmt() {
   return node;
 }
 
-/* ASIS
+/*
  * while_stmt: WHILE '(' expr ')' stmt
- *           ;
- * --
- * TOBE
- * while_stmt: WHILE '(' expr ')' compound_stmt
  *           ;
  */
 static Node *while_stmt() {
@@ -203,7 +181,7 @@ static Node *while_stmt() {
   match('(');
   node->cond = expr();
   match(')');
-  node->body = stmt(); // TODO
+  node->body = stmt();
 
   vec_pop(breaks);
   vec_pop(continues);

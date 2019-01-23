@@ -84,8 +84,8 @@ int main(int argc, char **argv) {
 
     // 式の評価結果としてスタックに一つの値が残っているはずなので
     // スタックが溢れないようにポップしておく
-    if (node->ty < ND_COMP_STMT)
-      printf("\tpop rax\n");
+    //    if (node->ty < ND_COMP_STMT)
+    printf("\tpop rax\n");
   }
 
   // エピローグ
