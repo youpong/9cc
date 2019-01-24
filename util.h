@@ -26,6 +26,6 @@ _Noreturn void error(char *, ...);
 
 void expect(int, int, int);
 void expect_ptr(int, void *, void *);
-  
+
 /* util_test.c */
 void run_utiltest();

@@ -25,13 +25,19 @@ void gen(Node *node) {
   if (node->ty == ND_FUNC_CALL) {
 
     int len = node->args->len;
+
     for (int i = 0; i < len; i++) {
       if (arg_rg[i] == NULL)
         error("too match args");
+      printf("\tpush %s\n", arg_rg[i]);
+      rsp_cur -= 8;
+    }
+    for (int i = 0; i < len; i++) {
       Node *arg = (Node *)node->args->data[i];
       gen(arg);
       printf("\tpop %s\n", arg_rg[i]);
     }
+
     int offset = 16 - abs(rsp_cur % 16);
     if (offset % 16 != 0)
       printf("\tsub rsp, %d\n", offset);
@@ -39,6 +45,11 @@ void gen(Node *node) {
     printf("\tcall %s\n", node->name);
     if (offset % 16 != 0)
       printf("\tadd rsp, %d\n", offset);
+
+    for (int i = 0; i < len; i++) {
+      printf("\tpop %s\n", arg_rg[len - i - 1]);
+      rsp_cur += 8;
+    }
 
     printf("\tpush rax\n");
     return;
@@ -76,7 +87,7 @@ void gen(Node *node) {
     printf("\tmov rsp, rbp\n");
     printf("\tpop rbp\n");
     printf("\tret\n");
-    printf("\tpush rax\n"); 
+    printf("\tpush rax\n");
     return;
   }
   if (node->ty == ND_WHILE) {
@@ -159,9 +170,7 @@ void gen(Node *node) {
     for (int i = 0; i < v->len; i++) {
       Node *n = (Node *)v->data[i];
       gen(n);
-      //if (n->ty < ND_COMP_STMT) {
       printf("\tpop rax\n");
-	//      }
     }
     printf("\tpush rax\n");
     return;

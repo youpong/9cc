@@ -79,7 +79,7 @@ static Node *func_def() {
   return node;
 }
 
-/* 
+/*
  * compound_stmt: '{' stmt* '}'
  */
 static Node *compound_stmt() {
@@ -95,7 +95,7 @@ static Node *compound_stmt() {
   return node;
 }
 
-/* 
+/*
  * stmt: var_def
  *     | if_stmt
  *     | while_stmt
@@ -122,7 +122,7 @@ static Node *stmt() {
   if (lookahead->ty == TK_RETURN)
     return return_stmt();
   if (lookahead->ty == '{')
-    return compound_stmt(); 
+    return compound_stmt();
 
   node = expr();
   match(';');
@@ -143,10 +143,10 @@ static Node *var_def() {
   return node;
 }
 
-/* 
- * if_stmt: IF '(' expr ')' stmt 
+/*
+ * if_stmt: IF '(' expr ')' stmt
  *        | IF '(' expr ')' stmt ELSE stmt
- *        ; 
+ *        ;
  */
 static Node *if_stmt() {
   Node *node = (Node *)malloc(sizeof(Node));
@@ -223,7 +223,7 @@ static Node *continue_stmt() {
  * TOBE
  * return_stmt: RETURN expr? ';'
  * --
- * ASIS 
+ * ASIS
  * return_stmt: RETURN expr ';'
  */
 static Node *return_stmt() {
@@ -266,7 +266,7 @@ static Node *assign() {
  TK_NE !=
 
 (1) original
-logical: logical (TK_EQ|TK_NE) add 
+logical: logical (TK_EQ|TK_NE) add
 (3)
 logical: add (TK_EQ add|TK_NE add)*
 */
@@ -351,8 +351,8 @@ static Node *mul() {
 
 /*
  * production rule
- * term: NUMBER 
- *     | IDENT | IDENT '(' args_opt ')' 
+ * term: NUMBER
+ *     | IDENT | IDENT '(' args_opt ')'
  *     | '(' expr ')'
  * args_opt: ε | expr ( ',' expr )*
  */
