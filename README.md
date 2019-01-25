@@ -4,6 +4,11 @@
 参考に作り始める。 ドラゴンブック[*2]を参考に作り続けている。
 目標は self-hosting。
 
+Build
+-----
+    $ make
+    $ make check
+    
 Usage
 -----
 Command Line interface.
@@ -31,17 +36,17 @@ Sample
 * 論理演算(!=, ==)
 * if, while 文
 * break/continue 文
-* コメント文
-* 引数[なし]の関数定義
-* 引数[なし]の関数呼び出し
+* コメント文(/* C style */)
+* 引数[あり|なし]の関数定義
+* 引数[あり|なし]の関数呼び出し
+* ローカル変数
 
 # 実装予定
 
 * 論理演算(&&, ||, &, |)
-* ローカル変数
+* for, do while, switch
+* コメント文(// C++ style)
 * グローバル変数
-* 引数[あり]の関数呼び出し
-* 引数[あり]の関数定義
 * 配列
 * ポインタ
 * 単項演算子(-/+)
@@ -55,7 +60,7 @@ Sample
 # 環境
 
 * OS: Ubuntu 18.10
-* CPU: x86_64
+* ISA: x86_64
 
 # 参考
 1: Rui Ueyama[2018] 「低レイヤを知りたい人のためのCコンパイラ作成入門」(https://www.sigbus.info/compilerbook/)
