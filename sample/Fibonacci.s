@@ -26,17 +26,15 @@ L0:
 L1:
 	# return fibonacci(n-2) + fibonacci(n-1)
 	mov	rdi, rbp
-	sub	rdi, 8
-	mov	rdi, [rdi]
+	mov	rdi, [rdi-8]
 	sub	rdi, 2
+
 	call 	fibonacci
 	push	rax
 
-	mov	rsi, rbp
-	sub	rsi, 8
-	mov	rsi, [rsi]
-	sub	rsi, 1
-	mov 	rdi, rsi
+	mov	rdi, rbp
+	mov	rdi, [rdi-8]
+	sub	rdi, 1
 	call 	fibonacci
 
 	pop	rdi
