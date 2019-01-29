@@ -6,9 +6,9 @@
 #include <string.h>
 
 static Node *func_def();
+static Node *compound_stmt();
 static Node *stmt();
 static Node *var_def();
-static Node *compound_stmt();
 static Node *if_stmt();
 static Node *while_stmt();
 static Node *break_stmt();
