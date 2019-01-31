@@ -29,10 +29,7 @@ Token *lookahead;
 static Vector *breaks;
 static Vector *continues;
 
-/* cmdln_flg == true
- * parse: stmt*
- * --
- * cmdln_flg != true
+/*
  * parse: func_def*
  */
 void parse() {
@@ -40,12 +37,8 @@ void parse() {
   continues = new_vector();
 
   lookahead = (Token *)tokens->data[0];
-  while (lookahead->ty != TK_EOF) {
-    if (cmdln_flg == true)
-      vec_push(code, stmt());
-    else
-      vec_push(code, func_def());
-  }
+  while (lookahead->ty != TK_EOF) 
+    vec_push(code, func_def());
 }
 
 /*

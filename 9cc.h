@@ -104,6 +104,5 @@ void init();
 void p_tree(Node *);
 
 // main.c
-extern bool cmdln_flg;
 extern bool ast_flg;
 extern char **ARGV;

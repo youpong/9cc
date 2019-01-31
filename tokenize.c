@@ -6,7 +6,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-static char *buf_ptr;
 static int mygetc();
 static int myungetc(int);
 
@@ -21,13 +20,9 @@ void tokenize() {
   int status = NOT_IN_COMMENT;
   int c;
 
-  if (cmdln_flg == true)
-    buf_ptr = ARGV[1];
-  else {
-    yyin = fopen(ARGV[1], "r");
-    if (yyin == NULL)
-      error("file cannot open");
-  }
+  yyin = fopen(ARGV[1], "r");
+  if (yyin == NULL)
+    error("file cannot open");
 
   while (true) {
     token = (Token *)malloc(sizeof(Token));
@@ -161,15 +156,9 @@ void tokenize() {
 }
 
 int mygetc() {
-  if (cmdln_flg == true)
-    return (*buf_ptr == '\0') ? EOF : *buf_ptr++;
   return fgetc(yyin);
 }
 
 int myungetc(int c) {
-  if (cmdln_flg == true) {
-    *--buf_ptr = c;
-    return *buf_ptr;
-  }
   return ungetc(c, yyin);
 }
