@@ -16,7 +16,6 @@ clean:
               TAGS core *.gcov *.gcno *.gcda *.png
 check: $(TARGET)
 	./$(TARGET) -test
-	./test.sh
 	cd test; make check
 format:
 	clang-format -i $(SRCS) *.h

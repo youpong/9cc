@@ -13,3 +13,4 @@ tmp*
 # emacs temporary files
 *~
 \#*\#
+.\#*

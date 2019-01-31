@@ -6,6 +6,14 @@ int div(int a, int b) {
   return a / b;
 }
 
+int inc(int a) {
+  return a + 1;
+}
+
+int sum(int a, int b, int c, int d, int e, int f) {
+  return a + b + c + d + e + f;
+}
+
 int main() {
   int a;
   int b;
@@ -16,7 +24,6 @@ int main() {
 
   /* comment */
   /** comment2 **/
-
   expect(41, 44, 46 - 7 + 5);
   expect(72, 16, 24 * 2 / 3);
 
@@ -101,8 +108,14 @@ int main() {
   expect(153, 2, a);
 
   expect(160, 42, add());
+  expect(161, 4,  div(12, 3));
 
-  expect(161, 4, div(12, 3));
+  expect(170, 2, inc(1));
+  a = 1;
+  expect(171, 2, inc(a));
+  expect(172, 1, a); /* a の値は書き換えられない */
+
+  expect(180, 21, sum(1,2,3,4,5,6));
   /*
   expect(,,);
   expect(162, 3, 5);
