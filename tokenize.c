@@ -25,7 +25,7 @@ void tokenize() {
     error("file cannot open");
 
   while (true) {
-    token = (Token *)malloc(sizeof(Token));
+    token = malloc(sizeof(Token));
     c = mygetc();
 
     // comment 終端処理
@@ -130,7 +130,7 @@ void tokenize() {
       myungetc(c);
       *p = '\0';
 
-      token->name = (char *)malloc((strlen(buf) + 1) * sizeof(char));
+      token->name = malloc((strlen(buf) + 1) * sizeof(char));
       strcpy(token->name, buf);
 
       SYM_REC *rec;

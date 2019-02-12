@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 void insert(char *name, int ty) {
-  SYM_REC *rec = (SYM_REC *)malloc(sizeof(SYM_REC));
+  SYM_REC *rec = malloc(sizeof(SYM_REC));
   rec->token = ty;
   if (ty == TK_IDENT)
     rec->addr = var_cnt++;

@@ -15,7 +15,6 @@ Command Line interface.
 
     program_file Specifiles program filename.
     -ast         Output AST(Abstract Syntax Tree). 
-    -e stmt      Specifies stmt from command-line.    
     -test        Do test.
 
 Sample
@@ -25,9 +24,6 @@ Sample
      $ 9cc -ast main.c > main.dot
      $ dot -Tpng main.dot > main.png
      
-     $ 9cc -e '9-5+2;'
-     $ 9cc -ast -e '9-5+2;' > tmp.dot
-
      $ 9cc -test
     
 # 実装済み

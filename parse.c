@@ -46,7 +46,7 @@ void parse() {
  * params_opt: ε | INT IDENT (',' INT IDENT)*
  */
 static Node *func_def() {
-  Node *node = (Node *)malloc(sizeof(Node));
+  Node *node = malloc(sizeof(Node));
   node->params = new_vector();
 
   node->ty = ND_FUNC_DEF;
@@ -126,7 +126,7 @@ static Node *stmt() {
  * var_def: INT IDENT ';'
  */
 static Node *var_def() {
-  Node *node = (Node *)malloc(sizeof(Node));
+  Node *node = malloc(sizeof(Node));
 
   node->ty = ND_VAR_DEF;
   match(TK_INT);
@@ -142,7 +142,7 @@ static Node *var_def() {
  *        ;
  */
 static Node *if_stmt() {
-  Node *node = (Node *)malloc(sizeof(Node));
+  Node *node = malloc(sizeof(Node));
 
   node->ty = ND_IF;
   match(TK_IF);
@@ -164,7 +164,7 @@ static Node *if_stmt() {
  *           ;
  */
 static Node *while_stmt() {
-  Node *node = (Node *)malloc(sizeof(Node));
+  Node *node = malloc(sizeof(Node));
 
   vec_push(breaks, node);
   vec_push(continues, node);
@@ -187,7 +187,7 @@ static Node *while_stmt() {
  *           ;
  */
 static Node *break_stmt() {
-  Node *node = (Node *)malloc(sizeof(Node));
+  Node *node = malloc(sizeof(Node));
 
   node->ty = ND_BREAK;
   node->target = vec_last(breaks);
@@ -202,7 +202,7 @@ static Node *break_stmt() {
  *              ;
  */
 static Node *continue_stmt() {
-  Node *node = (Node *)malloc(sizeof(Node));
+  Node *node = malloc(sizeof(Node));
 
   node->ty = ND_CONTINUE;
   node->target = vec_last(continues);
@@ -220,7 +220,7 @@ static Node *continue_stmt() {
  * return_stmt: RETURN expr ';'
  */
 static Node *return_stmt() {
-  Node *node = (Node *)malloc(sizeof(Node));
+  Node *node = malloc(sizeof(Node));
 
   node->ty = ND_RETURN;
   match(TK_RETURN);
@@ -361,7 +361,7 @@ static Node *term() {
     name = lookahead->name;
     match(TK_IDENT);
     if (lookahead->ty == '(') {
-      node = (Node *)malloc(sizeof(Node));
+      node = malloc(sizeof(Node));
       node->args = new_vector();
 
       node->ty = ND_FUNC_CALL;

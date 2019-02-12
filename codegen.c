@@ -23,7 +23,6 @@ void gen(Node *node) {
   char *arg_rg[] = {"rdi", "rsi", "rdx", "rcx", "r8", "r9", NULL};
 
   if (node->ty == ND_FUNC_CALL) {
-
     int len = node->args->len;
 
     for (int i = 0; i < len; i++) {
@@ -53,12 +52,10 @@ void gen(Node *node) {
 
     printf("\tpush rax\n");
     return;
-  }
-  if (node->ty == ND_VAR_DEF) {
+  } else  if (node->ty == ND_VAR_DEF) {
     printf("\tpush rax\n");
     return;
-  }
-  if (node->ty == ND_FUNC_DEF) {
+  } else if (node->ty == ND_FUNC_DEF) {
     // label
     printf("%s:\n", node->name);
 
@@ -89,11 +86,10 @@ void gen(Node *node) {
     printf("\tret\n");
     printf("\tpush rax\n");
     return;
-  }
-  if (node->ty == ND_WHILE) {
+  } else if (node->ty == ND_WHILE) {
     // ラベルの作成 l
-    node->label_head = (char *)malloc((3 + 1) * sizeof(char));
-    node->label_tail = (char *)malloc((3 + 1) * sizeof(char));
+    node->label_head = malloc((3 + 1) * sizeof(char));
+    node->label_tail = malloc((3 + 1) * sizeof(char));
     sprintf(node->label_head, "L%02d", label++); // L0
     sprintf(node->label_tail, "L%02d", label++); // L1
 
@@ -116,18 +112,15 @@ void gen(Node *node) {
     printf("%s:\n", node->label_tail); // L1
     printf("\tpush rax\n");
     return;
-  }
-  if (node->ty == ND_CONTINUE) {
+  } else if (node->ty == ND_CONTINUE) {
     printf("\tjmp %s\n", node->target->label_head);
     printf("\tpush rax\n");
     return;
-  }
-  if (node->ty == ND_BREAK) {
+  } else if (node->ty == ND_BREAK) {
     printf("\tjmp %s\n", node->target->label_tail);
     printf("\tpush rax\n");
     return;
-  }
-  if (node->ty == ND_IF) {
+  } else if (node->ty == ND_IF) {
     // ラベルの作成 l
     int l0 = label++;
     int l1 = label++;
@@ -154,8 +147,7 @@ void gen(Node *node) {
     printf("L%d:\n", l1); // L1
     printf("\tpush rax\n");
     return;
-  }
-  if (node->ty == ND_RETURN) {
+  } else if (node->ty == ND_RETURN) {
     gen(node->lhs);
     printf("\tpop rax\n");
 
@@ -164,8 +156,7 @@ void gen(Node *node) {
     printf("\tret\n");
     printf("\tpush rax\n");
     return;
-  }
-  if (node->ty == ND_COMP_STMT) {
+  } else if (node->ty == ND_COMP_STMT) {
     Vector *v = node->stmts;
     for (int i = 0; i < v->len; i++) {
       Node *n = (Node *)v->data[i];
@@ -174,22 +165,16 @@ void gen(Node *node) {
     }
     printf("\tpush rax\n");
     return;
-  }
-
-  if (node->ty == ND_NUM) {
+  } else if (node->ty == ND_NUM) {
     printf("\tpush %d\n", node->val);
     return;
-  }
-
-  if (node->ty == ND_IDENT) {
+  } else if (node->ty == ND_IDENT) {
     gen_lval(node);
     printf("\tpop rax\n");
     printf("\tmov rax, [rax]\n");
     printf("\tpush rax\n");
     return;
-  }
-
-  if (node->ty == '=') {
+  } else if (node->ty == '=') {
     gen_lval(node->lhs);
     gen(node->rhs);
 
