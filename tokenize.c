@@ -118,7 +118,7 @@ void tokenize() {
       continue;
     }
 
-    // 識別子
+    // identifier or reserved word
     if (isalpha(c)) {
       char *p = buf;
       *p++ = c;
@@ -134,14 +134,12 @@ void tokenize() {
       strcpy(token->name, buf);
 
       SYM_REC *rec;
-      if ((rec = lookup(token->name)) == NULL) {
-        insert(token->name, TK_IDENT);
-        token->ty = TK_IDENT;
-      } else {
+      token->ty = TK_IDENT;
+      if ((rec = query_reserved(token->name)) != NULL) {
         token->ty = rec->token;
       }
-      vec_push(tokens, token);
 
+      vec_push(tokens, token);
       continue;
     }
 

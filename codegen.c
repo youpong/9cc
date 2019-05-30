@@ -5,23 +5,30 @@
 #include <stdlib.h>
 
 static int label = 0;
-// static int rsp_start = 0;
 static int rsp_cur = 0;
 
 void gen_lval(Node *node) {
-  if (node->ty == ND_IDENT) {
-    SYM_REC *rec = lookup(node->name);
-    printf("\tmov rax, rbp\n");
-    printf("\tsub rax, %d\n", (rec->addr + 1) * 8);
-    printf("\tpush rax\n");
-    return;
+  if (node->ty != ND_IDENT) {
+    error("変数ではありません\n");
   }
-  error("変数ではありません\n");
+
+  SYM_REC *rec = query_var(node->name);
+  if (rec == NULL) {
+    error("未宣言の変数: %s\n", node->name);
+  }
+
+  printf("\tmov rax, rbp\n");
+  printf("\tsub rax, %d\n", rec->addr);
+  printf("\tpush rax\n");
 }
 
+/**
+ *
+ */
 void gen(Node *node) {
   char *arg_rg[] = {"rdi", "rsi", "rdx", "rcx", "r8", "r9", NULL};
 
+  // TODO: if -> case
   if (node->ty == ND_FUNC_CALL) {
     int len = node->args->len;
 
@@ -52,23 +59,29 @@ void gen(Node *node) {
 
     printf("\tpush rax\n");
     return;
-  } else  if (node->ty == ND_VAR_DEF) {
+  } else if (node->ty == ND_VAR_DEF) {
+    entry_var(node->name);
+
     printf("\tpush rax\n");
     return;
   } else if (node->ty == ND_FUNC_DEF) {
-    // label
+    sym_tab = append_sym_tab(node->name);
+
+    // print function name in label.
     printf("%s:\n", node->name);
 
-    // pro-logue
+    // print pro-logue
     printf("\tpush rbp\n");
     printf("\tmov rbp, rsp\n");
+    int var_cnt = 13; // TODO: refer sym_tab->var_cnt
     printf("\tsub rsp, %d\n", var_cnt * 8);
     rsp_cur -= var_cnt * 8;
 
-    // params
+    // function params
     int len = node->params->len;
     for (int i = 0; i < len; i++) {
       Node *param = (Node *)node->params->data[i];
+      entry_var(param->name);
       gen_lval(param);
       printf("\tpush %s\n", arg_rg[i]);
 
@@ -77,7 +90,7 @@ void gen(Node *node) {
       printf("\tmov [rax], rdi\n");
     }
 
-    // body
+    // function body
     gen(node->body);
 
     // epi-logue
@@ -85,6 +98,9 @@ void gen(Node *node) {
     printf("\tpop rbp\n");
     printf("\tret\n");
     printf("\tpush rax\n");
+
+    sym_tab = sym_tab->parent;
+
     return;
   } else if (node->ty == ND_WHILE) {
     // ラベルの作成 l

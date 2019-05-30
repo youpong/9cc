@@ -37,7 +37,6 @@ enum {
   ND_FUNC_CALL, // function call
   ND_EQ,        // '=='
   ND_NE,        // '!='
-  /* これより下の node は返り値を持たない */
   ND_COMP_STMT, // compound statement
   ND_VAR_DEF,   // variable definition
   ND_IF,        // if statement
@@ -86,16 +85,29 @@ void parse();
 // Generate
 void gen(Node *);
 
-// Variables table
-extern Map *var_tab;
-extern int var_cnt;
+// Symbol table
+typedef struct SYM_TAB SYM_TAB;
+struct SYM_TAB {
+  SYM_TAB *parent;
+  char *func_name; // use?
+  int var_cnt;
+  Map *body;
+};
+
 typedef struct {
   int token;
+  // int type; TODO: int
   int addr;
 } SYM_REC;
 
-void insert(char *, int);
-SYM_REC *lookup(char *);
+extern SYM_TAB *sym_tab;
+
+// Symbol
+SYM_TAB *append_sym_tab(char *);
+void entry_reserved(char *, int);
+void entry_var(char *);
+SYM_REC *query_reserved(char *);
+SYM_REC *query_var(char *);
 
 // init.c
 void init();

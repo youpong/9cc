@@ -37,7 +37,7 @@ void parse() {
   continues = new_vector();
 
   lookahead = (Token *)tokens->data[0];
-  while (lookahead->ty != TK_EOF) 
+  while (lookahead->ty != TK_EOF)
     vec_push(code, func_def());
 }
 
@@ -124,12 +124,16 @@ static Node *stmt() {
 
 /*
  * var_def: INT IDENT ';'
+ *
+ * ND_VAR_DEF node does not have function name.
+ * Node *TREE* has enough information about variable scope.
  */
 static Node *var_def() {
   Node *node = malloc(sizeof(Node));
 
   node->ty = ND_VAR_DEF;
   match(TK_INT);
+  node->name = strdup(lookahead->name);
   match(TK_IDENT);
   match(';');
 
@@ -393,8 +397,12 @@ static Node *term() {
 }
 
 static void match(int ty) {
-  if (lookahead->ty != ty)
-    error("unexpected %c : expected %c", lookahead->ty, ty);
+  if (lookahead->ty != ty) {
+    if (lookahead->ty == TK_IDENT)
+      error("unexpected token %d(%s): expected token %d", lookahead->ty,
+            lookahead->name, ty);
+    error("unexpected token %d : expected token %d", lookahead->ty, ty);
+  }
 
   lookahead = (Token *)tokens->data[++pos];
 }

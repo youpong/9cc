@@ -1,11 +1,11 @@
 #include "9cc.h"
 
 void init() {
-  insert("if", TK_IF);
-  insert("else", TK_ELSE);
-  insert("while", TK_WHILE);
-  insert("break", TK_BREAK);
-  insert("continue", TK_CONTINUE);
-  insert("return", TK_RETURN);
-  insert("int", TK_INT);
+  entry_reserved("if", TK_IF);
+  entry_reserved("else", TK_ELSE);
+  entry_reserved("while", TK_WHILE);
+  entry_reserved("break", TK_BREAK);
+  entry_reserved("continue", TK_CONTINUE);
+  entry_reserved("return", TK_RETURN);
+  entry_reserved("int", TK_INT);
 }

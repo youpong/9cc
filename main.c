@@ -10,15 +10,14 @@ FILE *yyin;
 Vector *tokens;
 int pos = 0;
 Vector *code;
-Map *var_tab;
-int var_cnt = 0;
+SYM_TAB *sym_tab = NULL;
 bool ast_flg = false;
 char **ARGV;
 
 int main(int argc, char **argv) {
   tokens = new_vector();
   code = new_vector();
-  var_tab = new_map();
+  sym_tab = append_sym_tab(NULL);
 
   if (argc >= 2 && strcmp(argv[1], "-test") == 0) {
     run_utiltest();
@@ -51,9 +50,10 @@ int main(int argc, char **argv) {
     return EXIT_SUCCESS;
   }
 
+  // print preamble.
   printf(".intel_syntax noprefix\n");
 
-  // function name
+  // print global function names.
   char *delim = "";
   printf(".global ");
   for (int i = 0; i < code->len; i++) {
@@ -65,6 +65,7 @@ int main(int argc, char **argv) {
   }
   printf("\n");
 
+  // print each node.
   for (int i = 0; i < code->len; i++) {
     Node *node = (Node *)code->data[i];
     gen(node);
