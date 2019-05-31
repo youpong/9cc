@@ -53,6 +53,8 @@ static Node *func_def() {
 
   match(TK_INT);
   node->name = strdup(lookahead->name);
+  sym_tab = append_sym_tab(node->name);
+
   match(TK_IDENT);
   match('(');
 
@@ -60,6 +62,7 @@ static Node *func_def() {
     while (true) {
       match(TK_INT);
       vec_push(node->params, new_node_id(lookahead->name));
+      entry_var(lookahead->name);
       match(TK_IDENT);
       if (lookahead->ty == ')')
         break;
@@ -68,6 +71,8 @@ static Node *func_def() {
   }
   match(')');
   node->body = compound_stmt();
+
+  sym_tab = sym_tab->parent;
 
   return node;
 }
@@ -134,6 +139,7 @@ static Node *var_def() {
   node->ty = ND_VAR_DEF;
   match(TK_INT);
   node->name = strdup(lookahead->name);
+  entry_var(node->name);
   match(TK_IDENT);
   match(';');
 

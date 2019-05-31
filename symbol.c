@@ -6,9 +6,13 @@ SYM_TAB *append_sym_tab(char *func_name) {
 
   child = malloc(sizeof(SYM_TAB));
   child->parent = sym_tab;
-  child->func_name = func_name;
+  child->children = new_map();
   child->var_cnt = 0;
   child->body = new_map();
+
+  // root sym_tab
+  if (sym_tab != NULL)
+    map_put(sym_tab->children, func_name, child);
 
   return child;
 }

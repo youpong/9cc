@@ -1,5 +1,15 @@
 implement global variable.
+--
 parse phase: entry variable
+--
+9cc.h
+parse.c
+  func_def()
+  var_def()
+codegen.c
+  gen_lval()
+  gen()
+
 --
 1. create a test case.
 2. implement.
@@ -63,54 +73,8 @@ implement function.
   - SYM_REC *query_var(var_name);
   - SYM_REC *query_reserved(sym_name) {
       return query(NULL, sym_name);
-    }  
-##
-
-implement global variable.
---
-
-1. create a test case.
-2. implement.
-3. pass the test case.
-
----
-test case 1: compile capable
-reiwa0.c
----
-test case 2: bar():expect().
-reiwa1.c
---
-9cc.h
-Map *var_tab;
-int var_cnt; // TODO
-typedef struct {
-  char *func_name;
-  char *var_name;
-  int token;
-  int type;
-  int addr;
-}
---
-main.c(instead of codegen.c)
-  global variable var_tab.
-tokenize.c
-  query(NULL, token-name)
-gen()
-  case ND_FUNC_DEF:
-    set static func_name.
-  case ND_COMP_STMT:
-    nothing.
-  case ND_VAR_DEF:
-    make an entry variable with var_tab.
-    - entry(func_name, var_name)
-gen_lval()
-  search variable from var_tab, if it is not found return error.
-  - query(func_name, var_name)
-
-implement function.
-  - query(func_name, var_name) returns address.
-  - entry(func_name, var_name) make an entry variable with tree var_tab.
-
+    }
+--    
 -e のときは暗に main() の中にあると考えて解釈している。
 
 $ ulimit -Sc unlimited

@@ -60,12 +60,10 @@ void gen(Node *node) {
     printf("\tpush rax\n");
     return;
   } else if (node->ty == ND_VAR_DEF) {
-    entry_var(node->name);
-
     printf("\tpush rax\n");
     return;
   } else if (node->ty == ND_FUNC_DEF) {
-    sym_tab = append_sym_tab(node->name);
+    sym_tab = (SYM_TAB *)map_get(sym_tab->children, node->name);
 
     // print function name in label.
     printf("%s:\n", node->name);
@@ -73,15 +71,13 @@ void gen(Node *node) {
     // print pro-logue
     printf("\tpush rbp\n");
     printf("\tmov rbp, rsp\n");
-    int var_cnt = 13; // TODO: refer sym_tab->var_cnt
-    printf("\tsub rsp, %d\n", var_cnt * 8);
-    rsp_cur -= var_cnt * 8;
+    printf("\tsub rsp, %d\n", sym_tab->var_cnt * 8);
+    rsp_cur -= sym_tab->var_cnt * 8;
 
     // function params
     int len = node->params->len;
     for (int i = 0; i < len; i++) {
       Node *param = (Node *)node->params->data[i];
-      entry_var(param->name);
       gen_lval(param);
       printf("\tpush %s\n", arg_rg[i]);
 

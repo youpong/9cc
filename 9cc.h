@@ -88,8 +88,16 @@ void gen(Node *);
 // Symbol table
 typedef struct SYM_TAB SYM_TAB;
 struct SYM_TAB {
+  // Map children の中の特別な要素として parent を加えることができる
+  // けどそうしてない。最初にそう書いたから。何か別の理由が生まれるまで
+  // このままにする。
+  // --
+  // Map body の中に children を含めたい場合、 SYM_REC 構造体のメンバ
+  // に SYM_TAB を加えることとメンバ token の値でそれが予約語/変数名/
+  // 関数名のいずれかであることを切り替えるようにできるだろう。
+  // そうしていない理由は上の件と一緒。
   SYM_TAB *parent;
-  char *func_name; // use?
+  Map *children;
   int var_cnt;
   Map *body;
 };
