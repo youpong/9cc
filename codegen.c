@@ -39,8 +39,7 @@ void gen(Node *node) {
       rsp_cur -= 8;
     }
     for (int i = 0; i < len; i++) {
-      Node *arg = (Node *)node->args->data[i];
-      gen(arg);
+      gen((Node *)vec_at(node->args, i));
       printf("\tpop %s\n", arg_rg[i]);
     }
 
@@ -77,8 +76,7 @@ void gen(Node *node) {
     // function params
     int len = node->params->len;
     for (int i = 0; i < len; i++) {
-      Node *param = (Node *)node->params->data[i];
-      gen_lval(param);
+      gen_lval((Node *)vec_at(node->params, i));
       printf("\tpush %s\n", arg_rg[i]);
 
       printf("\tpop rdi\n");
@@ -171,8 +169,7 @@ void gen(Node *node) {
   } else if (node->ty == ND_COMP_STMT) {
     Vector *v = node->stmts;
     for (int i = 0; i < v->len; i++) {
-      Node *n = (Node *)v->data[i];
-      gen(n);
+      gen((Node *)vec_at(v, i));
       printf("\tpop rax\n");
     }
     printf("\tpush rax\n");

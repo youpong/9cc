@@ -46,8 +46,8 @@ void map_put(Map *map, char *key, void *val) {
 
 void *map_get(Map *map, char *key) {
   for (int i = map->keys->len - 1; i >= 0; i--) {
-    if (strcmp(map->keys->data[i], key) == 0) {
-      return map->vals->data[i];
+    if (strcmp((char *)vec_at(map->keys, i), key) == 0) {
+      return vec_at(map->vals, i);
     }
   }
   return NULL;

@@ -25,7 +25,6 @@ typedef struct {
 } Token;
 
 extern Vector *tokens;
-extern int pos;
 void tokenize();
 
 FILE *yyin;

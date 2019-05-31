@@ -26,6 +26,7 @@ static void match(int);
 Token *lookahead;
 
 // static
+static int pos = 0;
 static Vector *breaks;
 static Vector *continues;
 
@@ -36,7 +37,7 @@ void parse() {
   breaks = new_vector();
   continues = new_vector();
 
-  lookahead = (Token *)tokens->data[0];
+  lookahead = (Token *)vec_at(tokens, pos);
   while (lookahead->ty != TK_EOF)
     vec_push(code, func_def());
 }
@@ -410,5 +411,5 @@ static void match(int ty) {
     error("unexpected token %d : expected token %d", lookahead->ty, ty);
   }
 
-  lookahead = (Token *)tokens->data[++pos];
+  lookahead = (Token *)vec_at(tokens, ++pos);
 }

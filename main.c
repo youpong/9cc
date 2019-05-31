@@ -8,7 +8,6 @@
 
 FILE *yyin;
 Vector *tokens;
-int pos = 0;
 Vector *code;
 SYM_TAB *sym_tab = NULL;
 bool ast_flg = false;
@@ -45,7 +44,7 @@ int main(int argc, char **argv) {
   if (ast_flg == true) {
     printf("graph graphname {\n");
     for (int i = 0; i < code->len; i++)
-      p_tree((Node *)code->data[i]);
+      p_tree((Node *)vec_at(code, i));
     printf("}\n");
     return EXIT_SUCCESS;
   }
@@ -65,8 +64,7 @@ int main(int argc, char **argv) {
 
   // print each node.
   for (int i = 0; i < code->len; i++) {
-    Node *node = (Node *)code->data[i];
-    gen(node);
+    gen((Node *)vec_at(code, i));
 
     // 式の評価結果としてスタックに一つの値が残っているはずなので
     // スタックが溢れないようにポップしておく
