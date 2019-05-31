@@ -1,0 +1,155 @@
+implement global variable.
+parse phase: entry variable
+--
+1. create a test case.
+2. implement.
+3. pass the test case.
+
+---
+test case 1: compile capable
+reiwa0.c
+---
+test case 2: bar():expect().
+reiwa1.c
+--
+9cc.h
+SYM_TAB *sym_tab_root;
+SYM_TAB *sym_tab;
+int var_cnt; // TODO: delete
+
+typedef struct SYM_TAB SYM_TAB;
+struct SYM_TAB {
+  SYM_TAB *parent;
+  char *func_name; // use?
+  int var_cnt;
+  Map *body;
+};
+
+typedef struct {
+  int token; // for reserved word
+  int type;   
+  int addr;
+} SYM_REC;
+--
+main.c(instead of codegen.c)
+  global sym_tab
+  SYM_TAB *sym_tab = malloc(sizeof(SYM_TAB));
+  sym_tab->parent = NULL;
+init.c
+  entry_reserved(sym_name, token);
+tokenize.c
+  query_reserved(token-name)
+gen()
+  case ND_FUNC_DEF:
+    begining of func.
+      sym_tab = append_sym_tab(func_name);
+    end of func.
+      sym_tab = sym_tab->parent;
+  case ND_COMP_STMT:
+  case ND_FOR_STMT:
+  case ND_WHILE_STMT:
+    TODO: append_sym_tab(NULL);
+  case ND_VAR_DEF:
+    make an entry variable with var_tab.
+    - entry_var(var_name, type)
+gen_lval()
+  search variable from var_tab, if it is not found return error.
+  - query_var(var_name)
+
+implement function.
+  - append_sym_tab(func_name);
+  - entry_reserved(sym_name, token);
+  - entry_var(var_name, type);
+  - SYM_REC *query_var(var_name);
+  - SYM_REC *query_reserved(sym_name) {
+      return query(NULL, sym_name);
+    }  
+##
+
+implement global variable.
+--
+
+1. create a test case.
+2. implement.
+3. pass the test case.
+
+---
+test case 1: compile capable
+reiwa0.c
+---
+test case 2: bar():expect().
+reiwa1.c
+--
+9cc.h
+Map *var_tab;
+int var_cnt; // TODO
+typedef struct {
+  char *func_name;
+  char *var_name;
+  int token;
+  int type;
+  int addr;
+}
+--
+main.c(instead of codegen.c)
+  global variable var_tab.
+tokenize.c
+  query(NULL, token-name)
+gen()
+  case ND_FUNC_DEF:
+    set static func_name.
+  case ND_COMP_STMT:
+    nothing.
+  case ND_VAR_DEF:
+    make an entry variable with var_tab.
+    - entry(func_name, var_name)
+gen_lval()
+  search variable from var_tab, if it is not found return error.
+  - query(func_name, var_name)
+
+implement function.
+  - query(func_name, var_name) returns address.
+  - entry(func_name, var_name) make an entry variable with tree var_tab.
+
+-e のときは暗に main() の中にあると考えて解釈している。
+
+$ ulimit -Sc unlimited
+
+rename 
+var_tab -> symtab
+
+compound_stmt の実装ってこれでよかったかなぁ。
+
+演算子の結合と優先度をチェックする。
+
+左結合: * /
+左結合: + -
+右結合: =
+==, !=
+
+--
+while ( cond )
+  break;
+--
+for (;;)
+  break;
+--
+do
+  break;
+while (cond);
+--
+switch (cond) {
+case 0:
+break;
+}
+--
+main() {
+  func();       
+}
+
+func() {
+}
+
+sudo apt-get install graphviz electric-fence
+
+$ gdb --args ./9cc test/test.c
