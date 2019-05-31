@@ -14,11 +14,15 @@ all: $(TARGET)
 clean:
 	rm -f $(TARGET) $(OBJS) a.out tmp* \
               TAGS core *.gcov *.gcno *.gcda *.png
+	cd test; make clean
+	cd sample; make clean
 check: $(TARGET)
 	./$(TARGET) -test
 	cd test; make clean check
 format:
 	clang-format -i $(SRCS) *.h
+	cd test; make format
+	cd sample; make format
 gcov: $(TARGET)
 	gcov $(SRCS)
 tags:
