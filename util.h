@@ -10,6 +10,7 @@ Vector *new_vector();
 void vec_push(Vector *, void *);
 void *vec_pop(Vector *);
 void *vec_last(Vector *);
+void *vec_at(Vector *, int);
 
 typedef struct {
   Vector *keys;
@@ -19,6 +20,7 @@ typedef struct {
 Map *new_map();
 void map_put(Map *, char *, void *);
 void *map_get(Map *, char *);
+Vector *map_keys(Map *);
 
 int *intdup(int);
 

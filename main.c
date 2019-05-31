@@ -54,14 +54,12 @@ int main(int argc, char **argv) {
   printf(".intel_syntax noprefix\n");
 
   // print global function names.
-  char *delim = "";
   printf(".global ");
-  for (int i = 0; i < code->len; i++) {
-    Node *node = (Node *)code->data[i];
-    if (node->ty == ND_FUNC_DEF) {
-      printf("%s%s", delim, node->name);
-      delim = ", ";
-    }
+  char *delim = "";
+  Vector *keys = map_keys(sym_tab->children);
+  for (int i = 0; i < keys->len; i++) {
+    printf("%s%s", delim, (char *)vec_at(keys, i));
+    delim = ", ";
   }
   printf("\n");
 

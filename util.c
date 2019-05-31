@@ -28,6 +28,10 @@ void *vec_last(Vector *vec) {
   return vec->data[vec->len - 1];
 }
 
+void *vec_at(Vector *vec, int index) {
+  return vec->data[index];
+}
+
 Map *new_map() {
   Map *map = malloc(sizeof(Map));
   map->keys = new_vector();
@@ -47,6 +51,10 @@ void *map_get(Map *map, char *key) {
     }
   }
   return NULL;
+}
+
+Vector *map_keys(Map *map) {
+  return map->keys;
 }
 
 int *intdup(int n) {

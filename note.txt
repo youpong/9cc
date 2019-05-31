@@ -9,6 +9,8 @@ parse.c
 codegen.c
   gen_lval()
   gen()
+    ND_FUNC_DEF
+      sym_tab = map_sym_tab->children(
 
 --
 1. create a test case.
