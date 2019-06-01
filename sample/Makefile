@@ -4,7 +4,7 @@ SRCS = fibonacci.c fib_main.c Fibonacci.java
 
 all: $(TARGET)
 clean:
-	rm -f $(TARGET) a.out core *.o *.class fibonacci.s
+	rm -f $(TARGET) fibonacci.s *.o *.class a.out core *~ 
 format:
 	clang-format -i $(SRCS)
 $(TARGET): fib_main.o fibonacci.o

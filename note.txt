@@ -1,5 +1,18 @@
 implement global variable.
 --
+implement pointer.
+
+tokenize: '*', '&'
+parse:
+  VAR_DEF:
+    int *y
+  FUNC_DEF: params
+    int *y
+  TERM/POINTER/DEREFERENCE
+  
+codegen:
+
+--
 parse phase: entry variable
 --
 9cc.h

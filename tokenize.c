@@ -65,6 +65,7 @@ void tokenize() {
     case '+':
     case '-':
     case '*':
+    case '&':
     case '(':
     case ')':
     case '{':

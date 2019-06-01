@@ -19,6 +19,7 @@ static Node *assign();
 static Node *logical();
 static Node *add();
 static Node *mul();
+static Node *unary();
 static Node *term();
 static void match(int);
 
@@ -61,9 +62,13 @@ static Node *func_def() {
 
   if (lookahead->ty != ')') {
     while (true) {
+      // TODO: Type ptr.
+      Type *ty;
       match(TK_INT);
       vec_push(node->params, new_node_id(lookahead->name));
-      entry_var(lookahead->name);
+      ty = malloc(sizeof(Type));
+      ty->ty = INT;
+      entry_var(lookahead->name, ty);
       match(TK_IDENT);
       if (lookahead->ty == ')')
         break;
@@ -130,18 +135,34 @@ static Node *stmt() {
 
 /*
  * var_def: INT IDENT ';'
+ *        | INT '*' IDENT ';'
  *
  * ND_VAR_DEF node does not have function name.
  * Node *TREE* has enough information about variable scope.
  */
 static Node *var_def() {
   Node *node = malloc(sizeof(Node));
+  Type *type = malloc(sizeof(Type));
 
   node->ty = ND_VAR_DEF;
+
+  type->ty = INT;
   match(TK_INT);
+
+  if (lookahead->ty == '*') {
+    Type *t = malloc(sizeof(Type));
+    t->ty = PTR;
+    t->ptr_to = type;
+    type = t;
+
+    match('*');
+  }
+
   node->name = strdup(lookahead->name);
-  entry_var(node->name);
   match(TK_IDENT);
+
+  entry_var(node->name, type);
+
   match(';');
 
   return node;
@@ -249,11 +270,12 @@ static Node *expr() {
 }
 
 /*
-production rules
-
-(1) original
-assign: logical | logical '=' assign
-*/
+ * operation associativity: right
+ *
+ * production rules
+ * (1) original
+ * assign: logical | logical '=' assign
+ */
 static Node *assign() {
   Node *lhs = logical();
 
@@ -266,14 +288,18 @@ static Node *assign() {
 }
 
 /*
- TK_EQ ==
- TK_NE !=
-
-(1) original
-logical: logical (TK_EQ|TK_NE) add
-(3)
-logical: add (TK_EQ add|TK_NE add)*
-*/
+ * TOKEN TABLE
+ * TK_EQ ==
+ * TK_NE !=
+ *
+ * operation associativity: left
+ *
+ * production rules
+ * (1) original
+ * logical: logical (TK_EQ|TK_NE) add
+ * (3)
+ * logical: add (TK_EQ add|TK_NE add)*
+ */
 static Node *logical() {
   Node *lhs = add();
   while (true)
@@ -290,6 +316,8 @@ static Node *logical() {
 }
 
 /*
+ * operation associativity: left
+ *
  * Production Rules
  *
  * (1) original
@@ -302,9 +330,6 @@ static Node *logical() {
  * (3) elimination of non-terminal rest2
  * add:  mul ('+' mul |'-' mul)*
  * "*" はカッコで囲まれた生成規則を0回以上繰り返す
- *
- * 左結合を実現するため、
- * トークンを読むにつれノードを左に伸ばす
  */
 static Node *add() {
   Node *lhs = mul();
@@ -322,31 +347,30 @@ static Node *add() {
 }
 
 /*
+ * operation associativity: left
+ *
  * Production Rule
  *
  * (1) original
- * mul:   mul '*' term | mul '/' term | term
+ * mul:   mul '*' unary | mul '/' unary | unary
  *
  * (2) elemination of left recursion
- * mul:   term rest1
- * rest1: '*' term rest1 | '/' term rest1 | ε
+ * mul:   unary rest1
+ * rest1: '*' unary rest1 | '/' unary rest1 | ε
  *
  * (3) elimination of non-terminal rest1
- * mul: term ('*' term | '/' term)*
+ * mul: unary ('*' unary | '/' unary)*
  * "*" はカッコで囲まれた生成規則を0回以上繰り返す
- *
- * 左結合を実現するため、
- * トークンを読むにつれノードを左に伸ばす
  */
 static Node *mul() {
-  Node *lhs = term();
+  Node *lhs = unary();
   while (true)
     if (lookahead->ty == '*') {
       match('*');
-      lhs = new_node('*', lhs, term());
+      lhs = new_node('*', lhs, unary());
     } else if (lookahead->ty == '/') {
       match('/');
-      lhs = new_node('/', lhs, term());
+      lhs = new_node('/', lhs, unary());
     } else
       break;
 
@@ -354,9 +378,32 @@ static Node *mul() {
 }
 
 /*
+ * operation associativity: right
+ *
+ * production rule
+ * unary: '-' term
+ *      | '&' term
+ *      | term
+ */
+static Node *unary() {
+  if (lookahead->ty == '-') {
+    match('-');
+    Node *node = malloc(sizeof(Node));
+    node->ty = ND_UNARY_MINUS;
+    node->lhs = term();
+    return node;
+  }
+  if (lookahead->ty == '&') {
+    // TODO
+  }
+  return term();
+}
+
+/*
  * production rule
  * term: NUMBER
- *     | IDENT | IDENT '(' args_opt ')'
+ *     | IDENT
+ *     | IDENT '(' args_opt ')'
  *     | '(' expr ')'
  * args_opt: ε | expr ( ',' expr )*
  */

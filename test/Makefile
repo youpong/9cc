@@ -8,7 +8,7 @@ TARGET = test
 check: $(TARGET)
 	./$(TARGET) && echo "OK"
 clean:
-	rm -f *.s *.o a.out core $(TARGET)
+	rm -f $(TARGET) *.s *.o a.out core *~
 format:
 	clang-format -i $(SRCS)
 $(TARGET): test.o util.o

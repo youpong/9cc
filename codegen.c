@@ -174,6 +174,12 @@ void gen(Node *node) {
     }
     printf("\tpush rax\n");
     return;
+  } else if (node->ty == ND_UNARY_MINUS) {
+    gen(node->lhs);
+    printf("\tpop rax\n");
+    printf("\tneg rax\n");
+    printf("\tpush rax\n");
+    return;
   } else if (node->ty == ND_NUM) {
     printf("\tpush %d\n", node->val);
     return;

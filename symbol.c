@@ -30,11 +30,12 @@ SYM_REC *query_reserved(char *name) {
 /*
  * name - variable name
  */
-void entry_var(char *name) {
+void entry_var(char *name, Type *ty) {
   SYM_REC *rec = malloc(sizeof(SYM_REC));
 
   rec->addr = 8 * (sym_tab->var_cnt + 1);
   sym_tab->var_cnt++;
+  rec->ty = ty;
   map_put(sym_tab->body, name, rec);
 }
 

@@ -12,8 +12,8 @@ OBJS = $(SRCS:.c=.o)
 
 all: $(TARGET)
 clean:
-	rm -f $(TARGET) $(OBJS) a.out tmp* \
-              TAGS core *.gcov *.gcno *.gcda *.png
+	rm -f $(TARGET) $(OBJS) tmp* *~ \
+              TAGS a.out core *.gcov *.gcno *.gcda *.png
 	cd test; make clean
 	cd sample; make clean
 check: $(TARGET)

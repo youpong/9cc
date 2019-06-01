@@ -31,19 +31,21 @@ FILE *yyin;
 
 // Abstract Syntax Node
 enum {
-  ND_NUM = 256, // 整数
-  ND_IDENT,     // 識別子
-  ND_FUNC_CALL, // function call
-  ND_EQ,        // '=='
-  ND_NE,        // '!='
-  ND_COMP_STMT, // compound statement
-  ND_VAR_DEF,   // variable definition
-  ND_IF,        // if statement
-  ND_WHILE,     // while statement
-  ND_BREAK,     // break statement
-  ND_CONTINUE,  // continue statement
-  ND_RETURN,    // return statement
-  ND_FUNC_DEF,  // function definition
+  ND_EQ = 256,    // '=='
+  ND_NE,          // '!='
+  ND_UNARY_MINUS, // unary operator '-'
+  ND_ADDRESS_OF,  // address-of operator '&'
+  ND_NUM,         // 整数
+  ND_IDENT,       // 識別子
+  ND_FUNC_CALL,   // function call
+  ND_COMP_STMT,   // compound statement
+  ND_VAR_DEF,     // variable definition
+  ND_IF,          // if statement
+  ND_WHILE,       // while statement
+  ND_BREAK,       // break statement
+  ND_CONTINUE,    // continue statement
+  ND_RETURN,      // return statement
+  ND_FUNC_DEF,    // function definition
 };
 
 typedef struct Node Node;
@@ -85,6 +87,12 @@ void parse();
 void gen(Node *);
 
 // Symbol table
+typedef struct Type Type;
+struct Type {
+  enum { INT, PTR } ty;
+  Type *ptr_to;
+};
+
 typedef struct SYM_TAB SYM_TAB;
 struct SYM_TAB {
   // Map children の中の特別な要素として parent を加えることができる
@@ -103,7 +111,7 @@ struct SYM_TAB {
 
 typedef struct {
   int token;
-  // int type; TODO: int
+  Type *ty;
   int addr;
 } SYM_REC;
 
@@ -112,7 +120,7 @@ extern SYM_TAB *sym_tab;
 // Symbol
 SYM_TAB *append_sym_tab(char *);
 void entry_reserved(char *, int);
-void entry_var(char *);
+void entry_var(char *, Type *);
 SYM_REC *query_reserved(char *);
 SYM_REC *query_var(char *);
 
