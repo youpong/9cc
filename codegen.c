@@ -189,6 +189,18 @@ void gen(Node *node) {
     printf("\tmov rax, [rax]\n");
     printf("\tpush rax\n");
     return;
+  } else if (node->ty == ND_ADDRESS_OF) {
+    gen_lval(node->lhs);
+    printf("\tpop rax\n");
+    printf("\tmov rax, [rax]\n");
+    printf("\tpush rax\n");
+    return;
+  } else if (node->ty == ND_DEREFERENCE) {
+    gen_lval(node->lhs);
+    printf("\tpop rax\n");
+    printf("\tmov rax, [rax]\n");
+    printf("\tpush rax\n");
+    return;
   } else if (node->ty == '=') {
     gen_lval(node->lhs);
     gen(node->rhs);

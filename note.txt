@@ -1,9 +1,13 @@
 implement global variable.
 --
+implement
+  low line '_'
+--
 implement pointer.
 
 tokenize: '*', '&'
 parse:
+  unary operation
   VAR_DEF:
     int *y
   FUNC_DEF: params
@@ -11,6 +15,11 @@ parse:
   TERM/POINTER/DEREFERENCE
   
 codegen:
+
+--
+implement ND
+ND_UNARY
+ND_ADDRESS_OF
 
 --
 parse phase: entry variable

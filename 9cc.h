@@ -30,11 +30,12 @@ void tokenize();
 FILE *yyin;
 
 // Abstract Syntax Node
-enum {
+enum node_type {
   ND_EQ = 256,    // '=='
   ND_NE,          // '!='
   ND_UNARY_MINUS, // unary operator '-'
   ND_ADDRESS_OF,  // address-of operator '&'
+  ND_DEREFERENCE, // pointer dereference '*'
   ND_NUM,         // 整数
   ND_IDENT,       // 識別子
   ND_FUNC_CALL,   // function call
@@ -50,9 +51,9 @@ enum {
 
 typedef struct Node Node;
 struct Node {
-  int ty; // 演算子 | ND_NUM | ND_IDENT
-  Node *lhs;
-  Node *rhs;
+  int ty;    // node_type(ND_EQ, ND_NE, ... , ND_FUNC_DEF)
+  Node *lhs; // Left Hand Side or unary operators operand.
+  Node *rhs; // Right Hand Side
   int val;
   char *name;
   Vector *stmts; // compound statements

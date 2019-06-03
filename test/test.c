@@ -14,6 +14,14 @@ int sum(int a, int b, int c, int d, int e, int f) {
   return a + b + c + d + e + f;
 }
 
+int testUnaryMinus() {
+  int a;
+  a = 30;
+  expect(190, -1, 0 - 1);
+  expect(191, -30, -a);
+  return 0;
+}
+
 int main() {
   int a;
   int b;

@@ -382,19 +382,37 @@ static Node *mul() {
  *
  * production rule
  * unary: '-' term
- *      | '&' term
+ *      | '*' term   ; pointer dereference
+ *      | '&' IDENT  ; address-of operator
  *      | term
  */
 static Node *unary() {
   if (lookahead->ty == '-') {
-    match('-');
     Node *node = malloc(sizeof(Node));
+
     node->ty = ND_UNARY_MINUS;
+    match('-');
+
     node->lhs = term();
     return node;
-  }
-  if (lookahead->ty == '&') {
-    // TODO
+  } else if (lookahead->ty == '*') {
+    Node *node = malloc(sizeof(Node));
+
+    node->ty = ND_DEREFERENCE;
+    match('*');
+
+    node->lhs = term();
+    return node;
+  } else if (lookahead->ty == '&') {
+    Node *node = malloc(sizeof(Node));
+
+    node->ty = ND_ADDRESS_OF;
+    match('&');
+
+    node->lhs = new_node_id(lookahead->name);
+    match(TK_IDENT);
+
+    return node;
   }
   return term();
 }
