@@ -14,11 +14,11 @@ int sum(int a, int b, int c, int d, int e, int f) {
   return a + b + c + d + e + f;
 }
 
-int testUnaryMinus() {
+int test_unary_minus() {
   int a;
-  a = 30;
+  a = 31;
   expect(190, -1, 0 - 1);
-  expect(191, -30, -a);
+  expect(191, -30, -a + 1);
   return 0;
 }
 
@@ -30,6 +30,7 @@ int main() {
   int e;
   int aa;
 
+  test_unary_minus();
   /* comment */
   /** comment2 **/
   expect(41, 44, 46 - 7 + 5);

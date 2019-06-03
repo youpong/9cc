@@ -120,11 +120,11 @@ void tokenize() {
     }
 
     // identifier or reserved word
-    if (isalpha(c)) {
+    if (isalpha(c) || c == '_') {
       char *p = buf;
       *p++ = c;
       c = mygetc();
-      while (isalnum(c)) {
+      while (isalnum(c) || c == '_') {
         *p++ = c;
         c = mygetc();
       }
