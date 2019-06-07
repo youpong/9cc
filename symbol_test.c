@@ -10,10 +10,9 @@ void run_symbol_test() {
 }
 
 static void test_query_var() {
-  //  int a;
   expect_ptr(__LINE__, NULL, query_var("a"));
   sym_tab = append_sym_tab(NULL);
-  expect_ptr(__LINE__, NULL, query_var("a"));
+  expect_ptr(__LINE__, NULL, query_var("b"));
   sym_tab = append_sym_tab("main");
-  expect_ptr(__LINE__, NULL, query_var("a"));
+  expect_ptr(__LINE__, NULL, query_var("c"));
 }

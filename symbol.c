@@ -42,8 +42,8 @@ void entry_var(char *name, Type *ty) {
 SYM_REC *query_var(char *name) {
   SYM_REC *rec = NULL;
 
-  for (SYM_TAB *tab = sym_tab; tab != NULL; tab = sym_tab->parent) {
-    rec = (SYM_REC *)map_get(sym_tab->body, name);
+  for (SYM_TAB *tab = sym_tab; tab != NULL; tab = tab->parent) {
+    rec = (SYM_REC *)map_get(tab->body, name);
     if (rec != NULL)
       break;
   }
