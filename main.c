@@ -14,12 +14,10 @@ bool ast_flg = false;
 char **ARGV;
 
 int main(int argc, char **argv) {
-  tokens = new_vector();
-  code = new_vector();
-  sym_tab = append_sym_tab(NULL);
 
   if (argc >= 2 && strcmp(argv[1], "-test") == 0) {
-    run_utiltest();
+    run_util_test();
+    run_symbol_test();
     return 0;
   }
   if (argc >= 2 && strcmp(argv[1], "-ast") == 0) {
@@ -36,6 +34,10 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
   }
   ARGV = argv;
+
+  tokens = new_vector();
+  code = new_vector();
+  sym_tab = append_sym_tab(NULL);
 
   init();
   tokenize();

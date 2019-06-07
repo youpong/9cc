@@ -134,3 +134,6 @@ void p_tree(Node *);
 // main.c
 extern bool ast_flg;
 extern char **ARGV;
+
+// symbol_test.c
+void run_symbol_test();

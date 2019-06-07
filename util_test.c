@@ -35,7 +35,7 @@ static void test_map() {
   expect(__LINE__, 6, *(int *)map_get(map, "foo"));
 }
 
-void run_utiltest() {
+void run_util_test() {
   test_vector();
   test_map();
   printf("OK\n");

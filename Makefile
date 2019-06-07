@@ -7,7 +7,7 @@ LIBS = -lgcov
 
 TARGET = 9cc
 SRCS = main.c init.c  symbol.c tokenize.c  parse.c codegen.c \
-       node.c debug.c util.c   util_test.c
+       node.c debug.c util.c   util_test.c symbol_test.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(TARGET)

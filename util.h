@@ -30,4 +30,4 @@ void expect(int, int, int);
 void expect_ptr(int, void *, void *);
 
 /* util_test.c */
-void run_utiltest();
+void run_util_test();
