@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 static int label = 0;
-static int rsp_cur = 0;
+static int rsp_cur;
 
 void gen_lval(Node *node) {
   if (node->ty != ND_IDENT) {
@@ -62,6 +62,7 @@ void gen(Node *node) {
     printf("\tpush rax\n");
     return;
   } else if (node->ty == ND_FUNC_DEF) {
+    rsp_cur = 0;
     sym_tab = (SYM_TAB *)map_get(sym_tab->children, node->name);
 
     // print function name in label.
