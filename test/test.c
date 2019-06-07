@@ -25,6 +25,17 @@ int test_unary_minus() {
   return 0;
 }
 
+int test_pointer() {
+  int x;
+  int *y;
+
+  x = 3;
+  y = &x;
+  expect(17, 3, *y);
+
+  return 0;
+}
+
 int main() {
   int a;
   int b;
@@ -34,6 +45,8 @@ int main() {
   int aa;
 
   test_unary_minus();
+  test_pointer();
+
   /* comment */
   /** comment2 **/
   expect(41, 44, 46 - 7 + 5);
