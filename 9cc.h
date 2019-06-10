@@ -2,91 +2,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-// Tokenize
-enum {
-  TK_NUM = 256, // integer
-  TK_IDENT,     // 識別子
-  TK_EQ,        // '=='
-  TK_NE,        // '!='
-  TK_IF,        // "if"
-  TK_ELSE,      // "else"
-  TK_WHILE,     // "while"
-  TK_BREAK,     // "break"
-  TK_CONTINUE,  // "continue"
-  TK_RETURN,    // "return"
-  TK_INT,       // "int"
-  TK_EOF,       // end of file
-};
-
-typedef struct {
-  int ty;     // type of token
-  int val;    // ty が TK_NUM の場合のその値
-  char *name; // ty が TK_IDENT の場合その名前
-} Token;
-
-extern Vector *tokens;
-void tokenize();
-
-FILE *yyin;
-
-// Abstract Syntax Node
-enum node_type {
-  ND_EQ = 256,    // '=='
-  ND_NE,          // '!='
-  ND_UNARY_MINUS, // unary operator '-'
-  ND_ADDRESS_OF,  // address-of operator '&'
-  ND_DEREFERENCE, // pointer dereference '*'
-  ND_NUM,         // 整数
-  ND_IDENT,       // 識別子
-  ND_FUNC_CALL,   // function call
-  ND_COMP_STMT,   // compound statement
-  ND_VAR_DEF,     // variable definition
-  ND_IF,          // if statement
-  ND_WHILE,       // while statement
-  ND_BREAK,       // break statement
-  ND_CONTINUE,    // continue statement
-  ND_RETURN,      // return statement
-  ND_FUNC_DEF,    // function definition
-};
-
-typedef struct Node Node;
-struct Node {
-  int ty;    // node_type(ND_EQ, ND_NE, ... , ND_FUNC_DEF)
-  Node *lhs; // Left Hand Side or unary operators operand.
-  Node *rhs; // Right Hand Side
-  int val;
-  char *name;
-  Vector *stmts; // compound statements
-
-  Node *cond;
-  Node *then;
-  Node *els;
-  Node *body;
-
-  // For break/continue
-  Node *target;
-  char *label_head;
-  char *label_tail;
-
-  // Function definition
-  Vector *params;
-
-  // Function call
-  Vector *args;
-};
-
-extern Vector *code;
-
-Node *new_node(int, Node *, Node *);
-Node *new_node_num(int);
-Node *new_node_id(char *name);
-
-// Parse
-void parse();
-
-// Generate
-void gen(Node *);
-
+/* typedef, enum, struct */
 // Symbol table
 typedef struct Type Type;
 struct Type {
@@ -116,7 +32,88 @@ typedef struct {
   int addr;
 } SYM_REC;
 
-extern SYM_TAB *sym_tab;
+// Tokenize
+enum token_type {
+  TK_NUM = 256, // integer
+  TK_IDENT,     // 識別子
+  TK_EQ,        // '=='
+  TK_NE,        // '!='
+  TK_IF,        // "if"
+  TK_ELSE,      // "else"
+  TK_WHILE,     // "while"
+  TK_BREAK,     // "break"
+  TK_CONTINUE,  // "continue"
+  TK_RETURN,    // "return"
+  TK_INT,       // "int"
+  TK_EOF,       // end of file
+};
+
+typedef struct {
+  int ty;     // type of token
+  int val;    // ty が TK_NUM の場合のその値
+  char *name; // ty が TK_IDENT の場合その名前
+} Token;
+
+// Abstract Syntax Node
+enum node_type {
+  ND_EQ = 256,    // '=='
+  ND_NE,          // '!='
+  ND_UNARY_MINUS, // unary operator '-'
+  ND_ADDRESS_OF,  // address-of operator '&'
+  ND_DEREFERENCE, // pointer dereference '*'
+  ND_NUM,         // 整数
+  ND_IDENT,       // 識別子
+  ND_FUNC_CALL,   // function call
+  ND_COMP_STMT,   // compound statement
+  ND_VAR_DEF,     // variable definition
+  ND_IF,          // if statement
+  ND_WHILE,       // while statement
+  ND_BREAK,       // break statement
+  ND_CONTINUE,    // continue statement
+  ND_RETURN,      // return statement
+  ND_FUNC_DEF,    // function definition
+};
+
+typedef struct Node Node;
+struct Node {
+  int ty; // node_type(ND_EQ, ND_NE, ... , ND_FUNC_DEF)
+
+  char *name;
+  int val;
+
+  Type *eval_ty; // type of evaluated value
+
+  Node *lhs;     // Left Hand Side or unary operators operand.
+  Node *rhs;     // Right Hand Side
+  Vector *stmts; // compound statements
+
+  Node *cond;
+  Node *then;
+  Node *els;
+  Node *body;
+
+  // For break/continue
+  Node *target;
+  char *label_head;
+  char *label_tail;
+
+  // Function definition
+  Vector *params;
+
+  // Function call
+  Vector *args;
+};
+
+/* Functions */
+void init();
+void tokenize();
+void parse();
+void gen(Node *);
+
+// Node
+Node *new_node(int, Node *, Node *);
+Node *new_node_num(int);
+Node *new_node_id(char *name);
 
 // Symbol
 SYM_TAB *append_sym_tab(char *);
@@ -125,15 +122,18 @@ void entry_var(char *, Type *);
 SYM_REC *query_reserved(char *);
 SYM_REC *query_var(char *);
 
-// init.c
-void init();
-
 // debug.c
 void p_tree(Node *);
 
-// main.c
-extern bool ast_flg;
-extern char **ARGV;
-
 // symbol_test.c
 void run_symbol_test();
+
+/* Variables */
+extern FILE *yyin;
+
+extern SYM_TAB *sym_tab;
+extern Vector *tokens;
+extern Vector *code;
+
+extern bool ast_flg;
+extern char **ARGV;

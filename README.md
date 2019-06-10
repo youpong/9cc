@@ -15,7 +15,7 @@ Command Line interface.
 
     program_file Specifiles program filename.
     -ast         Output AST(Abstract Syntax Tree). 
-    -test        Do test.
+    -test        Do unit test.
 
 Sample
 ------
