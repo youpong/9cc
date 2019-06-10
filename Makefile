@@ -1,4 +1,4 @@
-CC = gcc
+#CC = gcc
 #CFLAGS = -Wall -std=c11 -g -D_POSIX_C_SOURCE=200809L --coverage
 CFLAGS = -Wall -std=c11 -g -D_POSIX_C_SOURCE=200809L
 # electrice fence

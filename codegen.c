@@ -27,10 +27,12 @@ void gen_lval(Node *node) {
  */
 void gen(Node *node) {
   char *arg_rg[] = {"rdi", "rsi", "rdx", "rcx", "r8", "r9", NULL};
+  int len;
+  int l0, l1;
 
-  // TODO: if -> case
-  if (node->ty == ND_FUNC_CALL) {
-    int len = node->args->len;
+  switch (node->ty) {
+  case ND_FUNC_CALL:
+    len = node->args->len;
 
     for (int i = 0; i < len; i++) {
       if (arg_rg[i] == NULL)
@@ -58,10 +60,10 @@ void gen(Node *node) {
 
     printf("\tpush rax\n");
     return;
-  } else if (node->ty == ND_VAR_DEF) {
+  case ND_VAR_DEF:
     printf("\tpush rax\n");
     return;
-  } else if (node->ty == ND_FUNC_DEF) {
+  case ND_FUNC_DEF:
     rsp_cur = 0;
     sym_tab = (SYM_TAB *)map_get(sym_tab->children, node->name);
 
@@ -75,7 +77,7 @@ void gen(Node *node) {
     rsp_cur -= sym_tab->var_cnt * 8;
 
     // function params
-    int len = node->params->len;
+    len = node->params->len;
     for (int i = 0; i < len; i++) {
       gen_lval((Node *)vec_at(node->params, i));
       printf("\tpush %s\n", arg_rg[i]);
@@ -97,7 +99,8 @@ void gen(Node *node) {
     sym_tab = sym_tab->parent;
 
     return;
-  } else if (node->ty == ND_WHILE) {
+
+  case ND_WHILE:
     // ラベルの作成 l
     node->label_head = malloc((3 + 1) * sizeof(char));
     node->label_tail = malloc((3 + 1) * sizeof(char));
@@ -123,18 +126,18 @@ void gen(Node *node) {
     printf("%s:\n", node->label_tail); // L1
     printf("\tpush rax\n");
     return;
-  } else if (node->ty == ND_CONTINUE) {
+  case ND_CONTINUE:
     printf("\tjmp %s\n", node->target->label_head);
     printf("\tpush rax\n");
     return;
-  } else if (node->ty == ND_BREAK) {
+  case ND_BREAK:
     printf("\tjmp %s\n", node->target->label_tail);
     printf("\tpush rax\n");
     return;
-  } else if (node->ty == ND_IF) {
+  case ND_IF:
     // ラベルの作成 l
-    int l0 = label++;
-    int l1 = label++;
+    l0 = label++;
+    l1 = label++;
 
     // cond
     gen(node->cond);
@@ -158,7 +161,7 @@ void gen(Node *node) {
     printf("L%d:\n", l1); // L1
     printf("\tpush rax\n");
     return;
-  } else if (node->ty == ND_RETURN) {
+  case ND_RETURN:
     gen(node->lhs);
     printf("\tpop rax\n");
 
@@ -167,42 +170,41 @@ void gen(Node *node) {
     printf("\tret\n");
     printf("\tpush rax\n");
     return;
-  } else if (node->ty == ND_COMP_STMT) {
-    Vector *v = node->stmts;
-    for (int i = 0; i < v->len; i++) {
-      gen((Node *)vec_at(v, i));
+  case ND_COMP_STMT:
+    for (int i = 0; i < node->stmts->len; i++) {
+      gen((Node *)vec_at(node->stmts, i));
       printf("\tpop rax\n");
     }
     printf("\tpush rax\n");
     return;
-  } else if (node->ty == ND_UNARY_MINUS) {
+  case ND_UNARY_MINUS:
     gen(node->lhs);
     printf("\tpop rax\n");
     printf("\tneg rax\n");
     printf("\tpush rax\n");
     return;
-  } else if (node->ty == ND_NUM) {
+  case ND_NUM:
     printf("\tpush %d\n", node->val);
     return;
-  } else if (node->ty == ND_IDENT) {
+  case ND_IDENT:
     gen_lval(node);
     printf("\tpop rax\n");
     printf("\tmov rax, [rax]\n");
     printf("\tpush rax\n");
     return;
-  } else if (node->ty == ND_ADDRESS_OF) {
+  case ND_ADDRESS_OF:
     gen_lval(node->lhs);
     printf("\tpop rax\n");
     printf("\tmov rax, [rax]\n");
     printf("\tpush rax\n");
     return;
-  } else if (node->ty == ND_DEREFERENCE) {
+  case ND_DEREFERENCE:
     gen_lval(node->lhs);
     printf("\tpop rax\n");
     printf("\tmov rax, [rax]\n");
     printf("\tpush rax\n");
     return;
-  } else if (node->ty == '=') {
+  case '=':
     gen_lval(node->lhs);
     gen(node->rhs);
 
