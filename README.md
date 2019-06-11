@@ -33,22 +33,23 @@ Sample
 * if, while 文
 * break/continue 文
 * コメント文(/* C style */)
-* 引数[あり|なし]の関数定義
-* 引数[あり|なし]の関数呼び出し
-* ローカル変数
-* 単項演算子(-/& address-of/* pointer dereference)
-* ポインタ
+* 関数定義(int 型のみ)
+* 関数呼び出し(int 型のみ)
+* ローカル変数(int 型, int *型のみ)
+* 単項演算子(-)
+* ポインタ(& address-of, * pointer dereference)
 
 # 実装予定
 
+* ポインタ演算(+,-)
 * 論理演算(&&, ||, &, |)
 * for, do while, switch
 * コメント文(// C++ style)
 * グローバル変数
 * 配列
 * 単項演算子(+)
-* ++/--
-* char/int型
+* ++, --
+* char型
 * 文字列リテラル
 * 構造体
 * extern
