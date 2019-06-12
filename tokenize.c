@@ -9,15 +9,15 @@
 static int mygetc();
 static int myungetc(int);
 
-enum {
-  IN_COMMENT = 1,
+typedef enum {
   NOT_IN_COMMENT = 0,
-};
+  IN_COMMENT,
+} COMMENT_STATUS;
 
-void tokenize() {
+void tokenize(Vector *tokens) {
   Token *token;
   char buf[100];
-  int status = NOT_IN_COMMENT;
+  COMMENT_STATUS status = NOT_IN_COMMENT;
   int c;
 
   yyin = fopen(ARGV[1], "r");

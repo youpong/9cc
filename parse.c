@@ -30,11 +30,13 @@ Token *lookahead;
 static int pos = 0;
 static Vector *breaks;
 static Vector *continues;
+static Vector *tokens;
 
 /*
  * parse: func_def*
  */
-void parse() {
+void parse(Vector *t, Vector *code) {
+  tokens = t;
   breaks = new_vector();
   continues = new_vector();
 

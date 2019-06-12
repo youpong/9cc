@@ -6,8 +6,8 @@ CFLAGS = -Wall -std=c11 -g -D_POSIX_C_SOURCE=200809L
 LIBS = -lgcov 
 
 TARGET = 9cc
-SRCS = main.c init.c  symbol.c tokenize.c  parse.c codegen.c \
-       node.c debug.c util.c   util_test.c symbol_test.c
+SRCS = main.c init.c  symbol.c tokenize.c  parse.c sema.c codegen.c \
+       node.c util.c  debug.c  util_test.c symbol_test.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(TARGET)

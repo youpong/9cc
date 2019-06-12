@@ -7,8 +7,6 @@
 #include <string.h>
 
 FILE *yyin;
-Vector *tokens;
-Vector *code;
 SYM_TAB *sym_tab = NULL;
 bool ast_flg = false;
 char **ARGV;
@@ -35,13 +33,14 @@ int main(int argc, char **argv) {
   }
   ARGV = argv;
 
-  tokens = new_vector();
-  code = new_vector();
+  Vector *tokens = new_vector();
+  Vector *code = new_vector();
   sym_tab = append_sym_tab(NULL);
 
   init();
-  tokenize();
-  parse();
+  tokenize(tokens);
+  parse(tokens, code);
+  sema(code);
 
   if (ast_flg == true) {
     printf("graph graphname {\n");

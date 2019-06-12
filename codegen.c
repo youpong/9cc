@@ -234,7 +234,6 @@ void gen(Node *node) {
   case '/':
   case ND_EQ:
   case ND_NE:
-    // TODO:   if(node->lhs->eval_ty->ty == PTR)
     gen(node->lhs);
     gen(node->rhs);
 
@@ -268,7 +267,7 @@ void gen(Node *node) {
     }
     printf("\tpush rax\n");
     return;
-  default: 
+  default:
     error("unexpected type of node\n");
   }
 }

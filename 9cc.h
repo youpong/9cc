@@ -106,9 +106,10 @@ struct Node {
 
 /* Functions */
 void init();
-void tokenize();
-void parse();
-void gen(Node *);
+void tokenize(Vector *);
+void parse(Vector *, Vector *);
+void sema(Vector *);
+void gen(Node *); // TODO: gen(Vector *);
 
 // Node
 Node *new_node(int, Node *, Node *);
@@ -132,8 +133,6 @@ void run_symbol_test();
 extern FILE *yyin;
 
 extern SYM_TAB *sym_tab;
-extern Vector *tokens;
-extern Vector *code;
 
 extern bool ast_flg;
 extern char **ARGV;
