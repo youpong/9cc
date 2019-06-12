@@ -161,64 +161,64 @@ void gen(Node *node) {
   switch (node->ty) {
   case ND_FUNC_CALL:
     gen_func_call(node);
-    break;
+    return;
   case ND_VAR_DEF:
     printf("\tpush rax\n");
-    break;
+    return;
   case ND_FUNC_DEF:
     gen_func_def(node);
-    break;
+    return;
   case ND_WHILE:
     gen_while(node);
-    break;
+    return;
   case ND_CONTINUE:
     printf("\tjmp %s\n", node->target->label_head);
     printf("\tpush rax\n");
-    break;
+    return;
   case ND_BREAK:
     printf("\tjmp %s\n", node->target->label_tail);
     printf("\tpush rax\n");
-    break;
+    return;
   case ND_IF:
     gen_if(node);
-    break;
+    return;
   case ND_RETURN:
     gen_return(node);
-    break;
+    return;
   case ND_COMP_STMT:
     for (int i = 0; i < node->stmts->len; i++) {
       gen((Node *)vec_at(node->stmts, i));
       printf("\tpop rax\n");
     }
     printf("\tpush rax\n");
-    break;
+    return;
   case ND_UNARY_MINUS:
     gen(node->lhs);
     printf("\tpop rax\n");
     printf("\tneg rax\n");
     printf("\tpush rax\n");
-    break;
+    return;
   case ND_NUM:
     printf("\tpush %d\n", node->val);
-    break;
+    return;
   case ND_IDENT:
     gen_lval(node);
     printf("\tpop rax\n");
     printf("\tmov rax, [rax]\n");
     printf("\tpush rax\n");
-    break;
+    return;
   case ND_ADDRESS_OF:
     gen_lval(node->lhs);
     printf("\tpop rax\n");
     printf("\tmov rax, [rax]\n");
     printf("\tpush rax\n");
-    break;
+    return;
   case ND_DEREFERENCE:
     gen_lval(node->lhs);
     printf("\tpop rax\n");
     printf("\tmov rax, [rax]\n");
     printf("\tpush rax\n");
-    break;
+    return;
   case '=':
     gen_lval(node->lhs);
     gen(node->rhs);
@@ -227,15 +227,14 @@ void gen(Node *node) {
     printf("\tpop rax\n");
     printf("\tmov [rax], rdi\n");
     printf("\tpush rdi\n");
-    break;
-
+    return;
   case '+':
   case '-':
   case '*':
   case '/':
   case ND_EQ:
   case ND_NE:
-
+    // TODO:   if(node->lhs->eval_ty->ty == PTR)
     gen(node->lhs);
     gen(node->rhs);
 
@@ -268,8 +267,8 @@ void gen(Node *node) {
       break;
     }
     printf("\tpush rax\n");
-    break;
-  default:
+    return;
+  default: 
     error("unexpected type of node\n");
   }
 }
