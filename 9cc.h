@@ -106,7 +106,7 @@ struct Node {
 
 /* Functions */
 void init();
-Vector *tokenize();
+Vector *tokenize(char *);
 Vector *parse(Vector *);
 void sema(Vector *);
 void gen_x86(Vector *);
@@ -130,9 +130,4 @@ void p_tree(Node *);
 void run_symbol_test();
 
 /* Variables */
-extern FILE *yyin;
-
 extern SYM_TAB *sym_tab;
-
-extern bool ast_flg;
-extern char **ARGV;

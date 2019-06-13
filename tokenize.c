@@ -6,15 +6,17 @@
 #include <stdlib.h>
 #include <string.h>
 
-static int mygetc();
-static int myungetc(int);
-
 typedef enum {
   NOT_IN_COMMENT = 0,
   IN_COMMENT,
 } COMMENT_STATUS;
 
-Vector *tokenize() {
+static int mygetc();
+static int myungetc(int);
+
+static FILE *yyin;
+
+Vector *tokenize(char *path) {
   Vector *tokens;
   Token *token;
   char buf[100];
@@ -23,7 +25,7 @@ Vector *tokenize() {
 
   tokens = new_vector();
 
-  yyin = fopen(ARGV[1], "r");
+  yyin = fopen(path, "r");
   if (yyin == NULL)
     error("file cannot open");
 
