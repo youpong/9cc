@@ -33,8 +33,7 @@ int main(int argc, char **argv) {
   }
   ARGV = argv;
 
-  sym_tab = append_sym_tab(NULL);
-  init(); // TODO: sym_tab = init();
+  init();
   Vector *tokens = tokenize();
   Vector *code = parse(tokens);
   sema(code);
