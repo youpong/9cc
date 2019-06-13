@@ -106,8 +106,8 @@ struct Node {
 
 /* Functions */
 void init();
-void tokenize(Vector *);
-void parse(Vector *, Vector *);
+Vector *tokenize();
+Vector *parse(Vector *);
 void sema(Vector *);
 void gen_x86(Vector *);
 

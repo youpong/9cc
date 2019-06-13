@@ -33,13 +33,10 @@ int main(int argc, char **argv) {
   }
   ARGV = argv;
 
-  Vector *tokens = new_vector();
-  Vector *code = new_vector();
   sym_tab = append_sym_tab(NULL);
-
-  init();
-  tokenize(tokens);
-  parse(tokens, code);
+  init(); // TODO: sym_tab = init();
+  Vector *tokens = tokenize();
+  Vector *code = parse(tokens);
   sema(code);
 
   if (ast_flg == true) {
@@ -51,5 +48,6 @@ int main(int argc, char **argv) {
   }
 
   gen_x86(code);
+
   return EXIT_SUCCESS;
 }

@@ -14,11 +14,14 @@ typedef enum {
   IN_COMMENT,
 } COMMENT_STATUS;
 
-void tokenize(Vector *tokens) {
+Vector *tokenize() {
+  Vector *tokens;
   Token *token;
   char buf[100];
   COMMENT_STATUS status = NOT_IN_COMMENT;
   int c;
+
+  tokens = new_vector();
 
   yyin = fopen(ARGV[1], "r");
   if (yyin == NULL)
@@ -147,11 +150,13 @@ void tokenize(Vector *tokens) {
     if (c == EOF) {
       token->ty = TK_EOF;
       vec_push(tokens, token);
-      return;
+      break;
     }
 
     error("トークナイズできません: (%c)\n", c);
   }
+
+  return tokens;
 }
 
 int mygetc() {

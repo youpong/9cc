@@ -35,14 +35,19 @@ static Vector *tokens;
 /*
  * parse: func_def*
  */
-void parse(Vector *tokens_, Vector *code) {
+Vector *parse(Vector *tokens_) {
+  Vector *code;
   tokens = tokens_;
   breaks = new_vector();
   continues = new_vector();
 
+  code = new_vector();
+
   lookahead = (Token *)vec_at(tokens, pos);
   while (lookahead->ty != TK_EOF)
     vec_push(code, func_def());
+
+  return code;
 }
 
 /*
