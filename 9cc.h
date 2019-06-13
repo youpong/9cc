@@ -109,7 +109,7 @@ void init();
 void tokenize(Vector *);
 void parse(Vector *, Vector *);
 void sema(Vector *);
-void gen(Node *); // TODO: gen(Vector *);
+void gen_x86(Vector *);
 
 // Node
 Node *new_node(int, Node *, Node *);

@@ -35,8 +35,8 @@ static Vector *tokens;
 /*
  * parse: func_def*
  */
-void parse(Vector *t, Vector *code) {
-  tokens = t;
+void parse(Vector *tokens_, Vector *code) {
+  tokens = tokens_;
   breaks = new_vector();
   continues = new_vector();
 

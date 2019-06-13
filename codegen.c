@@ -4,11 +4,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+static void gen_lval(Node *);
+static void gen(Node *);
+
 static int label = 0;
 static int rsp_cur;
 static char *arg_rg[] = {"rdi", "rsi", "rdx", "rcx", "r8", "r9", NULL};
 
-void gen_lval(Node *node) {
+static void gen_lval(Node *node) {
   if (node->ty != ND_IDENT) {
     error("変数ではありません\n");
   }
@@ -23,7 +26,7 @@ void gen_lval(Node *node) {
   printf("\tpush rax\n");
 }
 
-void gen_func_def(Node *node) {
+static void gen_func_def(Node *node) {
   int len;
   rsp_cur = 0;
   sym_tab = (SYM_TAB *)map_get(sym_tab->children, node->name);
@@ -60,7 +63,7 @@ void gen_func_def(Node *node) {
   sym_tab = sym_tab->parent;
 }
 
-void gen_func_call(Node *node) {
+static void gen_func_call(Node *node) {
   int len = node->args->len;
 
   for (int i = 0; i < len; i++) {
@@ -90,7 +93,7 @@ void gen_func_call(Node *node) {
   printf("\tpush rax\n");
 }
 
-void gen_if(Node *node) {
+static void gen_if(Node *node) {
   // ラベルの作成 l
   int l0 = label++;
   int l1 = label++;
@@ -118,7 +121,7 @@ void gen_if(Node *node) {
   printf("\tpush rax\n");
 }
 
-void gen_while(Node *node) {
+static void gen_while(Node *node) {
   // ラベルの作成 l
   node->label_head = malloc((3 + 1) * sizeof(char));
   node->label_tail = malloc((3 + 1) * sizeof(char));
@@ -145,7 +148,7 @@ void gen_while(Node *node) {
   printf("\tpush rax\n");
 }
 
-void gen_return(Node *node) {
+static void gen_return(Node *node) {
   gen(node->lhs);
   printf("\tpop rax\n");
 
@@ -154,10 +157,11 @@ void gen_return(Node *node) {
   printf("\tret\n");
   printf("\tpush rax\n");
 }
+
 /**
  *
  */
-void gen(Node *node) {
+static void gen(Node *node) {
   switch (node->ty) {
   case ND_FUNC_CALL:
     gen_func_call(node);
@@ -269,5 +273,29 @@ void gen(Node *node) {
     return;
   default:
     error("unexpected type of node\n");
+  }
+}
+
+void gen_x86(Vector *code) {
+  // print preamble.
+  printf(".intel_syntax noprefix\n");
+
+  // print global function names.
+  printf(".global ");
+  char *delim = "";
+  Vector *keys = map_keys(sym_tab->children);
+  for (int i = 0; i < keys->len; i++) {
+    printf("%s%s", delim, (char *)vec_at(keys, i));
+    delim = ", ";
+  }
+  printf("\n");
+
+  // print each node.
+  for (int i = 0; i < code->len; i++) {
+    gen((Node *)vec_at(code, i));
+
+    // 式の評価結果としてスタックに一つの値が残っているはずなので
+    // スタックが溢れないようにポップしておく
+    printf("\tpop rax\n");
   }
 }

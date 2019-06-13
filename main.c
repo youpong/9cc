@@ -50,27 +50,6 @@ int main(int argc, char **argv) {
     return EXIT_SUCCESS;
   }
 
-  // print preamble.
-  printf(".intel_syntax noprefix\n");
-
-  // print global function names.
-  printf(".global ");
-  char *delim = "";
-  Vector *keys = map_keys(sym_tab->children);
-  for (int i = 0; i < keys->len; i++) {
-    printf("%s%s", delim, (char *)vec_at(keys, i));
-    delim = ", ";
-  }
-  printf("\n");
-
-  // print each node.
-  for (int i = 0; i < code->len; i++) {
-    gen((Node *)vec_at(code, i));
-
-    // 式の評価結果としてスタックに一つの値が残っているはずなので
-    // スタックが溢れないようにポップしておく
-    printf("\tpop rax\n");
-  }
-
+  gen_x86(code);
   return EXIT_SUCCESS;
 }
