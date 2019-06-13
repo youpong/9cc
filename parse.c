@@ -23,14 +23,12 @@ static Node *unary();
 static Node *term();
 static void match(int);
 
-// extern
-Token *lookahead;
-
 // static
-static int pos = 0;
+static Vector *tokens;
+static Token *lookahead;
+
 static Vector *breaks;
 static Vector *continues;
-static Vector *tokens;
 
 /*
  * parse: func_def*
@@ -43,7 +41,7 @@ Vector *parse(Vector *tokens_) {
 
   code = new_vector();
 
-  lookahead = (Token *)vec_at(tokens, pos);
+  lookahead = (Token *)vec_at(tokens, 0);
   while (lookahead->ty != TK_EOF)
     vec_push(code, func_def());
 
@@ -476,6 +474,8 @@ static Node *term() {
 }
 
 static void match(int ty) {
+  static int pos = 1;
+
   if (lookahead->ty != ty) {
     if (lookahead->ty == TK_IDENT)
       error("unexpected token %d(%s): expected token %d", lookahead->ty,
@@ -483,5 +483,5 @@ static void match(int ty) {
     error("unexpected token %d : expected token %d", lookahead->ty, ty);
   }
 
-  lookahead = (Token *)vec_at(tokens, ++pos);
+  lookahead = (Token *)vec_at(tokens, pos++);
 }
