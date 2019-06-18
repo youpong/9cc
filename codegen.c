@@ -282,13 +282,10 @@ void gen_x86(Vector *code) {
 
   // print global function names.
   printf(".global ");
-  char *delim = "";
   Vector *keys = map_keys(sym_tab->children);
-  for (int i = 0; i < keys->len; i++) {
-    printf("%s%s", delim, (char *)vec_at(keys, i));
-    delim = ", ";
-  }
-  printf("\n");
+  for (int i = 0; i < keys->len - 1; i++)
+    printf("%s, ", (char *)vec_at(keys, i));
+  printf("%s\n", (char *)vec_at(keys, keys->len - 1));
 
   // print each node.
   for (int i = 0; i < code->len; i++) {
