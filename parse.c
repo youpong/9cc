@@ -65,20 +65,17 @@ static Node *func_def() {
   match(TK_IDENT);
   match('(');
 
-  if (lookahead->ty != ')') {
-    while (true) {
-      // TODO: Type ptr.
-      Type *ty;
-      match(TK_INT);
-      vec_push(node->params, new_node_id(lookahead->name));
-      ty = malloc(sizeof(Type));
-      ty->ty = INT;
-      entry_var(lookahead->name, ty);
-      match(TK_IDENT);
-      if (lookahead->ty == ')')
-        break;
+  while (lookahead->ty != ')') {
+    // TODO: Type ptr.
+    Type *ty;
+    match(TK_INT);
+    vec_push(node->params, new_node_id(lookahead->name));
+    ty = malloc(sizeof(Type));
+    ty->ty = INT;
+    entry_var(lookahead->name, ty);
+    match(TK_IDENT);
+    if (lookahead->ty == ',')
       match(',');
-    }
   }
   match(')');
   node->body = compound_stmt();
