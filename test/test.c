@@ -38,6 +38,22 @@ int test_pointer() {
   return 0;
 }
 
+int test_pointer_arithmetic() {
+  int *p;
+  alloc4(&p, 1, 2, 4, 8);
+  int *q;
+  q = p + 0;
+  expect(1800, 1, *q);
+
+  q = p + 1;
+  expect(1801, 2, *q);
+
+  q = p + 3;
+  expect(1802, 8, *q);
+
+  return 0;
+}
+
 int main() {
   int a;
   int b;
@@ -48,6 +64,7 @@ int main() {
 
   test_unary_minus();
   test_pointer();
+  test_pointer_arithmetic();
 
   /* comment */
   /** comment2 **/

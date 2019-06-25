@@ -22,7 +22,7 @@ static void walk(Node *node) {
       Node *n = malloc(sizeof(Node));
       n->ty = '*';
       n->lhs = node->rhs;
-      n->rhs = new_node_num(8); // sizeof(void *)
+      n->rhs = new_node_num(4); // sizeof(int)
       node->rhs = n;
       //      printf("###\n");
     }
