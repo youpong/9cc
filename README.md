@@ -39,7 +39,7 @@ Sample
 * 単項演算子(-)
 * ポインタ(& address-of, * pointer dereference)
 
-# 実装予定
+# 実装する予定
 
 * ポインタ演算(+,-)
 * 論理演算(&&, ||, &, |)
@@ -54,6 +54,10 @@ Sample
 * 構造体
 * extern
 * #include
+
+# 実装するかもしれない
+
+* 複文や for 文内のスコープ
 
 # 環境
 

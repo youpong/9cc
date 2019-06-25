@@ -31,7 +31,9 @@ int test_pointer() {
 
   x = 3;
   y = &x;
-  expect(17, 3, *y);
+  expect(1700, 3, *y);
+  x = 4;
+  expect(1701, 4, *y);
 
   return 0;
 }

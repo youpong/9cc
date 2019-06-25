@@ -16,6 +16,8 @@ int main(int argc, char **argv) {
   if (argc >= 2 && strcmp(argv[1], "-test") == 0) {
     run_util_test();
     run_symbol_test();
+    run_pointer_test();
+    printf("OK\n");
     return 0;
   }
   if (argc >= 2 && strcmp(argv[1], "-ast") == 0) {

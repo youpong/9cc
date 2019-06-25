@@ -212,14 +212,17 @@ static void gen(Node *node) {
     printf("\tpush rax\n");
     return;
   case ND_ADDRESS_OF:
+    // TODO: test
+    gen_lval(node->lhs);
+    // printf("\tpop rax\n");
+    // printf("\tmov rax, [rax]\n");
+    // printf("\tpush rax\n");
+    return;
+  case ND_DEREFERENCE:
+    // TODO: test
     gen_lval(node->lhs);
     printf("\tpop rax\n");
     printf("\tmov rax, [rax]\n");
-    printf("\tpush rax\n");
-    return;
-  case ND_DEREFERENCE:
-    gen_lval(node->lhs);
-    printf("\tpop rax\n");
     printf("\tmov rax, [rax]\n");
     printf("\tpush rax\n");
     return;

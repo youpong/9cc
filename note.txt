@@ -1,103 +1,38 @@
+branch master に行われた変更を dev に反映する手順を調べる。
+--
+main()
+1. init()
+2. tokenize() - tokenize
+3. parse() - parse
+4. sema() - semantic analyze
+5. gen_x86() - generate code
+--
+node->ty == ND_IDENT | ND_NUM において node->c_ty を正しく設定する。
+それは parse phase ? semantic analyse phase ? codegen phase の前。
+--
+
+--
+branch
+ - master dev で十分に実現できた（テストできた) 機能を取り込むブランチ。テストをパスすること。
+ - dev 開発するためのブランチ。コンパイルはできること。
+--
+implement pointer operation
+test/step18.c
+int i, *p, *q;
+q = p + 2;
+q = p + i;
++ のオペランドに pointer 型が含まれている。そのとき、もう一つのオペランドが
+int 型であれば * sizeof(void *) を行う。
+
+sema() --> q = p + ( 2 * sizeof(void *))
+       --> q = p + ( i * sizeof(void *))
+--
+
 implement global variable.
---
-implement
-  low line '_'
---
-implement pointer.
-
-tokenize: '*', '&'
-parse:
-  unary operation
-  VAR_DEF:
-    int *y
-  FUNC_DEF: params
-    int *y
-  TERM/POINTER/DEREFERENCE
-  
-codegen:
-
---
-implement ND
-ND_UNARY
-ND_ADDRESS_OF
-
---
-parse phase: entry variable
---
-9cc.h
-parse.c
-  func_def()
-  var_def()
-codegen.c
-  gen_lval()
-  gen()
-    ND_FUNC_DEF
-      sym_tab = map_sym_tab->children(
-
 --
 1. create a test case.
 2. implement.
 3. pass the test case.
-
----
-test case 1: compile capable
-reiwa0.c
----
-test case 2: bar():expect().
-reiwa1.c
---
-9cc.h
-SYM_TAB *sym_tab_root;
-SYM_TAB *sym_tab;
-int var_cnt; // TODO: delete
-
-typedef struct SYM_TAB SYM_TAB;
-struct SYM_TAB {
-  SYM_TAB *parent;
-  char *func_name; // use?
-  int var_cnt;
-  Map *body;
-};
-
-typedef struct {
-  int token; // for reserved word
-  int type;   
-  int addr;
-} SYM_REC;
---
-main.c(instead of codegen.c)
-  global sym_tab
-  SYM_TAB *sym_tab = malloc(sizeof(SYM_TAB));
-  sym_tab->parent = NULL;
-init.c
-  entry_reserved(sym_name, token);
-tokenize.c
-  query_reserved(token-name)
-gen()
-  case ND_FUNC_DEF:
-    begining of func.
-      sym_tab = append_sym_tab(func_name);
-    end of func.
-      sym_tab = sym_tab->parent;
-  case ND_COMP_STMT:
-  case ND_FOR_STMT:
-  case ND_WHILE_STMT:
-    TODO: append_sym_tab(NULL);
-  case ND_VAR_DEF:
-    make an entry variable with var_tab.
-    - entry_var(var_name, type)
-gen_lval()
-  search variable from var_tab, if it is not found return error.
-  - query_var(var_name)
-
-implement function.
-  - append_sym_tab(func_name);
-  - entry_reserved(sym_name, token);
-  - entry_var(var_name, type);
-  - SYM_REC *query_var(var_name);
-  - SYM_REC *query_reserved(sym_name) {
-      return query(NULL, sym_name);
-    }
 --    
 -e のときは暗に main() の中にあると考えて解釈している。
 
@@ -131,13 +66,6 @@ case 0:
 break;
 }
 --
-main() {
-  func();       
-}
-
-func() {
-}
-
 sudo apt-get install graphviz electric-fence
 
 $ gdb --args ./9cc test/test.c
