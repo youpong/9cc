@@ -69,10 +69,12 @@ static Node *func_def() {
     // TODO: Type ptr.
     Type *ty;
     match(TK_INT);
-    vec_push(node->params, new_node_id(lookahead->name));
+
     ty = malloc(sizeof(Type));
     ty->ty = INT;
     entry_var(lookahead->name, ty);
+    vec_push(node->params, new_node_id(lookahead->name));
+
     match(TK_IDENT);
     if (lookahead->ty == ',')
       match(',');

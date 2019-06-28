@@ -78,10 +78,10 @@ typedef struct Node Node;
 struct Node {
   int ty; // node_type(ND_EQ, ND_NE, ... , ND_FUNC_DEF)
 
+  Type *c_ty; // type of c
+
   char *name;
   int val;
-
-  Type *eval_ty; // type of evaluated value
 
   Node *lhs;     // Left Hand Side or unary operators operand.
   Node *rhs;     // Right Hand Side
@@ -128,6 +128,7 @@ void p_tree(Node *);
 
 // symbol_test.c
 void run_symbol_test();
+void run_pointer_test();
 
 /* Variables */
 extern SYM_TAB *sym_tab;

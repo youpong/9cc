@@ -12,7 +12,7 @@ LIBS = -lgcov
 
 TARGET = 9cc
 SRCS = main.c init.c  symbol.c tokenize.c  parse.c sema.c codegen.c \
-       node.c util.c  debug.c  util_test.c symbol_test.c
+       node.c util.c  debug.c  util_test.c symbol_test.c pointer_test.c
 OBJS = $(SRCS:.c=.o)
 
 .PHONY: all clean check format gcov tags

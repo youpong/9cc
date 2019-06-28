@@ -2,7 +2,8 @@ CC = gcc
 CFLAGS = -Wall -g
 9CC = ../9cc
 
-SRCS = test.c
+SRCS = test.c help.c util.c
+OBJS = $(SRCS:.c=.o)
 TARGET = test
 
 check: $(TARGET)
@@ -11,7 +12,7 @@ clean:
 	rm -f $(TARGET) *.s *.o a.out core *~
 format:
 	clang-format -i $(SRCS)
-$(TARGET): test.o util.o
+$(TARGET): $(OBJS)
 	cc -o $@ $^
 
 util.o: util.c

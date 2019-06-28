@@ -31,7 +31,30 @@ int test_pointer() {
 
   x = 3;
   y = &x;
-  expect(17, 3, *y);
+  expect(1700, 3, *y);
+  x = 4;
+  expect(1701, 4, *y);
+
+  return 0;
+}
+
+int test_pointer_arithmetic() {
+  int *p;
+  int *q;
+
+  alloc4(&p, 1, 2, 4, 8);
+
+  q = p;
+  expect(1800, 1, *q);
+
+  q = p + 1;
+  expect(1801, 2, *q);
+
+  q = (p + 1) + 1;
+  expect(1802, 4, *q);
+
+  q = 3 + p;
+  expect(1803, 8, *q);
 
   return 0;
 }
@@ -46,6 +69,7 @@ int main() {
 
   test_unary_minus();
   test_pointer();
+  test_pointer_arithmetic();
 
   /* comment */
   /** comment2 **/
@@ -141,11 +165,9 @@ int main() {
   expect(172, 1, a); /* a の値は書き換えられない */
 
   expect(180, 21, sum(1, 2, 3, 4, 5, 6));
-  /*
-  expect(,,);
-  expect(162, 3, 5);
-  */
-  /* expect(999, 0, 1);  */
 
+  /*
+  printf("OK\n");
+  */
   return 0;
 }

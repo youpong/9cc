@@ -38,5 +38,4 @@ static void test_map() {
 void run_util_test() {
   test_vector();
   test_map();
-  printf("OK\n");
 }
