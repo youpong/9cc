@@ -40,9 +40,11 @@ int test_pointer() {
 
 int test_pointer_arithmetic() {
   int *p;
-  alloc4(&p, 1, 2, 4, 8);
   int *q;
-  q = p + 0;
+
+  alloc4(&p, 1, 2, 4, 8);
+
+  q = p;
   expect(1800, 1, *q);
 
   q = p + 1;
@@ -51,7 +53,7 @@ int test_pointer_arithmetic() {
   q = (p + 1) + 1;
   expect(1802, 4, *q);
 
-  q = p + 3;
+  q = 3 + p;
   expect(1803, 8, *q);
 
   return 0;

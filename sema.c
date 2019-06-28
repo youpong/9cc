@@ -14,6 +14,11 @@ static void walk(Node *node) {
     walk(node->lhs);
     walk(node->rhs);
     // PTR とあれば ptr to int と仮定している。
+    if (node->rhs->c_ty->ty == PTR) {
+      Node *n = node->lhs;
+      node->lhs = node->rhs;
+      node->rhs = n;
+    }
     if (node->lhs->c_ty->ty == PTR) {
       Node *n = malloc(sizeof(Node));
       n->ty = '*';
