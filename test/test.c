@@ -48,8 +48,11 @@ int test_pointer_arithmetic() {
   q = p + 1;
   expect(1801, 2, *q);
 
+  q = (p + 1) + 1;
+  expect(1802, 4, *q);
+
   q = p + 3;
-  expect(1802, 8, *q);
+  expect(1803, 8, *q);
 
   return 0;
 }
