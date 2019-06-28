@@ -6,13 +6,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-FILE *yyin;
 SYM_TAB *sym_tab = NULL;
-bool ast_flg = false;
-char **ARGV;
 
 int main(int argc, char **argv) {
+  bool ast_flg = false;
 
+  // process options
   if (argc >= 2 && strcmp(argv[1], "-test") == 0) {
     run_util_test();
     run_symbol_test();
@@ -25,7 +24,6 @@ int main(int argc, char **argv) {
     argc--;
     argv++;
   }
-
   if (argc != 2) {
     fprintf(stderr, "引数の数が正しくありません\n");
     fprintf(stderr, "%s [-ast] [-e program]\n", argv[0]);
@@ -33,11 +31,9 @@ int main(int argc, char **argv) {
     fprintf(stderr, "%s -test\n", argv[0]);
     return EXIT_FAILURE;
   }
-  ARGV = argv;
 
-  sym_tab = append_sym_tab(NULL);
-  init(); // TODO: sym_tab = init();
-  Vector *tokens = tokenize();
+  init();
+  Vector *tokens = tokenize(argv[1]);
   Vector *code = parse(tokens);
   sema(code);
 
