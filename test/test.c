@@ -165,11 +165,9 @@ int main() {
   expect(172, 1, a); /* a の値は書き換えられない */
 
   expect(180, 21, sum(1, 2, 3, 4, 5, 6));
-  /*
-  expect(,,);
-  expect(162, 3, 5);
-  */
-  /* expect(999, 0, 1);  */
 
+  /*
+  printf("OK\n");
+  */
   return 0;
 }

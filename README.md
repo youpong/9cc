@@ -38,10 +38,12 @@ Sample
 * ローカル変数(int 型, int *型のみ)
 * 単項演算子(-)
 * ポインタ(& address-of, * pointer dereference)
+* ポインタ算術演算(+)
 
 # 実装する予定
 
-* ポインタ演算(+,-)
+* sizeof 演算子
+* ポインタ算術演算(-)
 * 論理演算(&&, ||, &, |)
 * for, do while, switch
 * コメント文(// C++ style)
@@ -61,7 +63,7 @@ Sample
 
 # 環境
 
-* OS: Ubuntu 18.10
+* OS: Ubuntu 19.04
 * ISA: x86_64
 
 # 参考
