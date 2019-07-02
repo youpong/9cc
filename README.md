@@ -65,6 +65,7 @@ Sample
 
 * OS: Ubuntu 19.04
 * ISA: x86_64
+* C compiler: gcc 8.3.0(clang not supported [Issues#8](https://github.com/youpong/9cc/issues/8))
 
 # 参考
 1: Rui Ueyama[2018] 「低レイヤを知りたい人のためのCコンパイラ作成入門」(https://www.sigbus.info/compilerbook/)
