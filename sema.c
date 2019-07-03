@@ -10,6 +10,19 @@ static void walk(Node *node) {
     for (int i = 0; i < node->stmts->len; i++)
       walk(vec_at(node->stmts, i));
     return;
+  case ND_ADDRESS_OF:
+    // TODO: test
+    walk(node->lhs);
+    // node->lhs->c_ty の ptr となる。
+    node->c_ty = malloc(sizeof(Type));
+    node->c_ty->ty = PTR;
+    node->c_ty->ptr_to = node->lhs->c_ty;
+    return;
+  case ND_DEREFERENCE:
+    // TODO: test
+    walk(node->lhs);
+    node->c_ty = node->lhs->c_ty->ptr_to;
+    return;
   case '+':
   case '-':
     walk(node->lhs);
@@ -43,7 +56,7 @@ static void walk(Node *node) {
     walk(node->lhs);
     walk(node->rhs);
     node->c_ty = malloc(sizeof(Type));
-    //    node->c_ty->ty = node->rhs->c_ty->ty;
+    node->c_ty->ty = node->rhs->c_ty->ty;
     return;
   case ND_NUM:
   case ND_IDENT:
