@@ -11,6 +11,7 @@ static void walk(Node *node) {
       walk(vec_at(node->stmts, i));
     return;
   case '+':
+  case '-':
     walk(node->lhs);
     walk(node->rhs);
     // PTR とあれば ptr to int と仮定している。
@@ -29,17 +30,22 @@ static void walk(Node *node) {
     node->c_ty = malloc(sizeof(Type));
     node->c_ty->ty = PTR;
     return;
-  case '-':
-    // TODO
+  case '*':
+  case '/':
+  case ND_EQ:
+  case ND_NE:
+    walk(node->lhs);
+    walk(node->rhs);
+    node->c_ty = malloc(sizeof(Type));
+    node->c_ty->ty = INT;
     return;
   case '=':
     walk(node->lhs);
     walk(node->rhs);
+    node->c_ty = malloc(sizeof(Type));
+    //    node->c_ty->ty = node->rhs->c_ty->ty;
     return;
   case ND_NUM:
-    node->c_ty = malloc(sizeof(Type));
-    node->c_ty->ty = INT;
-    return;
   case ND_IDENT:
     return;
   }

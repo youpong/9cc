@@ -56,6 +56,9 @@ int test_pointer_arithmetic() {
   q = 3 + p;
   expect(1803, 8, *q);
 
+  q = q - 1;
+  expect(1804, 4, *q);
+
   return 0;
 }
 
