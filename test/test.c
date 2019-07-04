@@ -14,17 +14,6 @@ int sum(int a, int b, int c, int d, int e, int f) {
   return a + b + c + d + e + f;
 }
 
-int test_unary_minus() {
-  int unary_minus;
-  unary_minus = 31;
-
-  expect(190, -1, -1 + 0);
-  expect(190, 1, 0 - (-1));
-  expect(191, -30, -unary_minus + 1);
-
-  return 0;
-}
-
 int test_pointer() {
   int x;
   int *y;
@@ -59,6 +48,10 @@ int test_pointer_arithmetic() {
   q = q - 1;
   expect(1804, 4, *q);
 
+  /*
+  expect(1805, 2, *(p + 1));
+   */
+
   return 0;
 }
 
@@ -70,7 +63,7 @@ int main() {
   int e;
   int aa;
 
-  test_unary_minus();
+  /*  test_unary_minus(); */
   test_pointer();
   test_pointer_arithmetic();
 

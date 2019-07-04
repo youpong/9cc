@@ -3,6 +3,10 @@
 
 static void walk(Node *node) {
   switch (node->ty) {
+  case ND_FUNC_CALL:
+    for (int i = 0; i < node->args->len; i++)
+      walk(vec_at(node->args, i));
+    return;
   case ND_FUNC_DEF:
     walk(node->body);
     return;

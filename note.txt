@@ -1,3 +1,10 @@
+step19 sizeof
+step18 pointer arithmetic(+/-)
+step17 ポインタ型を導入する
+--
+ND_DEREFERENCE 周りの実装をもう一度見直そう
+*(ptr + 1) が利用できるようにしよう！
+
 branch master に行われた変更を dev に反映する手順を調べる。
 --
 main()
