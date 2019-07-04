@@ -27,6 +27,10 @@ static void walk(Node *node) {
     walk(node->lhs);
     node->c_ty = node->lhs->c_ty->ptr_to;
     return;
+  case ND_UNARY_MINUS:
+    walk(node->lhs);
+    node->c_ty = node->lhs->c_ty;
+    return;
   case '+':
   case '-':
     walk(node->lhs);
