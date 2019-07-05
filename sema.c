@@ -1,6 +1,18 @@
 #include "9cc.h"
 #include <stdlib.h>
 
+static void walk(Node *);
+
+// TODO: scale node according to node->c_ty
+static Node *scale(Node *node) {
+  Node *n = malloc(sizeof(Node));
+  n->ty = '*';
+  n->lhs = node;
+  n->rhs = new_node_num(4); // TODO: sizeof(int)
+  walk(n);
+  return n;
+}
+
 static void walk(Node *node) {
   switch (node->ty) {
   case ND_FUNC_CALL:
@@ -35,21 +47,26 @@ static void walk(Node *node) {
   case '-':
     walk(node->lhs);
     walk(node->rhs);
-    // PTR とあれば ptr to int と仮定している。
-    if (node->rhs->c_ty->ty == PTR) {
-      Node *n = node->lhs;
-      node->lhs = node->rhs;
-      node->rhs = n;
+
+    if (node->rhs->c_ty->ty == PTR && node->lhs->c_ty->ty == PTR) {
+      // TODO: ERR: both of PTR operand is invalid
+      exit(1);
     }
-    if (node->lhs->c_ty->ty == PTR) {
-      Node *n = malloc(sizeof(Node));
-      n->ty = '*';
-      n->lhs = node->rhs;
-      n->rhs = new_node_num(4); // sizeof(int)
-      node->rhs = n;
+    if (node->rhs->c_ty->ty != PTR && node->lhs->c_ty->ty != PTR) {
+      // no action
+      node->c_ty = node->lhs->c_ty;
+      return;
     }
-    node->c_ty = malloc(sizeof(Type));
-    node->c_ty->ty = PTR;
+    if (node->lhs->c_ty->ty != PTR) {
+      node->lhs = scale(node->lhs);
+      node->c_ty = node->rhs->c_ty;
+      return;
+    }
+    if (node->rhs->c_ty->ty != PTR) {
+      node->rhs = scale(node->rhs);
+      node->c_ty = node->lhs->c_ty;
+      return;
+    }
     return;
   case '*':
   case '/':
