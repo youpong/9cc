@@ -14,47 +14,6 @@ int sum(int a, int b, int c, int d, int e, int f) {
   return a + b + c + d + e + f;
 }
 
-int test_pointer() {
-  int x;
-  int *y;
-
-  x = 3;
-  y = &x;
-  expect(1700, 3, *y);
-  x = 4;
-  expect(1701, 4, *y);
-
-  return 0;
-}
-
-int test_pointer_arithmetic() {
-  int *p;
-  int *q;
-
-  alloc4(&p, 1, 2, 4, 8);
-
-  q = p;
-  expect(1800, 1, *q);
-
-  q = p + 1;
-  expect(1801, 2, *q);
-
-  q = (p + 1) + 1;
-  expect(1802, 4, *q);
-
-  q = 3 + p;
-  expect(1803, 8, *q);
-
-  q = q - 1;
-  expect(1804, 4, *q);
-
-  /*
-  expect(1805, 2, *(p + 1));
-   */
-
-  return 0;
-}
-
 int main() {
   int a;
   int b;
