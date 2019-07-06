@@ -5,7 +5,7 @@ CC = gcc
 CFLAGS = -Wall -g
 9CC = ../9cc
 
-SRCS = help.c util.c
+SRCS = help.c util.c print_result.c
 9CC_SRCS = test.9c test_unary_minus.9c
 
 OBJS = $(SRCS:.c=.o)
@@ -14,7 +14,7 @@ OBJS = $(SRCS:.c=.o)
 TARGET = test
 
 check: $(TARGET)
-	./$(TARGET) && echo "OK"
+	./$(TARGET) 
 clean:
 	rm -f $(TARGET) *.s *.o a.out core *~
 format:
