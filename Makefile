@@ -26,7 +26,7 @@ clean:
 	cd sample; make clean
 check: $(TARGET)
 	./$(TARGET) -test
-	cd test; make clean check
+	cd test; make check
 format:
 	clang-format -i $(SRCS) *.h
 	cd test; make format
