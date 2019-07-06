@@ -8,8 +8,9 @@ int test_unary_minus() {
 
   return 0;
 }
-
+/*
 int main() {
   test_unary_minus();
   return 100;
 }
+*/

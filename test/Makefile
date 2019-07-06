@@ -1,9 +1,16 @@
+# *.9c: 9cc source
+# *.c:  c souce
+
 CC = gcc
 CFLAGS = -Wall -g
 9CC = ../9cc
 
-SRCS = test.c help.c util.c
+SRCS = help.c util.c
+9CC_SRCS = test.9c test_unary_minus.9c
+
 OBJS = $(SRCS:.c=.o)
+9CC_OBJS = $(9CC_SRCS:.9c=.o)
+
 TARGET = test
 
 check: $(TARGET)
@@ -11,13 +18,18 @@ check: $(TARGET)
 clean:
 	rm -f $(TARGET) *.s *.o a.out core *~
 format:
-	clang-format -i $(SRCS)
-$(TARGET): $(OBJS)
-	cc -o $@ $^
+	clang-format -i $(SRCS) $(9CC_SRCS)
 
-util.o: util.c
+$(TARGET): $(OBJS) $(9CC_OBJS)
+	$(CC) -o $@ $^
+
+.SUFFIXES: .9c .s
+.SUFFIXES: .s .o
+
+.9c.s:
+	$(9CC) $< >$@
+.s.o:
+	$(CC) -c $<
+.c.o:
 	$(CC) $(CFLAGS) -c $<
 
-test.o: test.c
-	$(9CC) $< >test.s
-	$(CC) -o test.o -c test.s
