@@ -1,9 +1,10 @@
 # How to Coverage Test
-# 1. build with --coverage in CFLAGS
-# 2. run
-# 3. make gcov
+# 1. edit Makefile(CFLAGS contains --coverage)
+# 2. make
+# 3. run
+# 4. make gcov
 
-#CC = gcc
+CC = gcc
 #CFLAGS = -Wall -std=c11 -g -D_POSIX_C_SOURCE=200809L --coverage
 CFLAGS = -Wall -std=c11 -g -D_POSIX_C_SOURCE=200809L
 # electrice fence
@@ -25,7 +26,7 @@ clean:
 	cd sample; make clean
 check: $(TARGET)
 	./$(TARGET) -test
-	cd test; make clean check
+	cd test; make check
 format:
 	clang-format -i $(SRCS) *.h
 	cd test; make format

@@ -16,7 +16,9 @@ int main(int argc, char **argv) {
     run_util_test();
     run_symbol_test();
     run_pointer_test();
-    printf("OK\n");
+    printf("========================\n");
+    printf(" All unit tests passed.\n");
+    printf("========================\n");
     return 0;
   }
   if (argc >= 2 && strcmp(argv[1], "-ast") == 0) {
