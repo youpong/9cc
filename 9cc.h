@@ -45,6 +45,7 @@ enum token_type {
   TK_CONTINUE,  // "continue"
   TK_RETURN,    // "return"
   TK_INT,       // "int"
+  TK_SIZEOF,    // "sizeof"
   TK_EOF,       // end of file
 };
 
@@ -72,6 +73,7 @@ enum node_type {
   ND_CONTINUE,    // continue statement
   ND_RETURN,      // return statement
   ND_FUNC_DEF,    // function definition
+  ND_SIZEOF,      // 'sizeof'
 };
 
 typedef struct Node Node;

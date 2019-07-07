@@ -45,6 +45,11 @@ static void walk(Node *node) {
     walk(node->lhs);
     node->c_ty = node->lhs->c_ty;
     return;
+  case ND_SIZEOF:
+    walk(node->lhs);
+    node->c_ty = malloc(sizeof(Type));
+    node->c_ty->ty = INT;
+    return;
   case '+':
   case '-':
     walk(node->lhs);

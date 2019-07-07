@@ -1,0 +1,24 @@
+int test_sizeof() {
+  int x;
+  int *y;
+
+  expect(1900, 4, sizeof(x));
+  expect(1901, 8, sizeof(y));
+
+  expect(1903, 4, sizeof(x + 3));
+  expect(1904, 8, sizeof(y + 3));
+  expect(1905, 4, sizeof(*y));
+
+  expect(1905, 4, sizeof(1));
+  /*
+  expect(1906, 8, sizeof(sizeof(1)));
+  expect(1907, 8, sizeof(sizeof(1) + 1));
+  */
+  return 0;
+}
+/*
+int main() {
+  test_sizeof();
+  return 19;
+}
+*/

@@ -22,6 +22,7 @@ int main() {
   int e;
   int aa;
 
+  test_sizeof();
   test_unary_minus();
   test_pointer();
   test_pointer_arithmetic();
