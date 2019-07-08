@@ -386,12 +386,20 @@ static Node *mul() {
  *
  * production rule
  * unary: '-' term
+ *      | 'sizeof' unary
  *      | '*' term   ; pointer dereference
  *      | '&' IDENT  ; address-of operator
  *      | term
  */
 static Node *unary() {
-  if (lookahead->ty == '-') {
+  if (lookahead->ty == TK_SIZEOF) {
+    Node *node = malloc(sizeof(Node));
+
+    node->ty = ND_SIZEOF;
+    match(TK_SIZEOF);
+    node->lhs = unary();
+    return node;
+  } else if (lookahead->ty == '-') {
     Node *node = malloc(sizeof(Node));
 
     node->ty = ND_UNARY_MINUS;

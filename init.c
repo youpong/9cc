@@ -10,4 +10,5 @@ void init() {
   entry_reserved("continue", TK_CONTINUE);
   entry_reserved("return", TK_RETURN);
   entry_reserved("int", TK_INT);
+  entry_reserved("sizeof", TK_SIZEOF);
 }

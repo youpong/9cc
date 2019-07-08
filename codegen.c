@@ -202,6 +202,14 @@ static void gen(Node *node) {
     printf("\tneg rax\n");
     printf("\tpush rax\n");
     return;
+  case ND_SIZEOF:
+    if (node->lhs->c_ty->ty == INT)
+      printf("\tpush 4\n");
+    else if (node->lhs->c_ty->ty == PTR)
+      printf("\tpush 8\n");
+    else
+      error("sizeof operand unknown type(%d)\n", node->lhs->c_ty->ty);
+    return;
   case ND_NUM:
     printf("\tpush %d\n", node->val);
     return;
@@ -273,7 +281,7 @@ static void gen(Node *node) {
     printf("\tpush rax\n");
     return;
   default:
-    error("unexpected type of node\n");
+    error("unexpected type of node(%d)\n", node->ty);
   }
 }
 
