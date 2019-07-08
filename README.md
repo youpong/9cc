@@ -38,12 +38,11 @@ Sample
 * ローカル変数(int 型, int *型のみ)
 * 単項演算子(-)
 * ポインタ(& address-of, * pointer dereference)
-* ポインタ算術演算(+)
+* ポインタ算術演算(+/-)
+* sizeof 演算子
 
 # 実装する予定
 
-* sizeof 演算子
-* ポインタ算術演算(-)
 * 論理演算(&&, ||, &, |)
 * for, do while, switch
 * コメント文(// C++ style)

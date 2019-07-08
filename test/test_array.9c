@@ -1,0 +1,17 @@
+int foo() {
+  int a[2];
+  int *p;
+
+  *a = 1;
+  *(a + 1) = 2;
+  p = a;
+
+  expect(2000, 3, *p + *(p + 1));
+
+  return 0;
+}
+/*
+int main() {
+  return 20;
+}
+*/
